@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Jungle 內部知識庫 · 學術助理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f1419;
+    --bg-card: #1a1f2a;
+    --bg-elev: #232936;
+    --ink: #e8e3d3;
+    --ink-soft: #9aa0aa;
+    --ink-faded: #6b7280;
+    --accent: #d4a857;
+    --accent-soft: #b08642;
+    --line: #2a3140;
+    --user-bubble: #2c3548;
+    --ai-bubble: #1a1f2a;
+  }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at top, rgba(212,168,87,0.06), transparent 50%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+    position: relative; z-index: 1;
+  }
+
+  /* === Header === */
+  header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    flex-wrap: wrap; gap: 20px;
+    padding-bottom: 22px; margin-bottom: 32px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  header::after {
+    content: ''; position: absolute;
+    bottom: -1px; left: 0; width: 60px; height: 1px;
+    background: var(--accent);
+  }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand-mark {
+    width: 48px; height: 48px;
+    border: 1.5px solid var(--accent);
+    display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: 22px;
+    color: var(--accent);
+    background: var(--bg-card);
+  }
+  .brand h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px; font-weight: 600;
+    letter-spacing: 0.3px; line-height: 1.2;
+  }
+  .brand .subtitle {
+    color: var(--ink-soft);
+    font-size: 10px; letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+  .meta {
+    text-align: right;
+    font-size: 10px; color: var(--ink-faded);
+    letter-spacing: 2px; text-transform: uppercase;
+    line-height: 1.7;
+  }
+  .meta .status {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--accent);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* === Lock screen === */
+  .lock-screen {
+    position: fixed; inset: 0;
+    background: var(--bg);
+    display: grid; place-items: center;
+    z-index: 100;
+  }
+  .lock-screen::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(212,168,87,0.08), transparent 60%);
+  }
+  .lock-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 48px 40px;
+    max-width: 380px; width: 90%;
+    text-align: center;
+    position: relative;
+  }
+  .lock-icon {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .lock-card h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .lock-card p {
+    font-size: 12px; color: var(--ink-soft);
+    margin-bottom: 24px; line-height: 1.6;
+  }
+  .lock-card input {
+    width: 100%; padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: inherit; font-size: 14px;
+    outline: none; margin-bottom: 14px;
+    transition: border-color 0.2s;
+    letter-spacing: 1px;
+  }
+  .lock-card input:focus { border-color: var(--accent); }
+  .lock-card button {
+    width: 100%; padding: 11px;
+    background: var(--accent); color: var(--bg);
+    border: none; cursor: pointer;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600; font-size: 13px;
+    letter-spacing: 4px;
+    transition: opacity 0.2s;
+  }
+  .lock-card button:hover { opacity: 0.85; }
+  .lock-error {
+    color: #c44536; font-size: 12px;
+    margin-top: 12px; display: none;
+  }
+
+  /* === Categories === */
+  .cat-bar {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cat-pill {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: inherit; font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .cat-pill:hover { border-color: var(--accent); color: var(--ink); }
+  .cat-pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  /* === Chat === */
+  .chat {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .messages {
+    padding: 28px 24px;
+    min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .messages::-webkit-scrollbar { width: 6px; }
+  .messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+  .empty {
+    text-align: center; padding: 48px 24px;
+    color: var(--ink-faded);
+  }
+  .empty-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px; color: var(--accent);
+    line-height: 1; margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .empty h3 {
+    font-family: 'Noto Serif TC', serif;
+    color: var(--ink); font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .empty p { font-size: 13px; max-width: 380px; margin: 0 auto; line-height: 1.7; }
+  .empty .examples {
+    margin-top: 20px;
+    text-align: left;
+    background: var(--bg);
+    padding: 16px;
+    border-left: 3px solid var(--accent);
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--ink-soft);
+  }
+  .empty .examples strong { color: var(--accent); }
+
+  .msg {
+    margin-bottom: 18px;
+    max-width: 92%;
+    animation: slideIn 0.3s;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .msg.user { margin-left: auto; }
+  .msg-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px; color: var(--ink-faded);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .msg.user .msg-label { text-align: right; }
+  .msg-bubble {
+    padding: 14px 18px;
+    font-size: 14px; line-height: 1.85;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .msg.user .msg-bubble {
+    background: var(--user-bubble);
+    color: var(--ink);
+    border-left: 2px solid var(--accent);
+  }
+  .msg.ai .msg-bubble {
+    background: var(--ai-bubble);
+    color: var(--ink);
+    border-left: 2px solid var(--accent-soft);
+  }
+  .msg.ai code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--bg);
+    padding: 1px 6px;
+    color: var(--accent);
+  }
+
+  /* Input */
+  .input-area {
+    border-top: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex; gap: 10px;
+    background: var(--bg);
+  }
+  .input-area textarea {
+    flex: 1;
+    padding: 11px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: inherit; font-size: 13.5px;
+    resize: none;
+    min-height: 44px; max-height: 160px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  .input-area textarea:focus { border-color: var(--accent); }
+  .input-area button {
+    padding: 0 24px;
+    background: var(--accent); color: var(--bg);
+    border: none; cursor: pointer;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 3px;
+    transition: opacity 0.2s;
+  }
+  .input-area button:hover:not(:disabled) { opacity: 0.85; }
+  .input-area button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .typing { display: inline-flex; gap: 3px; align-items: center; padding: 4px 0; }
+  .typing span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    animation: typing 1.4s infinite;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-5px); }
+  }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--ink-faded);
+    letter-spacing: 1.5px;
+  }
+  footer .ornament {
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-family: 'Cormorant Garamond', serif;
+    letter-spacing: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Lock screen -->
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-card">
+    <div class="lock-icon">🔒</div>
+    <h2>內部存取</h2>
+    <p>此頁僅供 Jungle 個人使用。</p>
+    <input type="password" id="lock-input" placeholder="請輸入存取密碼" autocomplete="current-password">
+    <button onclick="unlock()">解 鎖</button>
+    <div class="lock-error" id="lock-error">密碼錯誤，請再試一次</div>
+  </div>
+</div>
+
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">J</div>
+      <div>
+        <h1>Jungle 學術知識庫</h1>
+        <div class="subtitle">Personal Academic RAG · Internal</div>
+      </div>
+    </div>
+    <div class="meta">
+      <div class="status"><span class="status-dot"></span>SECURE SESSION</div>
+      <div style="margin-top:4px;">15 categories · academic mode</div>
+    </div>
+  </header>
+
+  <div class="cat-bar" id="cat-bar">
+    <button class="cat-pill active" data-cat="">All Categories</button>
+    <button class="cat-pill" data-cat="01-shrm">SHRM</button>
+    <button class="cat-pill" data-cat="02-hrd">HRD</button>
+    <button class="cat-pill" data-cat="03-recruit">招募甄選</button>
+    <button class="cat-pill" data-cat="04-assessment">人才測評</button>
+    <button class="cat-pill" data-cat="05-training">訓練發展</button>
+    <button class="cat-pill" data-cat="06-performance">績效管理</button>
+    <button class="cat-pill" data-cat="07-compensation">薪酬激勵</button>
+    <button class="cat-pill" data-cat="08-employee-relations">員工關係</button>
+    <button class="cat-pill" data-cat="09-org-behavior">組織行為</button>
+    <button class="cat-pill" data-cat="10-engagement">敬業度離職</button>
+    <button class="cat-pill" data-cat="11-dei">DEI</button>
+    <button class="cat-pill" data-cat="12-ai-hr">AI HR / Analytics</button>
+    <button class="cat-pill" data-cat="13-sme-hr">SME HR</button>
+    <button class="cat-pill" data-cat="14-taiwan-research">台灣研究</button>
+    <button class="cat-pill" data-cat="15-consulting-methods">顧問方法論</button>
+  </div>
+
+  <div class="chat">
+    <div class="messages" id="messages">
+      <div class="empty">
+        <div class="empty-mark">⌬</div>
+        <h3>學術知識庫已就緒</h3>
+        <p>可詢問理論框架、文獻整合、寫作素材、概念比較。AI 會以學術口吻引用文獻並輔以實務連結。</p>
+        <div class="examples">
+          <strong>範例提問</strong><br>
+          · 「比較 HPWS 與 AMO 框架的核心差異」<br>
+          · 「Schmidt &amp; Hunter 1998 的後設分析有什麼批判？」<br>
+          · 「Kirkpatrick 模型如何反向設計訓練計畫？」<br>
+          · 「我要寫一篇關於『績效面談』的文章，給我 3 個 hook」<br>
+          · 「列出近 5 年 People Analytics 的關鍵研究」
+        </div>
+      </div>
+    </div>
+    <div class="input-area">
+      <textarea id="user-input" placeholder="輸入學術問題、寫作需求、概念比較..." disabled></textarea>
+      <button id="send-btn" onclick="sendMessage()" disabled>送 出</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="ornament">· · ·</div>
+    Jungle Personal Knowledge Base · 不對外公開 · 不會被搜尋引擎索引
+  </footer>
+</div>
+
+<script>
+  // ⚙️ 部署前請改成您的 Vercel 後端網址
+  const BACKEND_URL = 'https://your-backend.vercel.app';
+
+  let password = '';
+  let activeCategory = '';
+  let conversation = [];
+
+  function unlock() {
+    const input = document.getElementById('lock-input').value;
+    if (!input) return;
+    password = input;
+    // 驗證一次（送一個簡單測試請求）
+    testPassword().then(ok => {
+      if (ok) {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('user-input').disabled = false;
+        document.getElementById('send-btn').disabled = false;
+        document.getElementById('user-input').focus();
+        sessionStorage.setItem('jungle_pwd', password);
+      } else {
+        document.getElementById('lock-error').style.display = 'block';
+        password = '';
+      }
+    });
+  }
+
+  async function testPassword() {
+    try {
+      const res = await fetch(BACKEND_URL + '/api/jungle-internal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password,
+          messages: [{ role: 'user', content: 'ping' }],
+        }),
+      });
+      return res.status !== 401;
+    } catch {
+      return false;
+    }
+  }
+
+  // 自動嘗試已存的 session 密碼
+  window.addEventListener('DOMContentLoaded', () => {
+    const stored = sessionStorage.getItem('jungle_pwd');
+    if (stored) {
+      password = stored;
+      testPassword().then(ok => {
+        if (ok) {
+          document.getElementById('lock-screen').style.display = 'none';
+          document.getElementById('user-input').disabled = false;
+          document.getElementById('send-btn').disabled = false;
+          document.getElementById('user-input').focus();
+        } else {
+          sessionStorage.removeItem('jungle_pwd');
+          password = '';
+        }
+      });
+    }
+  });
+
+  document.getElementById('lock-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') unlock();
+  });
+
+  // Categories
+  document.querySelectorAll('.cat-pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('.cat-pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      activeCategory = p.dataset.cat;
+    });
+  });
+
+  function addMessage(role, content) {
+    const messages = document.getElementById('messages');
+    // 清掉 empty state
+    const empty = messages.querySelector('.empty');
+    if (empty) empty.remove();
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    div.innerHTML = `
+      <div class="msg-label">— ${role === 'user' ? 'Jungle' : 'Academic AI'}</div>
+      <div class="msg-bubble"></div>
+    `;
+    div.querySelector('.msg-bubble').textContent = content;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+    return div;
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById('user-input');
+    const text = input.value.trim();
+    if (!text || !password) return;
+
+    addMessage('user', text);
+    conversation.push({ role: 'user', content: text });
+    input.value = '';
+
+    const btn = document.getElementById('send-btn');
+    btn.disabled = true; input.disabled = true;
+
+    const messages = document.getElementById('messages');
+    const typing = document.createElement('div');
+    typing.className = 'msg ai';
+    typing.id = 'typing';
+    typing.innerHTML = `
+      <div class="msg-label">— Academic AI</div>
+      <div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>
+    `;
+    messages.appendChild(typing);
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
+      const res = await fetch(BACKEND_URL + '/api/jungle-internal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password,
+          messages: conversation,
+          category: activeCategory || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || '請求失敗');
+      }
+      const data = await res.json();
+      document.getElementById('typing')?.remove();
+      addMessage('ai', data.text);
+      conversation.push({ role: 'assistant', content: data.text });
+    } catch (err) {
+      document.getElementById('typing')?.remove();
+      addMessage('ai', '錯誤：' + err.message);
+    } finally {
+      btn.disabled = false; input.disabled = false;
+      input.focus();
+    }
+  }
+
+  document.getElementById('user-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  document.getElementById('user-input').addEventListener('input', e => {
+    e.target.style.height = 'auto';
+    e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px';
+  });
+</script>
+</body>
+</html>

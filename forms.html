@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>會員專屬表單庫 · 策識永續 AI 人資</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #f7f2e8; --bg-card: #fffdf8; --ink: #1c2541; --ink-soft: #5a6378;
+    --ink-faded: #8a8d9a; --accent: #b08642; --accent-deep: #8a6730;
+    --accent-soft: #ead7b3; --accent-pale: #f4ead0; --line: #e3d8be;
+    --hot: #c44536; --warn: #d4a040; --success: #6b8e23;
+  }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.7; min-height: 100vh;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(176,134,66,0.08), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(28,37,65,0.05), transparent 55%);
+  }
+  .container {
+    max-width: 1100px; margin: 0 auto;
+    padding: 32px 24px 80px;
+    position: relative; z-index: 1;
+  }
+
+  /* === Header === */
+  header {
+    text-align: center;
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .brand-mark {
+    width: 52px; height: 52px;
+    border: 1.5px solid var(--ink);
+    display: grid; place-items: center;
+    margin: 0 auto 18px;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600; font-size: 24px;
+    background: var(--bg-card);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: ''; position: absolute; inset: 4px;
+    border: 0.5px solid var(--accent);
+  }
+  .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; letter-spacing: 6px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 600;
+  }
+  h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 600; line-height: 1.2;
+    letter-spacing: -0.5px; margin-bottom: 14px;
+  }
+  h1 em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; color: var(--accent); font-weight: 600;
+  }
+  .lede {
+    font-size: 14.5px; color: var(--ink-soft);
+    max-width: 540px; margin: 0 auto;
+    line-height: 1.85;
+  }
+
+  /* === Lock state === */
+  .access-bar {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .access-status {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px;
+  }
+  .status-icon {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 13px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+  .status-icon.locked { background: var(--hot); color: white; }
+  .status-icon.unlocked { background: var(--success); color: white; }
+  .access-status .label {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+  }
+  .access-status .meta {
+    color: var(--ink-soft);
+    font-size: 12px;
+    margin-left: 4px;
+  }
+  .unlock-action {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .unlock-action input {
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    font-family: monospace; font-size: 13px;
+    color: var(--ink);
+    outline: none;
+    width: 220px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: border-color 0.2s;
+  }
+  .unlock-action input:focus { border-color: var(--accent); }
+  .unlock-action button {
+    padding: 9px 18px;
+    background: var(--ink); color: var(--bg);
+    border: none; cursor: pointer;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 3px;
+    transition: background 0.2s;
+  }
+  .unlock-action button:hover { background: var(--accent); }
+  .unlock-error {
+    color: var(--hot); font-size: 12px;
+    margin-top: 8px;
+    width: 100%;
+    text-align: right;
+    display: none;
+  }
+
+  /* === Filter pills === */
+  .filter-bar {
+    display: flex; gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-label {
+    font-size: 12px; color: var(--ink-soft);
+    letter-spacing: 1px;
+    margin-right: 4px;
+  }
+  .pill {
+    padding: 6px 12px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: inherit; font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--ink); }
+  .pill.active {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+
+  /* === Form grid === */
+  .forms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 18px;
+  }
+  .form-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    padding: 22px 22px 20px;
+    transition: all 0.25s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .form-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(28, 37, 65, 0.08);
+  }
+  .form-card.locked { opacity: 0.7; }
+
+  .card-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; letter-spacing: 3px;
+    color: var(--accent); font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .card-desc {
+    font-size: 12.5px; color: var(--ink-soft);
+    line-height: 1.7;
+    margin-bottom: 14px;
+    flex-grow: 1;
+  }
+  .card-meta {
+    display: flex; gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 10px;
+    padding: 3px 9px;
+    letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+  .badge.cat {
+    background: var(--accent-pale);
+    color: var(--accent-deep);
+  }
+  .badge.risk-low { background: rgba(107,142,35,0.15); color: var(--success); }
+  .badge.risk-medium { background: rgba(212,160,64,0.18); color: #8a6500; }
+  .badge.risk-high { background: rgba(196,69,54,0.15); color: var(--hot); }
+
+  .download-btn {
+    padding: 11px 16px;
+    background: var(--ink); color: var(--bg);
+    border: none; cursor: pointer;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 3px;
+    transition: background 0.2s;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+  }
+  .download-btn:hover:not(:disabled) { background: var(--accent); }
+  .download-btn:disabled {
+    background: var(--ink-faded);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  .download-btn .icon {
+    font-family: 'Cormorant Garamond', serif;
+    margin-right: 6px;
+  }
+
+  /* === Locked CTA === */
+  .upgrade-cta {
+    background: linear-gradient(135deg, var(--ink) 0%, #2a3656 100%);
+    color: var(--bg);
+    padding: 36px 32px;
+    margin: 32px 0;
+    text-align: center;
+    border: 1px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .upgrade-cta::before {
+    content: ''; position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(176,134,66,0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .upgrade-cta .eyebrow { color: var(--accent-soft); position: relative; }
+  .upgrade-cta h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.3;
+    position: relative;
+  }
+  .upgrade-cta p {
+    color: rgba(247,242,232,0.8);
+    font-size: 13.5px;
+    max-width: 480px;
+    margin: 0 auto 22px;
+    line-height: 1.85;
+    position: relative;
+  }
+  .upgrade-actions {
+    display: flex; gap: 12px; justify-content: center;
+    flex-wrap: wrap; position: relative;
+  }
+  .btn {
+    padding: 12px 24px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid var(--accent);
+    transition: all 0.25s;
+    display: inline-block;
+  }
+  .btn-primary { background: var(--accent); color: var(--ink); }
+  .btn-primary:hover { background: var(--accent-soft); }
+  .btn-secondary {
+    background: transparent; color: var(--bg);
+    border-color: rgba(247,242,232,0.4);
+  }
+  .btn-secondary:hover {
+    background: rgba(247,242,232,0.1);
+    border-color: var(--bg);
+  }
+
+  /* === Toast === */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 14px 24px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--hot); }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+  footer .ornament {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 6px;
+  }
+  footer a { color: var(--ink-soft); text-decoration: none; margin: 0 8px; }
+  footer a:hover { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .access-bar { flex-direction: column; align-items: stretch; }
+    .unlock-action { width: 100%; }
+    .unlock-action input { flex: 1; min-width: 0; }
+    .forms-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="brand-mark">人</div>
+    <div class="eyebrow">— Member Forms —</div>
+    <h1>會員專屬 <em>表單庫</em></h1>
+    <p class="lede">12 份策識永續精煉表單，<br>可直接下載 .docx，依您公司情境填寫使用。</p>
+  </header>
+
+  <div class="access-bar" id="access-bar">
+    <div class="access-status" id="access-status">
+      <div class="status-icon locked">🔒</div>
+      <div>
+        <span class="label">尚未解鎖</span>
+        <span class="meta" id="access-meta">輸入您的 Access Code 即可下載</span>
+      </div>
+    </div>
+    <div class="unlock-action" id="unlock-action">
+      <input type="text" id="code-input" placeholder="CESI-XXXX-XXXX-XXXX" autocomplete="off" maxlength="20">
+      <button onclick="verifyCode()">解 鎖</button>
+    </div>
+    <div class="unlock-error" id="unlock-error"></div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">類別：</span>
+    <button class="pill active" data-cat="all">全部</button>
+    <button class="pill" data-cat="recruit">招募任用</button>
+    <button class="pill" data-cat="onboard">新人報到</button>
+    <button class="pill" data-cat="performance">績效管理</button>
+    <button class="pill" data-cat="exit">離職資遣</button>
+    <button class="pill" data-cat="relations">員工關係</button>
+  </div>
+
+  <div class="forms-grid" id="forms-grid"></div>
+
+  <div class="upgrade-cta" id="upgrade-cta">
+    <div class="eyebrow">— Not Subscribed Yet? —</div>
+    <h2>解鎖 12 份表單 + 無限 AI 對話</h2>
+    <p>升級專業版即可使用全套表單庫，並享有無限次 AI 顧問問答、顧問諮詢 9 折優惠。前 100 名升級享早鳥優惠。</p>
+    <div class="upgrade-actions">
+      <a href="upgrade.html" class="btn btn-primary">立即升級</a>
+      <a href="ai-hr-consultant.html" class="btn btn-secondary">先試試 AI 顧問</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="container">
+    <div class="ornament">· · · · ·</div>
+    <div>
+      <a href="ai-hr-consultant.html">AI 顧問</a>
+      <a href="100qa.html">100 題 QA</a>
+      <a href="pricing-and-booking.html">方案與預約</a>
+      <a href="privacy.html">隱私政策</a>
+      <a href="terms.html">服務條款</a>
+    </div>
+    <div style="margin-top: 14px;">© 2026 策識永續 · 表單僅供會員使用，不得轉發</div>
+  </div>
+</footer>
+
+<script>
+  // ⚙️ 部署前請改為您的 Vercel 後端網址
+  const BACKEND_URL = 'https://your-backend.vercel.app';
+
+  const FORMS = [
+    { id: '01', name: '勞動契約書', cat: 'recruit', risk: 'medium',
+      desc: '不定期勞動契約完整範本，含工時、薪資、休假、保密與終止條款，依勞基法第 9 條設計。' },
+    { id: '02', name: '面試評分表', cat: 'recruit', risk: 'low',
+      desc: '結構化面試評分工具，含 6 大職能 + 4 道行為事例題（STAR 框架），預測效度達 0.51。' },
+    { id: '03', name: '職務說明書', cat: 'recruit', risk: 'low',
+      desc: 'JD 標準範本，含職務目的、主要職責、必要資格、職能要求、KPI、職涯路徑。' },
+    { id: '04', name: '新人報到檢核表', cat: 'onboard', risk: 'low',
+      desc: '5 大類 30+ 檢核項，涵蓋文件繳交、保險勞退、設備帳號、新人引導、合規教育。' },
+    { id: '05', name: '保密協議書', cat: 'onboard', risk: 'medium',
+      desc: 'NDA 完整範本，含機密定義、保密義務、智財歸屬、違約責任、永續保密期間。' },
+    { id: '06', name: '個資蒐集同意書', cat: 'onboard', risk: 'medium',
+      desc: '依個資法第 8 條八項告知事項完整版，蒐集目的、類別、利用範圍、權利行使全包含。' },
+    { id: '07', name: '績效考核表', cat: 'performance', risk: 'low',
+      desc: '年度版績效考核表，KPI 達成度 60% + 6 大職能評核 40%，含自評與主管評。' },
+    { id: '08', name: 'PIP 績效改善計畫', cat: 'performance', risk: 'high',
+      desc: '法律敏感文件。含具體事實記錄、SMART 改善目標、檢核點、未達成法律後果。' },
+    { id: '09', name: '離職交接清單', cat: 'exit', risk: 'low',
+      desc: '5 大類交接項目：業務、文件、設備資產、系統權限、人事行政。' },
+    { id: '10', name: '資遣通知書', cat: 'exit', risk: 'high',
+      desc: '法律敏感文件。含勞基法第 11 條事由勾選、預告期間、資遣費計算、員工救濟管道。' },
+    { id: '11', name: '非自願離職證明書', cat: 'exit', risk: 'high',
+      desc: '依就業保險法第 11 條開立，員工申請失業給付必要文件。' },
+    { id: '12', name: '員工申訴表', cat: 'relations', risk: 'high',
+      desc: '含性騷擾申訴、職場霸凌、工作條件爭議。依性平法處理，含保密與保護聲明。' },
+  ];
+
+  const CAT_LABELS = {
+    recruit: '招募任用',
+    onboard: '新人報到',
+    performance: '績效管理',
+    exit: '離職資遣',
+    relations: '員工關係',
+  };
+
+  const RISK_LABELS = {
+    low: '一般',
+    medium: '需審慎',
+    high: '🚨 高敏感',
+  };
+
+  let accessCode = sessionStorage.getItem('hr_access_code') || '';
+  let isUnlocked = false;
+  let activeCat = 'all';
+
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast show ${type}`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  async function verifyCode() {
+    const input = document.getElementById('code-input');
+    const code = input.value.trim().toUpperCase();
+    if (!code) {
+      showToast('請輸入 Access Code', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch(BACKEND_URL + '/api/verify-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
+      const data = await res.json();
+
+      if (data.valid) {
+        accessCode = code;
+        sessionStorage.setItem('hr_access_code', code);
+        isUnlocked = true;
+        updateUI(data);
+        showToast('✓ 解鎖成功！可下載全部表單', 'success');
+      } else {
+        document.getElementById('unlock-error').textContent = data.message || '驗證失敗';
+        document.getElementById('unlock-error').style.display = 'block';
+        showToast(data.message || '驗證失敗', 'error');
+      }
+    } catch (err) {
+      showToast('連線失敗，請稍後再試', 'error');
+    }
+  }
+
+  function updateUI(accessData) {
+    if (isUnlocked) {
+      // 解鎖狀態
+      const planLabels = {
+        pro_monthly: '月付方案',
+        pro_yearly: '年付方案',
+        pro_yearly_earlybird: '年付早鳥',
+      };
+      const planLabel = planLabels[accessData?.plan] || '專業版';
+      const expDate = accessData?.expiresAt ? `（至 ${accessData.expiresAt}）` : '';
+
+      document.getElementById('access-status').innerHTML = `
+        <div class="status-icon unlocked">✓</div>
+        <div>
+          <span class="label">已解鎖</span>
+          <span class="meta">${planLabel} ${expDate}</span>
+        </div>
+      `;
+      document.getElementById('unlock-action').style.display = 'none';
+      document.getElementById('upgrade-cta').style.display = 'none';
+    }
+    renderForms();
+  }
+
+  function renderForms() {
+    const grid = document.getElementById('forms-grid');
+    const filtered = activeCat === 'all' ? FORMS : FORMS.filter(f => f.cat === activeCat);
+
+    grid.innerHTML = filtered.map(f => `
+      <div class="form-card ${isUnlocked ? '' : 'locked'}">
+        <div class="card-num">No.${f.id}</div>
+        <div class="card-title">${f.name}</div>
+        <div class="card-desc">${f.desc}</div>
+        <div class="card-meta">
+          <span class="badge cat">${CAT_LABELS[f.cat]}</span>
+          <span class="badge risk-${f.risk}">${RISK_LABELS[f.risk]}</span>
+        </div>
+        <button class="download-btn" ${isUnlocked ? '' : 'disabled'} onclick="downloadForm('${f.id}', '${f.name}')">
+          <span class="icon">${isUnlocked ? '↓' : '🔒'}</span>${isUnlocked ? '下載 .docx' : '需解鎖'}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  async function downloadForm(formId, formName) {
+    if (!isUnlocked) {
+      showToast('請先輸入 Access Code 解鎖', 'error');
+      return;
+    }
+    showToast(`正在準備 ${formName}...`);
+    try {
+      const res = await fetch(BACKEND_URL + '/api/download-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: accessCode, formId }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || '下載失敗');
+      }
+      const data = await res.json();
+      // 觸發下載
+      const link = document.createElement('a');
+      link.href = data.url;
+      link.download = data.filename;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast(`✓ ${formName} 已開始下載`, 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  }
+
+  // 自動還原 session
+  if (accessCode) {
+    fetch(BACKEND_URL + '/api/verify-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: accessCode }),
+    }).then(r => r.json()).then(data => {
+      if (data.valid) {
+        isUnlocked = true;
+        updateUI(data);
+      } else {
+        sessionStorage.removeItem('hr_access_code');
+        accessCode = '';
+        renderForms();
+      }
+    }).catch(() => renderForms());
+  } else {
+    renderForms();
+  }
+
+  // 篩選
+  document.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      activeCat = p.dataset.cat;
+      renderForms();
+    });
+  });
+
+  // Enter key
+  document.getElementById('code-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyCode();
+  });
+</script>
+</body>
+</html>

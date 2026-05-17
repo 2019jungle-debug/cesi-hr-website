@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中小企業 HR 100 問 · 試用期、加班費、特休、解僱完整解答 | 策識永續 AI 人資</title>
+<meta name="description" content="中小企業老闆與 HR 最常問的 100 個問題：試用期、加班費、特休、解僱、招募、績效、訓練。每題附法源依據、風險提醒、相關表單。由策識永續整理。">
+<meta name="keywords" content="勞基法,試用期,加班費,特休,資遣費,解僱,招募,人資,中小企業,人事制度">
+<meta property="og:title" content="中小企業 HR 100 問 · 完整解答懶人包">
+<meta property="og:description" content="一篇看懂 100 個最常見的人資問題。法源 + 風險 + 表單一次說清楚。">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- Schema.org FAQPage 標記（SEO 強化）-->
+<script type="application/ld+json" id="faq-schema">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": []
+}
+</script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #f7f2e8; --bg-card: #fffdf8; --ink: #1c2541; --ink-soft: #5a6378;
+    --ink-faded: #8a8d9a; --accent: #b08642; --accent-deep: #8a6730;
+    --accent-soft: #ead7b3; --accent-pale: #f4ead0; --line: #e3d8be;
+    --hot: #c44536; --success: #6b8e23;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.75; -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(176,134,66,0.08), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(28,37,65,0.05), transparent 55%);
+  }
+  .container {
+    max-width: 1100px; margin: 0 auto;
+    padding: 32px 24px 80px;
+    position: relative; z-index: 1;
+  }
+
+  /* === Header === */
+  header {
+    text-align: center;
+    padding: 56px 0 40px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+  }
+  .brand-mark {
+    width: 56px; height: 56px;
+    border: 1.5px solid var(--ink);
+    display: grid; place-items: center;
+    margin: 0 auto 20px;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600; font-size: 26px;
+    background: var(--bg-card);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: ''; position: absolute; inset: 4px;
+    border: 0.5px solid var(--accent);
+  }
+  .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; letter-spacing: 6px;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 14px; font-weight: 600;
+  }
+  h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 600; line-height: 1.2;
+    letter-spacing: -0.5px; margin-bottom: 16px;
+    max-width: 760px; margin-left: auto; margin-right: auto;
+  }
+  h1 em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; color: var(--accent); font-weight: 600;
+  }
+  .lede {
+    font-size: 15px; color: var(--ink-soft);
+    max-width: 580px; margin: 0 auto;
+    line-height: 1.85;
+  }
+  .stats {
+    display: flex; justify-content: center; gap: 32px;
+    margin-top: 28px; flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 600;
+    color: var(--accent); line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--ink-soft); text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* === Search & Filter === */
+  .controls {
+    background: var(--bg-card);
+    border: 1px solid var(--ink);
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .search-row {
+    margin-bottom: 14px;
+  }
+  .search-row input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    font-family: inherit; font-size: 14px;
+    color: var(--ink); outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-row input:focus { border-color: var(--accent); }
+  .filter-pills {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pill {
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: inherit; font-size: 12.5px;
+    cursor: pointer; transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--ink); }
+  .pill.active {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+  .pill .icon {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .pill.active .icon { color: var(--accent-soft); }
+  .pill .count {
+    font-size: 11px; opacity: 0.6;
+  }
+
+  /* === Question list === */
+  .results-info {
+    font-size: 12px; color: var(--ink-faded);
+    margin-bottom: 16px; letter-spacing: 1px;
+  }
+  .qa-list {}
+  .qa-item {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .qa-item:hover { border-color: var(--accent); }
+  .qa-item.open { border-color: var(--accent); }
+
+  .qa-header {
+    padding: 18px 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .qa-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600;
+    color: var(--accent); line-height: 1;
+    flex-shrink: 0; min-width: 36px;
+  }
+  .qa-title {
+    flex: 1;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15.5px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .qa-toggle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--accent);
+    line-height: 0.8;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .qa-item.open .qa-toggle { transform: rotate(45deg); }
+
+  .qa-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    border-top: 1px solid var(--line);
+    border-top-color: transparent;
+  }
+  .qa-item.open .qa-body {
+    max-height: 1500px;
+    border-top-color: var(--line);
+  }
+  .qa-body-inner {
+    padding: 22px 24px 24px;
+  }
+  .qa-section {
+    margin-bottom: 16px;
+  }
+  .qa-section:last-child { margin-bottom: 0; }
+  .qa-section-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .qa-section-tag .marker {
+    color: var(--accent-deep);
+    font-family: 'Noto Serif TC', serif;
+    margin-right: 4px;
+  }
+  .qa-section-content {
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--ink);
+    white-space: pre-wrap;
+  }
+  .qa-section.law .qa-section-content,
+  .qa-section.form .qa-section-content {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+  }
+  .qa-section.risk {
+    background: var(--accent-pale);
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent);
+  }
+  .qa-section.risk .qa-section-content { color: var(--ink); }
+
+  .qa-cta {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .consult-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+  }
+  .consult-badge.low {
+    background: rgba(107, 142, 35, 0.15);
+    color: var(--success);
+  }
+  .consult-badge.medium {
+    background: var(--accent-pale);
+    color: var(--accent-deep);
+  }
+  .consult-badge.high {
+    background: rgba(196, 69, 54, 0.15);
+    color: var(--hot);
+  }
+  .ask-ai-btn {
+    padding: 8px 18px;
+    background: var(--ink); color: var(--bg);
+    text-decoration: none;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: 3px;
+    transition: background 0.2s;
+  }
+  .ask-ai-btn:hover { background: var(--accent); }
+
+  .empty-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-faded);
+  }
+  .empty-results h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  /* === Floating CTA === */
+  .floating-cta {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 14px 22px;
+    text-decoration: none;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 20px rgba(28,37,65,0.25);
+    transition: all 0.2s;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .floating-cta:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+  }
+  .floating-cta .icon {
+    width: 24px; height: 24px;
+    border: 1.5px solid var(--accent-soft);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--accent-soft);
+  }
+
+  /* === Bottom CTA section === */
+  .bottom-cta {
+    margin-top: 64px;
+    padding: 56px 40px;
+    background: linear-gradient(135deg, var(--ink) 0%, #2a3656 100%);
+    color: var(--bg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .bottom-cta::before {
+    content: ''; position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(176,134,66,0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .bottom-cta .eyebrow { color: var(--accent-soft); position: relative; }
+  .bottom-cta h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.3;
+    position: relative;
+  }
+  .bottom-cta h2 em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--accent);
+  }
+  .bottom-cta p {
+    color: rgba(247,242,232,0.8);
+    font-size: 14.5px;
+    max-width: 520px;
+    margin: 0 auto 28px;
+    line-height: 1.85;
+    position: relative;
+  }
+  .bottom-cta-actions {
+    display: flex; justify-content: center; gap: 14px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .btn-primary, .btn-secondary {
+    padding: 14px 28px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid var(--accent);
+    transition: all 0.25s;
+    display: inline-block;
+  }
+  .btn-primary { background: var(--accent); color: var(--ink); }
+  .btn-primary:hover { background: var(--accent-soft); }
+  .btn-secondary { background: transparent; color: var(--bg); border-color: rgba(247,242,232,0.4); }
+  .btn-secondary:hover { background: rgba(247,242,232,0.1); border-color: var(--bg); }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+  footer .ornament {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 6px;
+  }
+
+  @media (max-width: 600px) {
+    .qa-header { padding: 14px 16px; gap: 12px; }
+    .qa-body-inner { padding: 18px 18px 22px; }
+    .floating-cta { bottom: 16px; right: 16px; padding: 12px 16px; }
+    .bottom-cta { padding: 40px 24px; }
+    header { padding: 32px 0 24px; }
+    .controls { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="brand-mark">人</div>
+    <div class="eyebrow">— HR Compendium —</div>
+    <h1>中小企業 <em>100 問</em> 人資懶人包</h1>
+    <p class="lede">中小企業老闆與 HR 最常問的 100 個人資問題。<br>每題附法源依據、風險提醒、建議表單，由策識永續整理。</p>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">100</div>
+        <div class="stat-label">Questions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Categories</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">AI Follow-up</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-row">
+      <input type="search" id="search-input" placeholder="🔍 搜尋關鍵字（如：加班費、試用期、特休...）" autocomplete="off">
+    </div>
+    <div class="filter-pills" id="filter-pills">
+      <button class="pill active" data-cat="">All <span class="count">·100</span></button>
+      <!-- 動態插入 -->
+    </div>
+  </div>
+
+  <div class="results-info" id="results-info">顯示全部 100 題</div>
+
+  <div class="qa-list" id="qa-list">
+    <!-- 動態插入 -->
+  </div>
+
+  <div class="empty-results" id="empty-results" style="display:none;">
+    <h3>找不到符合的問題</h3>
+    <p>試試其他關鍵字，或直接問 AI 顧問</p>
+  </div>
+
+  <div class="bottom-cta">
+    <div class="eyebrow">— Beyond the FAQ —</div>
+    <h2>沒有找到您的問題？<br>讓 <em>AI 顧問</em> 為您客製化回答</h2>
+    <p>這 100 題只是常見問題的縮影。實務上每家公司情境不同，AI 人資顧問可依您的具體情況提供完整建議，並在高風險議題時為您預約專業顧問。</p>
+    <div class="bottom-cta-actions">
+      <a href="ai-hr-consultant.html" class="btn-primary">免費試用 AI 顧問</a>
+      <a href="pricing-and-booking.html" class="btn-secondary">預約專業諮詢</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="ornament">· · · · ·</div>
+    本懶人包提供之內容為一般性參考資訊，不構成法律意見。<br>
+    個案處理請諮詢專業律師或人資顧問。<br>
+    © 2026 策識永續 · HR Intelligence Assistant
+  </footer>
+</div>
+
+<a href="ai-hr-consultant.html" class="floating-cta">
+  <span class="icon">A</span>
+  問 AI 顧問
+</a>
+
+<script>
+  // ⚙️ 部署前可改為從後端 fetch 100qa-data.json
+  // 此處內嵌前 25 題，方便單檔部署。實際使用建議改 fetch
+  const DATA = {
+  "_meta": {
+    "title": "100 題人資懶人包",
+    "description": "中小企業老闆與 HR 最常問的 100 個人資問題，由策識永續整理",
+    "categories": [
+      {
+        "id": "labor",
+        "name": "勞動法令",
+        "icon": "§",
+        "count": 25
+      },
+      {
+        "id": "recruit",
+        "name": "招募與面談",
+        "icon": "✦",
+        "count": 15
+      },
+      {
+        "id": "insurance",
+        "name": "勞健保與薪資",
+        "icon": "₩",
+        "count": 10
+      },
+      {
+        "id": "training",
+        "name": "教育訓練",
+        "icon": "◈",
+        "count": 10
+      },
+      {
+        "id": "performance",
+        "name": "績效考核",
+        "icon": "△",
+        "count": 10
+      },
+      {
+        "id": "relations",
+        "name": "員工關係與管理",
+        "icon": "○",
+        "count": 10
+      },
+      {
+        "id": "termination",
+        "name": "解僱與風險",
+        "icon": "⚠",
+        "count": 10
+      },
+      {
+        "id": "system",
+        "name": "制度與管理",
+        "icon": "▤",
+        "count": 10
+      }
+    ],
+    "last_updated": "2026-05-04"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "labor",
+      "q": "試用期可以約定多久？可以延長嗎？",
+      "a": "勞基法本身沒有明文規定試用期長度，但實務上以 **3 個月** 為主流，最長不超過 6 個月。試用期可以延長，但須在原試用期屆滿前以書面與員工合意，且總長度合理。",
+      "law": "勞動部函釋肯認試用期約定有效，但仍適用勞基法全部規定（包括資遣、預告、加班費等），試用期不等於「無責任期」。",
+      "risk": "若以「試用期不適任」解僱，仍須符合勞基法第 11 條第 5 款「不能勝任」要件，需備齊客觀考核紀錄與改善機會證明。",
+      "form": "試用期評核表、試用期延長同意書",
+      "consult_level": "low"
+    },
+    {
+      "id": 2,
+      "category": "labor",
+      "q": "試用期不適任可以直接解僱嗎？",
+      "a": "**不可以直接解僱**。雖然試用期間勞資雙方適配性是合理考量，但解僱仍須符合勞基法第 11 條（不可歸責於勞工事由）或第 12 條（可歸責於勞工事由）法定事由，並備齊書面考核紀錄。",
+      "law": "勞動部多次函釋指出，試用期勞工受勞基法完整保障，雇主負舉證責任。",
+      "risk": "近年法院判決多認為「試用期不適任」單獨不構成解僱事由，需證明已給予改善機會。違法解僱賠償可達 6-18 個月工資。",
+      "form": "試用期評核表、書面警告通知、PIP 改善計畫",
+      "consult_level": "high"
+    },
+    {
+      "id": 3,
+      "category": "labor",
+      "q": "員工遲到可以扣薪嗎？怎麼扣才合法？",
+      "a": "**可以扣薪**，但僅能就「實際未提供勞務時間」按比例扣減，**不能加倍扣或處罰性扣薪**。例：時薪 200 元、遲到 30 分鐘 → 扣 100 元，不能扣 200 元。",
+      "law": "勞基法第 22 條：工資應全額直接給付勞工。第 26 條：雇主不得預扣勞工工資作為違約金或賠償費用。",
+      "risk": "若以「遲到 1 次扣 500」「遲到罰款」等懲罰性扣薪，違反第 26 條，可處 9-45 萬元罰鍰。建議改用「曠職紀錄」「年度考績扣分」等非扣薪方式管理。",
+      "form": "出勤管理辦法、考勤紀錄表",
+      "consult_level": "medium"
+    },
+    {
+      "id": 4,
+      "category": "labor",
+      "q": "加班費應如何計算？平日與假日有差嗎？",
+      "a": "依勞基法第 24 條：\n• **平日加班**：前 2 小時 ×1⅓，後 2 小時 ×1⅔\n• **休息日加班**：前 2 小時 ×1⅓，第 3-8 小時 ×1⅔，第 9-12 小時 ×2⅔\n• **國定假日 / 例假日加班**：當日加倍給付，且時數超過 8 小時部分依平日加班計算",
+      "law": "勞動基準法第 24 條、第 39 條、第 40 條。施行細則第 24-1 條補充計算方式。",
+      "risk": "「責任制」不是雇主自稱即可，必須是勞動部公告適用第 84-1 條的工作者，且經書面約定報主管機關核備。違法不付加班費罰鍰 2-100 萬，並可被公開揭露。",
+      "form": "加班同意書、出勤紀錄表、工資計算表",
+      "consult_level": "low"
+    },
+    {
+      "id": 5,
+      "category": "labor",
+      "q": "可以強制員工加班嗎？",
+      "a": "**原則上不可以**。勞基法第 32 條規定，雇主延長工時須**經工會同意，無工會者經勞資會議同意**，且**個別員工有拒絕權**。除非有天災、事變或突發事件，否則無法強制。",
+      "law": "勞基法第 32 條（一般加班）、第 32-1 條（補休選擇權）、第 40 條（天災事變特殊延時）。",
+      "risk": "雇主以「不加班就解僱」「不加班影響考績」變相強制，可能構成不當勞動行為，並違反第 32 條（罰 2-100 萬）。",
+      "form": "加班同意書、勞資會議紀錄",
+      "consult_level": "medium"
+    },
+    {
+      "id": 6,
+      "category": "labor",
+      "q": "補休與加班費可以同時存在嗎？",
+      "a": "**可以**，但選擇權在員工。依勞基法第 32-1 條，員工延長工時或休息日工作後，**得選擇**換取補休或加班費，雇主**不得強制選擇補休**。補休期限最長至下一年度 3 月 31 日，期限屆滿仍未休畢者，雇主應依法給付加班費。",
+      "law": "勞基法第 32-1 條（2018 年新增）。",
+      "risk": "雇主預設「全部補休」「補休過期歸零」常見違法。員工書面選擇補休的紀錄須完整保存。",
+      "form": "補休選擇同意書、補休紀錄表",
+      "consult_level": "medium"
+    },
+    {
+      "id": 7,
+      "category": "labor",
+      "q": "特休如何計算？未休完要給錢嗎？",
+      "a": "依勞基法第 38 條：\n• 6 個月以上未滿 1 年：**3 日**\n• 滿 1 年：**7 日** ／ 滿 2 年：**10 日** ／ 滿 3 年：**14 日**\n• 滿 5 年：**15 日** ／ 滿 10 年起每年 +1 日，最多 30 日\n\n年度內未休畢的特休，雇主**應以工資補償**（依未休日數 × 1 日工資）。",
+      "law": "勞基法第 38 條、施行細則第 24 條。",
+      "risk": "「年度歸零、不發代金」「強制員工放棄特休」皆違法。雇主應於「年度終結或契約終止後 30 日內」結算給付。",
+      "form": "特休管理表、特休結算通知",
+      "consult_level": "low"
+    },
+    {
+      "id": 8,
+      "category": "labor",
+      "q": "員工請事假可以扣全薪嗎？",
+      "a": "**可以扣當日工資**。依勞工請假規則，事假**全年最長 14 日，請假期間不給薪**，但雇主不能再額外處罰。",
+      "law": "勞工請假規則第 7 條。",
+      "risk": "雇主僅能不給事假當日工資，不能加重扣薪、扣全勤、扣考績。事假超過 14 日得依「曠職」處理。",
+      "form": "請假單、出勤紀錄表",
+      "consult_level": "low"
+    },
+    {
+      "id": 9,
+      "category": "labor",
+      "q": "病假可以不給薪嗎？",
+      "a": "**普通病假給半薪**。依勞工請假規則，普通傷病假 1 年內未住院 30 日、住院 2 年內 1 年合計 1 年，**請假期間給予半薪**（與勞保傷病給付合計不超過原領工資）。",
+      "law": "勞工請假規則第 4 條第 3 款。職災傷病假則依勞基法第 59 條全薪給付。",
+      "risk": "雇主未依規定給半薪、或要求員工以特休抵病假，皆違反請假規則。",
+      "form": "請假單、就醫證明、勞保傷病給付申請書",
+      "consult_level": "low"
+    },
+    {
+      "id": 10,
+      "category": "labor",
+      "q": "女性生理假公司一定要給嗎？",
+      "a": "**一定要給**。依性別平等工作法第 14 條，女性員工每月得請生理假 1 日，全年**未逾 3 日不併入病假計算**，超過 3 日者併入病假。給薪標準按病假規定（半薪）。",
+      "law": "性別平等工作法第 14 條（2022 年修法）。",
+      "risk": "雇主拒絕給予生理假、要求出示醫師證明、或將生理假計入考績扣分，皆違法。罰鍰 2-30 萬元。",
+      "form": "請假單（生理假無需檢附證明）",
+      "consult_level": "low"
+    },
+    {
+      "id": 11,
+      "category": "labor",
+      "q": "育嬰留停公司可以拒絕嗎？",
+      "a": "**不可以**。依性別平等工作法第 16 條，受僱於僱用 30 人以上雇主之員工，任職滿 6 個月後，於子女滿 3 歲前，**得申請育嬰留職停薪**，期間最長 2 年。",
+      "law": "性別平等工作法第 16 條、育嬰留職停薪實施辦法。",
+      "risk": "雇主不得拒絕、不得以此為由解僱或不利處分。違反者罰鍰 2-30 萬，並可能構成性別歧視。復職時應回任原職務或同等職務。",
+      "form": "育嬰留停申請書、復職通知書",
+      "consult_level": "medium"
+    },
+    {
+      "id": 12,
+      "category": "labor",
+      "q": "勞動契約一定要書面嗎？",
+      "a": "**法律未強制要求書面**，口頭契約亦有效。但實務上**強烈建議書面**——若發生爭議，舉證會非常困難。建議至少包含：工作內容、工時、工資、休假、終止條款。",
+      "law": "勞基法施行細則第 7 條列出契約應約定之 11 項事項。",
+      "risk": "無書面契約時，遇爭議幾乎全仰賴雇主舉證。建議所有員工到職時簽訂書面契約並保存。",
+      "form": "勞動契約範本（一般職、業務職、主管職）",
+      "consult_level": "low"
+    },
+    {
+      "id": 13,
+      "category": "labor",
+      "q": "約聘人員與正職有什麼差別？",
+      "a": "在勞基法上**沒有「約聘」這個分類**——只區分「定期契約」與「不定期契約」。定期契約僅限**臨時性、短期性、季節性、特定性工作**，且有期間限制。其他情況皆為不定期契約，與正職享有相同保障（特休、資遣費、退休金）。",
+      "law": "勞基法第 9 條、施行細則第 6 條。",
+      "risk": "以「約聘」之名規避法定保障是常見違法樣態。若實質工作內容為「繼續性業務」，即使簽訂定期契約也會被認定為不定期契約。",
+      "form": "定期契約書（特定事由用）",
+      "consult_level": "high"
+    },
+    {
+      "id": 14,
+      "category": "labor",
+      "q": "員工曠職幾天可以解僱？",
+      "a": "依勞基法第 12 條第 6 款：**無正當理由連續曠職 3 日，或 1 個月內曠職達 6 日**，雇主得不經預告解僱，且不需支付資遣費。",
+      "law": "勞基法第 12 條第 1 項第 6 款。",
+      "risk": "解僱前須有確實的出勤紀錄與「曠職通知」（已嘗試聯繫員工卻未獲回應）。員工有「正當理由」（如住院、車禍）則不構成曠職。解僱應於 30 日內為之。",
+      "form": "曠職通知書、解僱通知書、出勤紀錄",
+      "consult_level": "high"
+    },
+    {
+      "id": 15,
+      "category": "labor",
+      "q": "什麼情況可以資遣員工？",
+      "a": "依勞基法第 11 條，雇主預告終止勞動契約限於下列情形：\n1. 歇業或轉讓\n2. 虧損或業務緊縮\n3. 不可抗力暫停工作 1 個月以上\n4. 業務性質變更，有減少勞工必要，又無適當工作可安置\n5. 勞工對於所擔任之工作確不能勝任",
+      "law": "勞基法第 11 條（5 款法定事由）、第 16 條（預告期間）、第 17 條（資遣費）。",
+      "risk": "第 5 款「不能勝任」最常被濫用，需備齊客觀考核 + 改善機會 + 最後手段性證明。違法解僱可能被判恢復僱傭、補發工資。",
+      "form": "資遣預告通知書、資遣費計算表、非自願離職證明書",
+      "consult_level": "high"
+    },
+    {
+      "id": 16,
+      "category": "labor",
+      "q": "資遣費如何計算？",
+      "a": "依**勞退新制**（2005 年 7 月 1 日後到職者）：每滿 1 年發給 **0.5 個月**平均工資，最高 6 個月。\n\n依**勞退舊制**：每滿 1 年發給 **1 個月**平均工資，無上限。\n\n平均工資 = 終止前 6 個月工資總額 / 該期間總日數 × 30。",
+      "law": "勞退條例第 12 條（新制）、勞基法第 17 條（舊制）。",
+      "risk": "未滿 1 年部分按比例計算。雇主應於終止契約 30 日內發給。漏發或短發可處 30 萬罰鍰。",
+      "form": "資遣費計算表、平均工資計算表",
+      "consult_level": "medium"
+    },
+    {
+      "id": 17,
+      "category": "labor",
+      "q": "解僱一定要提前通知嗎？",
+      "a": "**第 11 條資遣需預告**：\n• 連續工作 3 個月以上未滿 1 年：**10 日前**\n• 1 年以上未滿 3 年：**20 日前**\n• 3 年以上：**30 日前**\n\n未經預告者應給付**預告期間工資**。\n\n**第 12 條解僱（員工重大過失）不需預告**。",
+      "law": "勞基法第 16 條（預告期間）。",
+      "risk": "資遣同時必須開立「非自願離職證明書」，員工才能申請失業給付。漏開可被處罰。",
+      "form": "資遣預告通知書、非自願離職證明書",
+      "consult_level": "medium"
+    },
+    {
+      "id": 18,
+      "category": "labor",
+      "q": "公司可以隨意調動員工職務嗎？",
+      "a": "**不可以隨意調動**。依勞基法第 10-1 條（調動五原則）：\n1. 基於企業經營必要，且不得有不當動機\n2. 對勞工工資及其他勞動條件未做不利變更\n3. 調動後工作為勞工體能及技術可勝任\n4. 調動工作地點過遠，雇主應予必要協助\n5. 考量勞工及其家庭之生活利益",
+      "law": "勞基法第 10-1 條（2015 年新增）。",
+      "risk": "違反五原則的調動，員工得拒絕，並可主張雇主違約。違法調動還可能被認定為「實質解僱」，需給付資遣費。",
+      "form": "職務異動通知書、調動同意書",
+      "consult_level": "high"
+    },
+    {
+      "id": 19,
+      "category": "labor",
+      "q": "工時制度有哪些？可以彈性嗎？",
+      "a": "勞基法允許的工時制度：\n• **正常工時**：每日 8 小時，每週 40 小時\n• **2 週彈性工時**：第 30 條第 2 項，每日不超 10 小時\n• **4 週彈性工時**：第 30-1 條，限指定行業\n• **8 週彈性工時**：第 30 條第 3 項，限指定行業\n• **責任制（84-1 條）**：限指定工作者，須書面約定報核",
+      "law": "勞基法第 30 條、30-1 條、84-1 條。",
+      "risk": "彈性工時須經工會或勞資會議同意，且須符合該行業是否在勞動部公告範圍內。誤用彈性工時計算加班費是常見違法。",
+      "form": "彈性工時同意書、勞資會議紀錄、責任制書面約定",
+      "consult_level": "medium"
+    },
+    {
+      "id": 20,
+      "category": "labor",
+      "q": "例假與休息日差在哪？",
+      "a": "「**一例一休**」制度：\n• **例假日**：每 7 日至少 1 日，**原則上不可加班**（除非天災事變）\n• **休息日**：每 7 日至少 1 日，**可經勞工同意加班**，但須給較高加班費\n\n例假日加班費 = 加倍給付（第 39 條）。休息日加班費 = 1⅓ ~ 2⅔ 倍。",
+      "law": "勞基法第 36 條、第 39 條、第 24 條第 2 項。",
+      "risk": "把「例假日」當「休息日」要求加班是嚴重違法，可處 2-100 萬罰鍰。每 7 日的計算須以「曆日」為準。",
+      "form": "排班表、加班同意書",
+      "consult_level": "medium"
+    },
+    {
+      "id": 21,
+      "category": "labor",
+      "q": "國定假日一定要放嗎？",
+      "a": "**一定要放**。依勞基法第 37 條，內政部所定之應放假日（國定假日、紀念日、勞動節等共 12 日）員工得休假，工資**照給**。\n\n如雇主徵得勞工同意於國定假日工作，工資應**加倍發給**（即雙倍薪資）。",
+      "law": "勞基法第 37 條、第 39 條。內政部紀念日及節日實施辦法。",
+      "risk": "「以特休抵國定假日」「不發加倍工資」皆違法。元旦、春節、228、清明、勞動節、端午、中秋、雙十、除夕等都是法定應放日。",
+      "form": "排班表、加班同意書",
+      "consult_level": "low"
+    },
+    {
+      "id": 22,
+      "category": "labor",
+      "q": "公司可以要求員工簽離職切結書嗎？",
+      "a": "**可以要求簽署**，但內容**不得違反勞基法強制規定**。常見可寫入：交接事項確認、保密義務、智財權歸屬、離職後競業限制（須符合法定要件）。\n\n**不可要求**：放棄資遣費、放棄未休特休工資、放棄訴訟權等違法條款。",
+      "law": "勞基法第 71 條：本法強制規定，雇主與勞工不得約定排除或減損。",
+      "risk": "切結書中違法條款（如「放棄資遣費」）即使員工簽名亦無效。但其他條款仍有效。建議切結書一式兩份保存。",
+      "form": "離職切結書、交接清單、保密協議",
+      "consult_level": "medium"
+    },
+    {
+      "id": 23,
+      "category": "labor",
+      "q": "競業禁止條款一定有效嗎？",
+      "a": "**不一定**。依勞基法第 9-1 條，離職後競業禁止須**同時符合**四要件：\n1. 雇主有應受保護之正當營業利益\n2. 勞工職務有接觸營業秘密\n3. 競業禁止之期間、區域、職業活動及就業對象未逾合理範疇\n4. **雇主對勞工因不從事競業行為所受損失有合理補償**\n\n期間最長不得超過 2 年。",
+      "law": "勞基法第 9-1 條（2015 年新增）、施行細則第 7-1 條至第 7-3 條。",
+      "risk": "未支付合理補償的競業條款無效。補償標準至少為離職前月平均工資 50%。多數公司舊版競業條款都不符新法。",
+      "form": "競業禁止協議書、補償約定書",
+      "consult_level": "high"
+    },
+    {
+      "id": 24,
+      "category": "labor",
+      "q": "工資一定要匯款嗎？",
+      "a": "**不一定**。依勞基法第 22 條，工資應以**法定通用貨幣全額直接給付勞工**。匯款入帳戶或現金給付皆可，但須**全額、按時、直接**給付。",
+      "law": "勞基法第 22 條、第 23 條（按月給付，每月至少 2 次）。",
+      "risk": "「拆分薪資以低薪報稅」「以實物抵充工資」「延遲發薪」皆違法。建議統一匯款並提供完整薪資明細。",
+      "form": "薪資明細表、薪資轉帳同意書",
+      "consult_level": "low"
+    },
+    {
+      "id": 25,
+      "category": "labor",
+      "q": "可以用績效不好當解僱理由嗎？",
+      "a": "**可以，但有嚴格條件**。需符合勞基法第 11 條第 5 款「對於所擔任之工作確不能勝任」，並須備齊：\n1. 客觀績效考核紀錄（量化指標）\n2. 主觀面：勞工有怠忽工作或缺乏意願之證據\n3. 已給予改善機會（PIP 計畫，至少 1-3 個月）\n4. 已善盡「最後手段性」（嘗試訓練、調職、降薪）",
+      "law": "勞基法第 11 條第 5 款；最高法院多次判決確立「客觀+主觀+最後手段性」標準。",
+      "risk": "**這是法院最常判雇主敗訴的解僱類型**。預估賠償 6-18 個月工資。涉及此議題務必諮詢專業顧問或律師。",
+      "form": "績效考核紀錄、PIP 改善計畫、面談紀錄、警告通知",
+      "consult_level": "high"
+    }
+  ],
+  "_pending": "後續 75 題（招募 15 + 勞健保 10 + 訓練 10 + 績效 10 + 員工關係 10 + 解僱 10 + 制度 10）將以同樣格式補完，請告訴我繼續即可"
+};
+
+  let activeCategory = '';
+  let searchTerm = '';
+
+  // 渲染分類 pills
+  function renderPills() {
+    const container = document.getElementById('filter-pills');
+    DATA._meta.categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'pill';
+      btn.dataset.cat = cat.id;
+      btn.innerHTML = `<span class="icon">${cat.icon}</span>${cat.name}<span class="count">·${cat.count}</span>`;
+      btn.addEventListener('click', () => {
+        activeCategory = cat.id;
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+      });
+      container.appendChild(btn);
+    });
+    // All button
+    document.querySelector('.pill[data-cat=""]').addEventListener('click', (e) => {
+      activeCategory = '';
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      render();
+    });
+  }
+
+  // 渲染問題清單
+  function render() {
+    const list = document.getElementById('qa-list');
+    const empty = document.getElementById('empty-results');
+    const info = document.getElementById('results-info');
+
+    let questions = DATA.questions;
+    if (activeCategory) questions = questions.filter(q => q.category === activeCategory);
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      questions = questions.filter(q =>
+        q.q.toLowerCase().includes(term) ||
+        (q.a || '').toLowerCase().includes(term) ||
+        (q.law || '').toLowerCase().includes(term)
+      );
+    }
+
+    list.innerHTML = '';
+    if (questions.length === 0) {
+      empty.style.display = 'block';
+      info.textContent = '';
+      return;
+    }
+    empty.style.display = 'none';
+
+    const totalText = activeCategory
+      ? `${DATA._meta.categories.find(c => c.id === activeCategory).name}：${questions.length} 題`
+      : `共 ${questions.length} 題`;
+    info.textContent = searchTerm ? `搜尋「${searchTerm}」 · ${totalText}` : `顯示${activeCategory ? '' : '全部'} ${totalText}`;
+
+    questions.forEach(q => {
+      const item = document.createElement('div');
+      item.className = 'qa-item';
+      item.innerHTML = `
+        <div class="qa-header">
+          <div class="qa-num">${q.id.toString().padStart(2, '0')}</div>
+          <div class="qa-title">${escapeHtml(q.q)}</div>
+          <div class="qa-toggle">+</div>
+        </div>
+        <div class="qa-body">
+          <div class="qa-body-inner">
+            ${q.a ? `<div class="qa-section answer">
+              <div class="qa-section-tag"><span class="marker">A.</span>核心解答</div>
+              <div class="qa-section-content">${formatContent(q.a)}</div>
+            </div>` : ''}
+            ${q.law ? `<div class="qa-section law">
+              <div class="qa-section-tag"><span class="marker">§</span>法源依據</div>
+              <div class="qa-section-content">${formatContent(q.law)}</div>
+            </div>` : ''}
+            ${q.risk ? `<div class="qa-section risk">
+              <div class="qa-section-tag"><span class="marker">⚠</span>風險提醒</div>
+              <div class="qa-section-content">${formatContent(q.risk)}</div>
+            </div>` : ''}
+            ${q.form ? `<div class="qa-section form">
+              <div class="qa-section-tag"><span class="marker">📋</span>建議表單</div>
+              <div class="qa-section-content">${escapeHtml(q.form)}</div>
+            </div>` : ''}
+            <div class="qa-cta">
+              ${q.consult_level === 'high'
+                ? '<span class="consult-badge high">🚨 建議轉真人顧問</span>'
+                : q.consult_level === 'medium'
+                ? '<span class="consult-badge medium">⚡ 建議諮詢</span>'
+                : '<span class="consult-badge low">✓ 一般情形</span>'
+              }
+              <a href="ai-hr-consultant.html" class="ask-ai-btn">問 AI 深入了解 →</a>
+            </div>
+          </div>
+        </div>
+      `;
+      const header = item.querySelector('.qa-header');
+      header.addEventListener('click', () => {
+        item.classList.toggle('open');
+      });
+      list.appendChild(item);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function formatContent(text) {
+    return escapeHtml(text)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\n/g, '<br>');
+  }
+
+  // 搜尋
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    searchTerm = e.target.value.trim();
+    render();
+  });
+
+  // SEO: 注入 FAQPage Schema.org
+  function injectSchema() {
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: DATA.questions.map(q => ({
+        '@type': 'Question',
+        name: q.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: (q.a || '').replace(/\*\*/g, '').replace(/\n/g, ' ')
+        }
+      }))
+    };
+    document.getElementById('faq-schema').textContent = JSON.stringify(schema, null, 2);
+  }
+
+  // Init
+  renderPills();
+  render();
+  injectSchema();
+</script>
+</body>
+</html>

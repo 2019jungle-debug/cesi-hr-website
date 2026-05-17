@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>策識永續 · 管理後台</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@500;600&family=Cormorant+Garamond:wght@600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f1419; --bg-card: #1a1f2a; --bg-elev: #232936;
+    --ink: #e8e3d3; --ink-soft: #9aa0aa; --ink-faded: #6b7280;
+    --accent: #d4a857; --line: #2a3140;
+    --hot: #e95d4d; --warn: #d4a040; --success: #7ba83a; --info: #5a9fc8;
+  }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--ink);
+    line-height: 1.6; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at top, rgba(212,168,87,0.05), transparent 50%); }
+
+  /* Lock screen */
+  .lock-screen { position: fixed; inset: 0; background: var(--bg); display: grid; place-items: center; z-index: 100; }
+  .lock-card { background: var(--bg-card); border: 1px solid var(--line); padding: 44px 36px;
+    max-width: 360px; width: 90%; text-align: center; }
+  .lock-card h2 { font-family: 'Noto Serif TC', serif; font-size: 18px; margin-bottom: 6px; }
+  .lock-card .sub { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 4px;
+    color: var(--accent); text-transform: uppercase; font-weight: 600; margin-bottom: 24px; }
+  .lock-card input { width: 100%; padding: 11px 14px; background: var(--bg); border: 1px solid var(--line);
+    color: var(--ink); font-size: 13px; outline: none; margin-bottom: 12px; letter-spacing: 1px; }
+  .lock-card input:focus { border-color: var(--accent); }
+  .lock-card button { width: 100%; padding: 11px; background: var(--accent); color: var(--bg);
+    border: none; cursor: pointer; font-family: 'Noto Serif TC', serif; font-weight: 600;
+    font-size: 13px; letter-spacing: 4px; }
+  .lock-card .err { color: var(--hot); font-size: 11px; margin-top: 10px; min-height: 14px; }
+
+  /* Layout */
+  .topbar { background: var(--bg-card); border-bottom: 1px solid var(--line);
+    padding: 14px 28px; display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 50; }
+  .topbar h1 { font-family: 'Noto Serif TC', serif; font-size: 16px; font-weight: 600; }
+  .topbar h1 .sub { font-family: 'Cormorant Garamond', serif; font-size: 10px;
+    letter-spacing: 4px; color: var(--accent); margin-left: 12px; text-transform: uppercase; font-weight: 600; }
+  .topbar .actions { display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--ink-soft); }
+  .topbar button { padding: 6px 12px; background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--line); cursor: pointer; font-size: 11px; transition: all 0.2s; }
+  .topbar button:hover { color: var(--ink); border-color: var(--accent); }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 28px 60px; position: relative; z-index: 1; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .tab { padding: 10px 20px; background: transparent; color: var(--ink-soft);
+    border: none; cursor: pointer; font-family: inherit; font-size: 13px;
+    transition: all 0.2s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card { background: var(--bg-card); border: 1px solid var(--line); padding: 18px 22px; }
+  .stat-card .label { font-family: 'Cormorant Garamond', serif; font-size: 10px;
+    letter-spacing: 3px; color: var(--accent); text-transform: uppercase; font-weight: 600; }
+  .stat-card .num { font-family: 'Noto Serif TC', serif; font-size: 30px; font-weight: 600; margin: 6px 0; }
+  .stat-card .sub { font-size: 11px; color: var(--ink-soft); }
+
+  /* Section */
+  .section { background: var(--bg-card); border: 1px solid var(--line); margin-bottom: 24px; }
+  .section h2 { padding: 16px 22px; font-family: 'Noto Serif TC', serif; font-size: 14px;
+    font-weight: 600; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .section h2 .meta { font-family: 'Cormorant Garamond', serif; font-size: 11px;
+    color: var(--ink-faded); letter-spacing: 2px; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { font-family: 'Noto Serif TC', serif; font-weight: 600; color: var(--ink-soft);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  tbody tr:hover { background: var(--bg-elev); }
+  td.mono { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--ink-soft); }
+  td .badge { padding: 2px 8px; font-size: 10px; letter-spacing: 1px;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600; }
+  .badge.active { background: rgba(123,168,58,0.18); color: var(--success); }
+  .badge.expired { background: rgba(233,93,77,0.18); color: var(--hot); }
+  .badge.cancelled { background: rgba(154,160,170,0.2); color: var(--ink-faded); }
+  .badge.pending { background: rgba(212,160,64,0.18); color: var(--warn); }
+
+  td button { padding: 4px 10px; background: transparent; color: var(--accent);
+    border: 1px solid var(--accent); cursor: pointer; font-size: 11px; transition: all 0.2s; }
+  td button:hover { background: var(--accent); color: var(--bg); }
+
+  .empty-state { padding: 48px 20px; text-align: center; color: var(--ink-faded); font-size: 13px; }
+
+  /* Daily chart */
+  .chart-row { padding: 24px 22px; }
+  .chart { display: flex; align-items: flex-end; height: 140px; gap: 4px; }
+  .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 4px; cursor: pointer; }
+  .chart-bar { width: 100%; background: var(--accent); min-height: 2px;
+    transition: opacity 0.2s; opacity: 0.7; position: relative; }
+  .chart-col:hover .chart-bar { opacity: 1; }
+  .chart-bar.zero { background: var(--line); }
+  .chart-tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+    background: var(--bg-elev); color: var(--ink); padding: 4px 8px; font-size: 10px;
+    white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; margin-bottom: 4px; }
+  .chart-col:hover .chart-tooltip { opacity: 1; }
+  .chart-label { font-size: 9px; color: var(--ink-faded); }
+
+  /* Modal */
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none;
+    place-items: center; z-index: 200; padding: 24px; }
+  .modal-bg.show { display: grid; }
+  .modal { background: var(--bg-card); border: 1px solid var(--line);
+    max-width: 540px; width: 100%; max-height: 80vh; overflow-y: auto; }
+  .modal-header { padding: 16px 22px; border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center; }
+  .modal-header h3 { font-family: 'Noto Serif TC', serif; font-size: 15px; font-weight: 600; }
+  .modal-header .close { cursor: pointer; color: var(--ink-faded); font-size: 20px; line-height: 1; }
+  .modal-body { padding: 22px; }
+  .modal-body .field { margin-bottom: 14px; }
+  .modal-body label { display: block; font-size: 11px; color: var(--ink-soft);
+    margin-bottom: 4px; letter-spacing: 1px; }
+  .modal-body input, .modal-body select, .modal-body textarea {
+    width: 100%; padding: 9px 12px; background: var(--bg); border: 1px solid var(--line);
+    color: var(--ink); font-family: inherit; font-size: 13px; outline: none; }
+  .modal-body input:focus, .modal-body select:focus { border-color: var(--accent); }
+  .modal-footer { padding: 14px 22px; border-top: 1px solid var(--line);
+    display: flex; gap: 10px; justify-content: flex-end; }
+  .btn { padding: 9px 18px; background: transparent; color: var(--ink); border: 1px solid var(--line);
+    cursor: pointer; font-family: inherit; font-size: 12px; letter-spacing: 1px; transition: all 0.2s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .btn.primary:hover { opacity: 0.85; color: var(--bg); }
+  .btn.danger { color: var(--hot); border-color: var(--hot); }
+  .btn.danger:hover { background: var(--hot); color: var(--bg); }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--bg-elev); border: 1px solid var(--line); color: var(--ink);
+    padding: 11px 20px; font-size: 12px; opacity: 0; transition: all 0.3s; z-index: 300;
+    pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.success { border-color: var(--success); }
+  .toast.error { border-color: var(--hot); }
+</style>
+</head>
+<body>
+
+<!-- Lock screen -->
+<div class="lock-screen" id="lock">
+  <div class="lock-card">
+    <div class="sub">— Admin Console</div>
+    <h2>策識永續 · 後台</h2>
+    <input type="password" id="pwd" placeholder="管理員密碼" autocomplete="current-password">
+    <button onclick="login()">進 入</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<!-- Main -->
+<div id="main" style="display: none;">
+  <div class="topbar">
+    <h1>策識永續 後台 <span class="sub">Admin Console</span></h1>
+    <div class="actions">
+      <span id="kv-status">KV: ?</span>
+      <button onclick="refresh()">↻ 重新整理</button>
+      <button onclick="logout()">登出</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('overview')">總覽</button>
+      <button class="tab" onclick="switchTab('members')">會員</button>
+      <button class="tab" onclick="switchTab('orders')">訂單</button>
+      <button class="tab" onclick="switchTab('cancellations')">取消申請</button>
+      <button class="tab" onclick="switchTab('system')">系統</button>
+    </div>
+
+    <!-- 總覽 -->
+    <div class="panel active" id="panel-overview">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="label">— Today Orders</div>
+          <div class="num" id="s-today-orders">—</div>
+          <div class="sub">今日訂單數</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">— Today Revenue</div>
+          <div class="num" id="s-today-revenue">—</div>
+          <div class="sub">今日營收 (NT$)</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">— Active Members</div>
+          <div class="num" id="s-active">—</div>
+          <div class="sub">活躍會員數</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">— Today AI Chats</div>
+          <div class="num" id="s-chats">—</div>
+          <div class="sub">今日 AI 對話次數</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="label">— 7-Day Orders</div>
+          <div class="num" id="s-7d-orders">—</div>
+          <div class="sub">7 日訂單數</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">— 7-Day Revenue</div>
+          <div class="num" id="s-7d-revenue">—</div>
+          <div class="sub">7 日營收</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">— 7-Day Chats</div>
+          <div class="num" id="s-7d-chats">—</div>
+          <div class="sub">7 日對話次數</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">— Pending Cancel</div>
+          <div class="num" id="s-pending">—</div>
+          <div class="sub">待處理取消</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>過去 7 天活躍度 <span class="meta">Daily Activity</span></h2>
+        <div class="chart-row">
+          <div class="chart" id="overview-chart"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>最近訂單 <span class="meta">Recent Orders</span></h2>
+        <div id="recent-orders"></div>
+      </div>
+    </div>
+
+    <!-- 會員 -->
+    <div class="panel" id="panel-members">
+      <div class="section">
+        <h2>會員列表 <span class="meta" id="member-count">—</span></h2>
+        <div id="members-table"></div>
+      </div>
+    </div>
+
+    <!-- 訂單 -->
+    <div class="panel" id="panel-orders">
+      <div class="section">
+        <h2>訂單列表 <span class="meta" id="order-count">—</span></h2>
+        <div id="orders-table"></div>
+      </div>
+    </div>
+
+    <!-- 取消申請 -->
+    <div class="panel" id="panel-cancellations">
+      <div class="section">
+        <h2>取消申請列表 <span class="meta" id="cancel-count">—</span></h2>
+        <div id="cancellations-table"></div>
+      </div>
+    </div>
+
+    <!-- 系統 -->
+    <div class="panel" id="panel-system">
+      <div class="section">
+        <h2>系統狀態 <span class="meta">System Status</span></h2>
+        <div style="padding: 22px;">
+          <div style="margin-bottom: 16px;">
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 3px;
+                        color: var(--accent); margin-bottom: 6px;">— KV STORAGE</div>
+            <div id="kv-detail" style="font-size: 13px;">載入中...</div>
+          </div>
+          <div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 3px;
+                        color: var(--accent); margin-bottom: 6px;">— ENVIRONMENT</div>
+            <div style="font-size: 13px; color: var(--ink-soft);" id="env-info">
+              ECPAY 模式：<span id="ecpay-mode">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>使用提示 <span class="meta">Tips</span></h2>
+        <div style="padding: 22px; font-size: 13px; line-height: 1.85; color: var(--ink-soft);">
+          <p style="margin-bottom: 10px;"><b style="color: var(--ink);">會員操作：</b>到「會員」分頁可手動延長到期日、停用 access code、修改 email。</p>
+          <p style="margin-bottom: 10px;"><b style="color: var(--ink);">取消訂閱處理：</b>客戶申請取消後會出現在「取消申請」分頁。處理流程：(1) 到綠界後台停止扣款；(2) 在「會員」中將該 access code 狀態改為 cancelled。</p>
+          <p style="margin-bottom: 10px;"><b style="color: var(--ink);">系統異常：</b>若 KV 未啟用，會員資料無法即時更新，需手動編輯 Vercel 環境變數 VALID_ACCESS_CODES。</p>
+          <p><b style="color: var(--ink);">資料備份：</b>建議每月匯出一次 KV 資料備份（手動：到「會員」分頁 → 下方匯出 CSV 按鈕）。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 編輯會員 modal -->
+<div class="modal-bg" id="edit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>編輯會員</h3>
+      <span class="close" onclick="closeModal()">×</span>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Access Code</label>
+        <input type="text" id="m-code" disabled>
+      </div>
+      <div class="field">
+        <label>姓名</label>
+        <input type="text" id="m-name" disabled>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="m-email" disabled>
+      </div>
+      <div class="field">
+        <label>狀態</label>
+        <select id="m-status">
+          <option value="active">active · 啟用</option>
+          <option value="cancelled">cancelled · 已取消</option>
+          <option value="suspended">suspended · 暫停</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>到期日</label>
+        <input type="date" id="m-expire">
+      </div>
+      <div class="field">
+        <label>備註原因</label>
+        <input type="text" id="m-reason" placeholder="例如：客戶申請取消、延期 30 天因系統問題...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">取消</button>
+      <button class="btn primary" onclick="saveMember()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ⚙️ 部署前請改為您的 Vercel 後端網址
+  const BACKEND_URL = 'https://your-backend.vercel.app';
+  let password = sessionStorage.getItem('admin_pwd') || '';
+
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  async function callAdmin(action, params = {}) {
+    const res = await fetch(BACKEND_URL + '/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, action, ...params }),
+    });
+    if (res.status === 401) throw new Error('密碼錯誤或已逾時');
+    if (!res.ok) {
+      const e = await res.json().catch(() => ({}));
+      throw new Error(e.error || `HTTP ${res.status}`);
+    }
+    const json = await res.json();
+    return json.data;
+  }
+
+  async function login() {
+    const pwd = document.getElementById('pwd').value;
+    if (!pwd) return;
+    password = pwd;
+    try {
+      await callAdmin('kv_status');
+      sessionStorage.setItem('admin_pwd', pwd);
+      document.getElementById('lock').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      refresh();
+    } catch (e) {
+      document.getElementById('err').textContent = e.message;
+      password = '';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('admin_pwd');
+    location.reload();
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.tab[onclick*="${name}"]`).classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+
+    // Lazy load
+    if (name === 'members') loadMembers();
+    if (name === 'orders') loadOrders();
+    if (name === 'cancellations') loadCancellations();
+    if (name === 'system') loadSystem();
+  }
+
+  async function refresh() {
+    showToast('載入中...');
+    try {
+      const data = await callAdmin('dashboard');
+
+      // KV 狀態
+      const kvOk = await callAdmin('kv_status');
+      document.getElementById('kv-status').textContent = `KV: ${kvOk.available ? '✓' : '✗'}`;
+      document.getElementById('kv-status').style.color = kvOk.available ? 'var(--success)' : 'var(--hot)';
+
+      // Stats
+      const s = data.summary;
+      document.getElementById('s-today-orders').textContent = s.today_orders;
+      document.getElementById('s-today-revenue').textContent = s.today_revenue.toLocaleString();
+      document.getElementById('s-active').textContent = s.active_members;
+      document.getElementById('s-chats').textContent = s.today_chats;
+      document.getElementById('s-7d-orders').textContent = s.last7days.orders;
+      document.getElementById('s-7d-revenue').textContent = s.last7days.revenue.toLocaleString();
+      document.getElementById('s-7d-chats').textContent = s.last7days.chats;
+      document.getElementById('s-pending').textContent = s.pending_cancellations;
+
+      // Daily chart
+      renderDailyChart(data.daily_stats);
+
+      // Recent orders
+      renderRecentOrders(data.recent_orders);
+
+      showToast('已更新', 'success');
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  function renderDailyChart(stats) {
+    const days = Object.keys(stats).sort();
+    const max = Math.max(...days.map(d => stats[d].chats), 5);
+    const chart = document.getElementById('overview-chart');
+    chart.innerHTML = days.map(d => {
+      const day = stats[d];
+      const md = d.slice(5).replace('-', '/');
+      const h = (day.chats / max) * 100;
+      return `<div class="chart-col">
+        <div class="chart-bar ${day.chats === 0 ? 'zero' : ''}" style="height: ${Math.max(h, 2)}%;">
+          <div class="chart-tooltip">${d}<br>對話 ${day.chats} 次<br>訂單 ${day.orders} 筆<br>$${day.revenue.toLocaleString()}</div>
+        </div>
+        <div class="chart-label">${md}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderRecentOrders(orders) {
+    if (!orders || orders.length === 0) {
+      document.getElementById('recent-orders').innerHTML = '<div class="empty-state">尚無訂單</div>';
+      return;
+    }
+    let html = `<table>
+      <thead><tr><th>時間</th><th>姓名</th><th>方案</th><th>金額</th><th>付款方式</th><th>訂單編號</th></tr></thead>
+      <tbody>`;
+    orders.forEach(o => {
+      html += `<tr>
+        <td class="mono">${(o.createdAt || '').slice(0, 16).replace('T', ' ')}</td>
+        <td>${escapeHtml(o.name || '—')}</td>
+        <td>${escapeHtml(o.plan || '—')}</td>
+        <td>NT$ ${(o.amount || 0).toLocaleString()}</td>
+        <td>${escapeHtml(o.paymentType || '—')}</td>
+        <td class="mono">${escapeHtml(o.orderId || '—')}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('recent-orders').innerHTML = html;
+  }
+
+  async function loadMembers() {
+    try {
+      const members = await callAdmin('list_members');
+      document.getElementById('member-count').textContent = `${members.length} members`;
+      if (members.length === 0) {
+        document.getElementById('members-table').innerHTML = '<div class="empty-state">尚無會員</div>';
+        return;
+      }
+
+      let html = `<table>
+        <thead><tr>
+          <th>Access Code</th><th>姓名</th><th>Email</th><th>方案</th><th>到期</th><th>狀態</th><th>操作</th>
+        </tr></thead><tbody>`;
+
+      members.forEach(m => {
+        const now = new Date();
+        const exp = m.expireDate ? new Date(m.expireDate) : null;
+        const isActive = m.status === 'active' && (!exp || exp > now);
+        const badge = m.status === 'cancelled' ? 'cancelled' : (isActive ? 'active' : 'expired');
+        const badgeText = m.status === 'cancelled' ? '取消' : (isActive ? 'Active' : 'Expired');
+        html += `<tr>
+          <td class="mono" title="${m.accessCode}">${escapeHtml(m.accessCodeMasked)}</td>
+          <td>${escapeHtml(m.name || '—')}</td>
+          <td>${escapeHtml(m.emailMasked || '—')}</td>
+          <td>${escapeHtml(m.plan || '—')}</td>
+          <td>${m.expireDate || '∞'}</td>
+          <td><span class="badge ${badge}">${badgeText}</span></td>
+          <td><button onclick="editMember('${m.accessCode}')">編輯</button></td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById('members-table').innerHTML = html;
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  async function loadOrders() {
+    try {
+      const orders = await callAdmin('list_orders');
+      document.getElementById('order-count').textContent = `${orders.length} orders`;
+      if (orders.length === 0) {
+        document.getElementById('orders-table').innerHTML = '<div class="empty-state">尚無訂單</div>';
+        return;
+      }
+
+      let html = `<table>
+        <thead><tr>
+          <th>時間</th><th>訂單編號</th><th>姓名</th><th>Email</th><th>方案</th><th>金額</th><th>付款</th><th>統編</th>
+        </tr></thead><tbody>`;
+      orders.forEach(o => {
+        html += `<tr>
+          <td class="mono">${(o.createdAt || '').slice(0, 16).replace('T', ' ')}</td>
+          <td class="mono">${escapeHtml(o.orderId || '—')}</td>
+          <td>${escapeHtml(o.name || '—')}</td>
+          <td>${escapeHtml(o.emailMasked || '—')}</td>
+          <td>${escapeHtml(o.plan || '—')}</td>
+          <td>NT$ ${(o.amount || 0).toLocaleString()}</td>
+          <td>${escapeHtml(o.paymentType || '—')}</td>
+          <td class="mono">${o.taxId || '—'}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById('orders-table').innerHTML = html;
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  async function loadCancellations() {
+    try {
+      const items = await callAdmin('list_cancellations');
+      document.getElementById('cancel-count').textContent = `${items.length} items`;
+      if (items.length === 0) {
+        document.getElementById('cancellations-table').innerHTML = '<div class="empty-state">尚無取消申請</div>';
+        return;
+      }
+
+      let html = `<table>
+        <thead><tr>
+          <th>時間</th><th>姓名</th><th>Email</th><th>Access Code</th><th>原因</th><th>回饋</th>
+        </tr></thead><tbody>`;
+      items.forEach(c => {
+        html += `<tr>
+          <td class="mono">${(c.submittedAt || '').slice(0, 16).replace('T', ' ')}</td>
+          <td>${escapeHtml(c.name || '—')}</td>
+          <td>${escapeHtml(c.email || '—')}</td>
+          <td class="mono">${escapeHtml(c.accessCode || '—')}</td>
+          <td>${escapeHtml((c.reasons || []).join('、'))}</td>
+          <td style="max-width: 300px; font-size: 12px; color: var(--ink-soft);">${escapeHtml(c.feedback || '')}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      document.getElementById('cancellations-table').innerHTML = html;
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  async function loadSystem() {
+    try {
+      const status = await callAdmin('kv_status');
+      const detail = document.getElementById('kv-detail');
+      if (status.available) {
+        const ok = status.test?.ok;
+        detail.innerHTML = `<span style="color: var(--success);">✓ KV 已啟用</span>` +
+          (ok ? ' · <span style="color: var(--success);">讀寫測試通過</span>' : ' · <span style="color: var(--warn);">讀寫測試失敗</span>');
+      } else {
+        detail.innerHTML = `<span style="color: var(--hot);">✗ KV 未啟用</span> · 請至 Vercel Storage 設定 KV，或使用環境變數 VALID_ACCESS_CODES 手動管理`;
+      }
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  let editingCode = null;
+  async function editMember(code) {
+    try {
+      const data = await callAdmin('get_member', { accessCode: code });
+      const m = data.member;
+      editingCode = code;
+      document.getElementById('m-code').value = code;
+      document.getElementById('m-name').value = m.name || '';
+      document.getElementById('m-email').value = m.email || '';
+      document.getElementById('m-status').value = m.status || 'active';
+      document.getElementById('m-expire').value = m.expireDate || '';
+      document.getElementById('m-reason').value = m.statusReason || '';
+      document.getElementById('edit-modal').classList.add('show');
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('edit-modal').classList.remove('show');
+    editingCode = null;
+  }
+
+  async function saveMember() {
+    if (!editingCode) return;
+    try {
+      await callAdmin('update_member', {
+        accessCode: editingCode,
+        status: document.getElementById('m-status').value,
+        expireDate: document.getElementById('m-expire').value,
+        reason: document.getElementById('m-reason').value,
+      });
+      closeModal();
+      loadMembers();
+      showToast('已更新', 'success');
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Auto-login if password in session
+  if (password) {
+    callAdmin('kv_status').then(() => {
+      document.getElementById('lock').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      refresh();
+    }).catch(() => {
+      sessionStorage.removeItem('admin_pwd');
+      password = '';
+    });
+  }
+
+  document.getElementById('pwd').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+</script>
+</body>
+</html>

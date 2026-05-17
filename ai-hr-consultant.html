@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 人資顧問 · HR Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f7f2e8;
+    --bg-card: #fffdf8;
+    --ink: #1c2541;
+    --ink-soft: #5a6378;
+    --ink-faded: #8a8d9a;
+    --accent: #b08642;
+    --accent-deep: #8a6730;
+    --accent-soft: #ead7b3;
+    --line: #e3d8be;
+    --line-soft: #ede2c9;
+    --ai-bubble: #f3ead7;
+    --success: #6b8e23;
+    --locked: rgba(28, 37, 65, 0.4);
+  }
+
+  /* === HR Function 樹狀導航（會員功能） === */
+  .hr-functions {
+    background: var(--bg-card);
+    border: 1px solid var(--ink);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hr-functions-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+  }
+  .hr-functions-header:hover { background: var(--line-soft); }
+
+  .hr-functions-header .title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .hr-functions-header .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .hr-functions-header h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--ink);
+  }
+
+  .hr-functions-header .meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1.5px;
+  }
+  .hr-functions-header .lock-pill {
+    padding: 3px 10px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+  .hr-functions-header .pro-pill {
+    padding: 3px 10px;
+    background: var(--ink);
+    color: var(--accent-soft);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    border-radius: 2px;
+  }
+  .hr-functions-header .toggle-arrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--accent);
+    transition: transform 0.3s;
+  }
+  .hr-functions.open .hr-functions-header .toggle-arrow { transform: rotate(180deg); }
+
+  .hr-functions-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hr-functions.open .hr-functions-body { max-height: 2000px; }
+
+  /* 8 大功能 grid */
+  .functions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 0;
+    background: var(--bg-card);
+  }
+  @media (max-width: 900px) { .functions-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .functions-grid { grid-template-columns: 1fr; } }
+
+  .fn-card {
+    padding: 18px 18px 16px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    text-align: left;
+    font-family: inherit;
+    color: var(--ink);
+    border-top: none;
+    border-left: none;
+    width: 100%;
+  }
+  .fn-card:hover { background: var(--line-soft); }
+  .fn-card.expanded { background: var(--ink); color: var(--bg); }
+  .fn-card.expanded .fn-num { color: var(--accent-soft); }
+  .fn-card.expanded .fn-name { color: var(--bg); }
+  .fn-card.expanded .fn-count { color: rgba(247, 242, 232, 0.7); }
+
+  .fn-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .fn-name {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .fn-count {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.5px;
+  }
+  .fn-card.locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .fn-card.locked::before {
+    content: '🔒';
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  .fn-card.locked:hover {
+    background: var(--bg-card);
+  }
+  .fn-card.locked:hover::after {
+    content: '訂閱會員專屬';
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    font-size: 10px;
+    color: var(--accent-deep);
+    letter-spacing: 1px;
+    background: var(--accent-soft);
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+
+  /* 子問題展開區 */
+  .fn-questions {
+    grid-column: 1 / -1;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-card) 100%);
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
+    padding: 22px 24px;
+    display: none;
+  }
+  .fn-questions.show { display: block; }
+
+  .fn-questions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .fn-questions-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .fn-questions-title .accent-text {
+    color: var(--accent);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    margin-right: 8px;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .fn-questions-close {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    padding: 4px 10px;
+  }
+  .fn-questions-close:hover { color: var(--ink); }
+
+  .question-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 600px) { .question-list { grid-template-columns: 1fr; } }
+
+  .q-item {
+    padding: 11px 14px 11px 36px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--ink);
+    transition: all 0.2s;
+    position: relative;
+    line-height: 1.5;
+  }
+  .q-item::before {
+    content: '▸';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 10px;
+    transition: transform 0.2s;
+  }
+  .q-item:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .q-item:hover::before {
+    color: var(--accent-soft);
+    transform: translateY(-50%) translateX(2px);
+  }
+
+  /* 表單關聯（在子問題區下方顯示） */
+  .related-forms {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .related-forms .label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1.5px;
+    margin-right: 6px;
+  }
+  .form-chip {
+    padding: 5px 12px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-size: 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .form-chip::before {
+    content: '↓ ';
+    font-weight: 700;
+  }
+  .form-chip:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .form-chip.locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .form-chip.locked::before {
+    content: '🔒 ';
+  }
+  .form-chip.locked:hover {
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+  }
+
+  /* CTA 升級 banner（在反白下方） */
+  .upgrade-banner {
+    background: linear-gradient(135deg, var(--ink) 0%, #2a3656 100%);
+    color: var(--bg);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--accent);
+    display: none;
+  }
+  .upgrade-banner.show { display: flex; }
+  .upgrade-banner .text {
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .upgrade-banner .text strong {
+    color: var(--accent-soft);
+  }
+  .upgrade-banner a {
+    padding: 8px 18px;
+    background: var(--accent);
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .upgrade-banner a:hover { background: var(--accent-soft); }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(176,134,66,0.08), transparent 55%),
+      radial-gradient(ellipse at 90% 100%, rgba(28,37,65,0.05), transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* === Header === */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    border-bottom: 1.5px solid var(--ink);
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .brand-mark {
+    width: 56px;
+    height: 56px;
+    border: 1.5px solid var(--ink);
+    display: grid;
+    place-items: center;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 26px;
+    background: var(--bg-card);
+    position: relative;
+  }
+
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 0.5px solid var(--accent);
+    pointer-events: none;
+  }
+
+  .brand-text h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .brand-text .subtitle {
+    color: var(--ink-soft);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1.8;
+  }
+
+  .header-meta .date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--ink);
+    letter-spacing: 1px;
+  }
+
+  /* === Categories === */
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border: 1px solid var(--ink);
+    background: var(--bg-card);
+    margin-bottom: 36px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 900px) {
+    .categories { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .categories { grid-template-columns: 1fr; }
+  }
+
+  .cat {
+    padding: 22px 20px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--bg-card);
+    text-align: left;
+    font-family: inherit;
+    color: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cat:last-child { border-right: none; }
+
+  .cat::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+  }
+
+  .cat > * { position: relative; z-index: 1; }
+
+  .cat:hover::before { transform: translateY(0); }
+  .cat:hover { color: var(--bg); }
+  .cat:hover .cat-num { color: var(--accent-soft); }
+  .cat:hover .cat-desc { color: rgba(247,242,232,0.7); }
+
+  .cat.active::before { transform: translateY(0); }
+  .cat.active { color: var(--bg); }
+  .cat.active .cat-num { color: var(--accent-soft); }
+  .cat.active .cat-desc { color: rgba(247,242,232,0.75); }
+
+  .cat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+  }
+
+  .cat-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  .cat-desc {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    transition: color 0.3s;
+  }
+
+  /* === Workspace === */
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 0;
+    border: 1px solid var(--ink);
+    background: var(--bg-card);
+    min-height: 540px;
+  }
+
+  @media (max-width: 900px) {
+    .workspace { grid-template-columns: 1fr; }
+  }
+
+  .chat {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--line);
+  }
+
+  @media (max-width: 900px) {
+    .chat { border-right: none; border-bottom: 1px solid var(--line); }
+  }
+
+  .chat-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+  }
+
+  .chat-header h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(107,142,35,0.4); }
+    50% { opacity: 0.6; box-shadow: 0 0 0 5px rgba(107,142,35,0); }
+  }
+
+  .messages {
+    flex: 1;
+    padding: 28px 24px;
+    overflow-y: auto;
+    max-height: 540px;
+    min-height: 340px;
+  }
+
+  .messages::-webkit-scrollbar { width: 6px; }
+  .messages::-webkit-scrollbar-track { background: transparent; }
+  .messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+
+  .msg {
+    margin-bottom: 18px;
+    max-width: 90%;
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { margin-left: auto; }
+
+  .msg-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .msg.user .msg-label { text-align: right; }
+
+  .msg-bubble {
+    padding: 14px 18px;
+    font-size: 14.5px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .msg.user .msg-bubble {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .msg.ai .msg-bubble {
+    background: var(--ai-bubble);
+    color: var(--ink);
+    border-left: 3px solid var(--accent);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--ink-soft);
+  }
+
+  .empty-mark {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 80px;
+    color: var(--accent-soft);
+    line-height: 1;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .empty-state h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .empty-state .arrow {
+    display: inline-block;
+    margin-top: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--accent);
+    letter-spacing: 2px;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
+  /* === Input === */
+  .input-area {
+    border-top: 1px solid var(--line);
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+    background: var(--bg);
+  }
+
+  .input-area textarea {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    resize: none;
+    min-height: 46px;
+    max-height: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-area textarea:focus { border-color: var(--accent); }
+  .input-area textarea:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .input-area button {
+    padding: 0 28px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .input-area button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateY(100%);
+    transition: transform 0.3s;
+  }
+
+  .input-area button > span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .input-area button:hover:not(:disabled)::after { transform: translateY(0); }
+
+  .input-area button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* === Sidebar === */
+  .sidebar {
+    padding: 24px 22px;
+    background: var(--bg);
+    overflow-y: auto;
+    max-height: 700px;
+  }
+
+  .sidebar-section { margin-bottom: 32px; }
+
+  .sidebar-section h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ink);
+    position: relative;
+    font-weight: 600;
+  }
+
+  .sidebar-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 30px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .sidebar-empty {
+    font-size: 12px;
+    color: var(--ink-faded);
+    font-style: italic;
+    line-height: 1.7;
+  }
+
+  .suggested-q {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    margin-bottom: 8px;
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.5;
+  }
+
+  .suggested-q:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateX(2px);
+  }
+
+  .doc-item {
+    padding: 11px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .doc-item:last-child { border-bottom: none; }
+
+  .doc-item a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.2s;
+    flex: 1;
+  }
+
+  .doc-item a:hover { color: var(--accent-deep); }
+
+  .doc-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 10px;
+    background: var(--accent-soft);
+    color: var(--ink);
+    padding: 3px 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* === Structured Output Headers === */
+  .section-tag {
+    display: inline-block;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    color: var(--ink);
+    background: rgba(176,134,66,0.16);
+    padding: 3px 10px;
+    margin: 16px 0 8px;
+    letter-spacing: 0.5px;
+    border-left: 2px solid var(--accent);
+    font-size: 14px;
+  }
+
+  .msg.ai .msg-bubble .section-tag:first-child {
+    margin-top: 0;
+  }
+
+  /* === Consult CTA Card === */
+  .consult-card {
+    background: linear-gradient(135deg, var(--ink) 0%, #2a3656 100%);
+    color: var(--bg);
+    padding: 18px;
+    margin-top: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+
+  .consult-card::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(176,134,66,0.35), transparent 70%);
+    pointer-events: none;
+  }
+
+  .consult-card.alert {
+    animation: alertPulse 1.4s ease-in-out 2;
+  }
+
+  @keyframes alertPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(176,134,66,0); }
+    50% { box-shadow: 0 0 0 4px rgba(176,134,66,0.5); }
+  }
+
+  .consult-card h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    position: relative;
+  }
+
+  .consult-card p {
+    font-size: 12px;
+    color: rgba(247,242,232,0.78);
+    margin-bottom: 14px;
+    line-height: 1.65;
+    position: relative;
+  }
+
+  .consult-btn {
+    display: block;
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--accent);
+    color: var(--ink);
+    border: none;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+
+  .consult-btn:hover { background: var(--accent-soft); }
+
+  /* === Access Status === */
+  .access-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .access-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .access-status:hover { border-color: var(--accent); }
+  .access-status.pro {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .access-status.pro::before {
+    content: '★';
+    color: var(--accent);
+    margin-right: 2px;
+  }
+  .upgrade-btn {
+    padding: 6px 14px;
+    background: var(--accent);
+    color: var(--ink);
+    border: none;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .upgrade-btn:hover { background: var(--accent-soft); }
+
+  /* === Access modal === */
+  .access-modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(28,37,65,0.72);
+    display: none; place-items: center;
+    z-index: 200;
+    animation: fadeIn 0.25s;
+  }
+  .access-modal-bg.show { display: grid; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .access-modal {
+    background: var(--bg-card);
+    max-width: 440px; width: 90%;
+    padding: 36px 32px;
+    border: 1px solid var(--ink);
+    text-align: center;
+    position: relative;
+  }
+  .access-modal::after {
+    content: ''; position: absolute; inset: 5px;
+    border: 0.5px solid var(--accent);
+    pointer-events: none;
+  }
+  .access-modal h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .access-modal .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    position: relative;
+    font-weight: 600;
+  }
+  .access-modal p {
+    font-size: 13px; color: var(--ink-soft);
+    margin-bottom: 22px;
+    line-height: 1.7;
+    position: relative;
+  }
+  .access-modal input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .access-modal input:focus { border-color: var(--accent); }
+  .access-modal-actions { display: flex; gap: 10px; position: relative; }
+  .access-modal-actions button {
+    flex: 1;
+    padding: 11px;
+    border: 1.5px solid var(--ink);
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .access-modal .btn-cancel { background: transparent; color: var(--ink); }
+  .access-modal .btn-cancel:hover { background: var(--ink); color: var(--bg); }
+  .access-modal .btn-confirm { background: var(--ink); color: var(--bg); }
+  .access-modal .btn-confirm:hover { background: var(--accent); border-color: var(--accent); }
+  .access-error {
+    color: var(--hot);
+    font-size: 12px;
+    margin-bottom: 12px;
+    min-height: 16px;
+    position: relative;
+  }
+  .access-modal .upgrade-link {
+    margin-top: 18px;
+    font-size: 11px;
+    color: var(--ink-faded);
+    position: relative;
+  }
+  .access-modal .upgrade-link a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  /* === Footer === */
+  footer {
+    margin-top: 50px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+
+  footer .ornament {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: 6px;
+  }
+
+  /* === Typing Indicator === */
+  .typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+  }
+
+  .typing-indicator span {
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: typing 1.4s infinite;
+  }
+
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-7px); opacity: 1; }
+  }
+
+  /* === Responsive === */
+  @media (max-width: 600px) {
+    .container { padding: 24px 16px 40px; }
+    .brand-text h1 { font-size: 22px; }
+    .header-meta { display: none; }
+    .messages { padding: 20px 16px; }
+    .input-area { padding: 12px 16px; }
+    .sidebar { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">人</div>
+        <div class="brand-text">
+          <h1>AI 人資顧問</h1>
+          <div class="subtitle">HR Intelligence Assistant</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="access-bar">
+          <div class="access-status" id="access-status" onclick="openAccessModal()">免費版 · 每日 10 問</div>
+          <a href="upgrade.html" class="upgrade-btn" id="upgrade-btn">升 級</a>
+        </div>
+        <div style="margin-top: 8px;">
+          <div class="date">MMXXVI</div>
+          <div>Taiwan Labor Practice</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== HR Function 樹狀導航（會員專屬） ===== -->
+    <div class="hr-functions" id="hr-functions">
+      <div class="hr-functions-header" onclick="toggleHrFunctions()">
+        <div class="title-group">
+          <span class="eyebrow">— HR Functions</span>
+          <h3>人資功能分類引導</h3>
+        </div>
+        <div class="meta">
+          <span class="lock-pill" id="hr-fn-pill">會員專屬</span>
+          <span class="toggle-arrow">▾</span>
+        </div>
+      </div>
+      <div class="hr-functions-body">
+        <div class="functions-grid" id="functions-grid"></div>
+        <div class="fn-questions" id="fn-questions"></div>
+        <div class="upgrade-banner" id="hr-fn-upgrade">
+          <div class="text">
+            <strong>升級會員</strong>解鎖完整功能：8 大人資領域 × 40+ 引導問題 × 表單下載
+          </div>
+          <a href="upgrade.html">立 即 升 級</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="categories" id="categories"></div>
+
+    <div class="workspace">
+      <div class="chat">
+        <div class="chat-header">
+          <h2 id="chat-title">請選擇諮詢主題</h2>
+          <div class="status">
+            <span class="status-dot"></span>
+            <span>ONLINE</span>
+          </div>
+        </div>
+        <div class="messages" id="messages">
+          <div class="empty-state">
+            <div class="empty-mark">人</div>
+            <h3>歡迎使用 AI 人資諮詢</h3>
+            <p>請從上方選擇您想諮詢的主題，或從「綜合諮詢」開始全方位對談</p>
+            <div class="arrow">↑ Begin Above</div>
+          </div>
+        </div>
+        <div class="input-area">
+          <textarea id="user-input" placeholder="請先選擇上方諮詢主題..." disabled></textarea>
+          <button id="send-btn" disabled><span>送 出</span></button>
+        </div>
+      </div>
+
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <h3>常見提問</h3>
+          <div id="suggested-questions">
+            <p class="sidebar-empty">選擇主題後將顯示建議提問</p>
+          </div>
+        </div>
+        <div class="sidebar-section">
+          <h3>文件 / 表單</h3>
+          <div id="documents">
+            <p class="sidebar-empty">選擇主題後將顯示相關文件</p>
+          </div>
+        </div>
+        <div class="sidebar-section">
+          <h3>專業諮詢</h3>
+          <div class="consult-card" id="consult-cta">
+            <h4>需要更深入的協助？</h4>
+            <p>遇到複雜個案、勞資爭議或高風險議題，建議由策識永續資深顧問接手處理。</p>
+            <button class="consult-btn" onclick="goToBooking();">預 約 顧 問</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="ornament">· · ·</div>
+      ※ 本 AI 提供之內容為一般性參考建議，個案情況請諮詢專業人資顧問或律師
+    </footer>
+  </div>
+
+  <script>
+    // ============================================================
+    // 部署設定 — 上線前請改成您的 Vercel 後端網址
+    // ============================================================
+    const BACKEND_URL = 'https://your-backend.vercel.app';
+
+    // ============================================================
+    // Access Code 管理
+    // ============================================================
+    let accessState = {
+      isPro: false,
+      planName: '',
+      expiresAt: null,
+      code: null
+    };
+
+    function loadAccessState() {
+      try {
+        const stored = localStorage.getItem('hr_access_state');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.expiresAt && parsed.expiresAt > Date.now()) {
+            accessState = parsed;
+            renderAccessStatus();
+          } else {
+            localStorage.removeItem('hr_access_state');
+          }
+        }
+      } catch (e) {}
+    }
+
+    function renderAccessStatus() {
+      const statusEl = document.getElementById('access-status');
+      const upgradeBtn = document.getElementById('upgrade-btn');
+      if (accessState.isPro) {
+        statusEl.classList.add('pro');
+        const expiresStr = new Date(accessState.expiresAt).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        statusEl.textContent = `${accessState.planName} · 至 ${expiresStr}`;
+        upgradeBtn.style.display = 'none';
+      } else {
+        statusEl.classList.remove('pro');
+        statusEl.textContent = '免費版 · 每日 10 問';
+        upgradeBtn.style.display = 'inline-block';
+      }
+    }
+
+    function openAccessModal() {
+      document.getElementById('access-modal-bg').classList.add('show');
+      document.getElementById('access-input').focus();
+    }
+    function closeAccessModal() {
+      document.getElementById('access-modal-bg').classList.remove('show');
+      document.getElementById('access-error').textContent = '';
+    }
+
+    // 自動格式化輸入：HRAI-XXXX-XXXX-XXXX
+    document.getElementById('access-input').addEventListener('input', (e) => {
+      let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (v.startsWith('HRAI')) v = v.slice(4);
+      const parts = [v.slice(0, 4), v.slice(4, 8), v.slice(8, 12)].filter(Boolean);
+      e.target.value = 'HRAI-' + parts.join('-');
+      if (e.target.value === 'HRAI-') e.target.value = '';
+    });
+
+    document.getElementById('access-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAccessCode();
+    });
+
+    async function submitAccessCode() {
+      const code = document.getElementById('access-input').value.trim().toUpperCase();
+      const errorEl = document.getElementById('access-error');
+      errorEl.textContent = '';
+
+      if (!/^HRAI-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
+        errorEl.textContent = '格式錯誤，請輸入 HRAI-XXXX-XXXX-XXXX';
+        return;
+      }
+
+      try {
+        const response = await fetch(BACKEND_URL + '/api/verify-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessCode: code })
+        });
+        const data = await response.json();
+
+        if (!data.valid) {
+          errorEl.textContent = data.error || '驗證失敗';
+          return;
+        }
+
+        accessState = {
+          isPro: true,
+          planName: data.planName,
+          expiresAt: data.expiresAt,
+          code: code
+        };
+        localStorage.setItem('hr_access_state', JSON.stringify(accessState));
+        renderAccessStatus();
+        // 通知 HR Functions 重新渲染（解鎖反白）
+        if (typeof renderHrFunctions === 'function') renderHrFunctions();
+        closeAccessModal();
+        alert(`✓ 驗證成功，歡迎 ${data.name || '會員'}！`);
+      } catch (err) {
+        errorEl.textContent = '驗證服務暫時無法使用，請稍後再試';
+      }
+    }
+
+    // 取得 / 產生本次對話的 session ID（跨頁面追蹤用）
+    function getSessionId() {
+      let id = localStorage.getItem('hr_session_id');
+      if (!id) {
+        id = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('hr_session_id', id);
+      }
+      return id;
+    }
+
+    // 預約跳轉 — 把當前對話脈絡存到 localStorage 給定價頁讀取
+    function goToBooking() {
+      if (activeCategory && conversation.length > 0) {
+        localStorage.setItem('hr_session_data', JSON.stringify({
+          sessionId: getSessionId(),
+          category: activeCategory.id,
+          categoryTitle: activeCategory.title,
+          conversation: conversation.slice(-10),
+          lastUpdate: Date.now()
+        }));
+      }
+      window.open('pricing-and-booking.html?session=' + encodeURIComponent(getSessionId()), '_blank');
+    }
+
+    // 五段式回答架構 — 策識永續顧問分身的核心差異化
+    const ANSWER_FORMAT = `
+
+請務必依照以下五段式架構回答，每段都要有，使用方括號標題格式：
+
+【一、直接回答】
+用 2-3 句話先給結論，直白回答使用者問題。
+
+【二、依據說明】
+引用具體法條（須標明法規與條號）或實務原則／業界標準。
+
+【三、⚠️ 風險提醒】
+列出 HR 或雇主在此議題上的常見地雷、勞檢風險、訴訟風險，至少 2 點。
+
+【四、📋 建議參考表單】
+從本主題的可下載表單中，推薦 1-2 份相關文件，並說明使用時機與常見錯誤。
+
+【五、🤝 顧問建議】
+明確標註下列其中一類:
+- ✅【一般情形】可依本指引自行處理
+- ⚡【建議諮詢】有彈性判斷空間，建議與顧問討論細節
+- 🚨【強烈建議轉人工】凡涉及「解雇、性騷擾、職災、就業歧視、勞資爭議調解／訴訟、重大金額爭議、刑事責任」其中任一項，請務必預約專業顧問，不要自行處理
+
+語氣專業清楚，使用繁體中文。`;
+
+    function formatStructuredText(text) {
+      const esc = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      return esc.replace(/【([^】]+)】/g, '<span class="section-tag">【$1】</span>');
+    }
+
+    const categories = [
+      {
+        id: 'labor',
+        num: 'I',
+        title: '勞動法令',
+        desc: '勞基法、勞退、性平法等實務應用',
+        prompt: `你是一位專精於台灣勞動法令的 AI 人資顧問，熟悉勞動基準法、勞工退休金條例、性別平等工作法、職業安全衛生法、就業服務法、勞工保險條例等。
+
+回答時請：
+1. 引用相關法條（須註明法規與條號，例如：勞基法第 24 條）
+2. 解釋實務應用方式與計算方法（如有）
+3. 提醒常見的合規風險與雇主應注意事項
+4. 區分「應為」與「得為」的法律義務
+5. 若涉及個案情境，提醒應諮詢專業律師或洽詢勞工局
+
+請使用繁體中文回答，語氣專業而清楚，必要時用條列式呈現。`,
+        suggestions: [
+          '加班費要怎麼計算才合法？',
+          '試用期可以隨時解雇員工嗎？',
+          '員工請特休雇主可以拒絕嗎？',
+          '颱風天上班的工資如何給付？',
+          '懷孕員工的法定保障有哪些？'
+        ],
+        docs: [
+          { name: '勞動契約範本', tag: 'Tpl' },
+          { name: '加班同意書', tag: 'Form' },
+          { name: '出勤紀錄表', tag: 'Form' },
+          { name: '解雇預告通知書', tag: 'Tpl' },
+          { name: '工作規則範本', tag: 'Tpl' }
+        ]
+      },
+      {
+        id: 'recruit',
+        num: 'II',
+        title: '招募選才',
+        desc: '人才招募、面試流程與選才工具',
+        prompt: `你是一位資深的招募與選才 AI 顧問，熟悉台灣就業市場、各類招募管道與選才科學。
+
+回答時請：
+1. 提供招募策略與管道建議（含不同職級、不同產業）
+2. 協助職務分析與職能要求設計
+3. 設計結構化面試流程與行為事例題（BEI）
+4. 推薦適用的選才工具與測評（如性向、職能測評）
+5. 提供任用流程與報到準備清單
+6. 提醒就業服務法相關合規（如不得歧視、隱私保護）
+
+請使用繁體中文回答，注重實務可操作性，提供具體步驟與範例。`,
+        suggestions: [
+          '如何撰寫吸引人的職缺說明？',
+          '結構化面試題目怎麼設計？',
+          '如何辨識履歷造假或誇大？',
+          '新人到職前的準備清單',
+          '哪些面試問題會違反就服法？'
+        ],
+        docs: [
+          { name: '職務說明書範本', tag: 'Tpl' },
+          { name: '結構化面試評分表', tag: 'Form' },
+          { name: 'Reference Check 表單', tag: 'Form' },
+          { name: '到職資料清單', tag: 'List' },
+          { name: '錄取通知書範本', tag: 'Tpl' }
+        ]
+      },
+      {
+        id: 'training',
+        num: 'III',
+        title: '教育訓練',
+        desc: '訓練需求分析、課程設計與成效評估',
+        prompt: `你是一位專精於企業教育訓練規劃的 AI 顧問，熟悉 ADDIE、Kirkpatrick 四層次評估、TTQS、政府訓練補助等。
+
+回答時請：
+1. 協助訓練需求分析（TNA）：組織、職務、個人三層面
+2. 建構訓練體系：新人訓練、在職訓練、管理職訓練、專業職訓練
+3. 課程設計：學習目標、教學策略、教材與活動安排
+4. 推薦講師選擇方法與供應商評選標準
+5. 訓練成效評估：反應、學習、行為、結果四層次
+6. 介紹 TTQS、產業人才投資方案、企業人力資源提升計畫等政府資源
+
+請使用繁體中文回答，提供結構化、可實施的建議。`,
+        suggestions: [
+          '如何規劃年度訓練計畫？',
+          '新人訓練應該包含哪些內容？',
+          '如何評估訓練的實際成效？',
+          '小公司訓練預算有限怎麼辦？',
+          '有哪些政府訓練補助可申請？'
+        ],
+        docs: [
+          { name: '訓練需求調查表', tag: 'Form' },
+          { name: '年度訓練計畫表', tag: 'Tpl' },
+          { name: '課後評量問卷', tag: 'Form' },
+          { name: 'IDP 個人發展計畫', tag: 'Tpl' },
+          { name: '訓練 ROI 評估表', tag: 'Tool' }
+        ]
+      },
+      {
+        id: 'performance',
+        num: 'IV',
+        title: '績效考核',
+        desc: 'KPI、OKR 設計與績效面談技巧',
+        prompt: `你是一位專精於績效管理的 AI 人資顧問，熟悉 MBO、KPI、OKR、BSC、360 度回饋等績效制度，以及台灣勞動法令中關於績效不佳的法律風險。
+
+回答時請：
+1. 績效制度設計：依公司規模與產業特性推薦合適制度
+2. 目標設定：SMART 原則、目標串接（公司 → 部門 → 個人）
+3. 評核流程：頻率、評核者、評分機制設計
+4. 績效面談技巧：開場、回饋話術（SBI、STAR）、處理反彈
+5. 績效改善計畫（PIP）的合法設計
+6. 提醒：解雇績效不佳員工須符合勞基法第 11 條第 5 款「不能勝任」的法律標準，需備齊客觀事證
+
+請使用繁體中文回答，務實具體，平衡管理需求與法律合規。`,
+        suggestions: [
+          'KPI 與 OKR 哪個適合我的公司？',
+          '績效面談如何開場才不尷尬？',
+          '績效不佳能直接解雇員工嗎？',
+          '如何設計公平的評分制度？',
+          'PIP 計畫的法律風險如何控管？'
+        ],
+        docs: [
+          { name: 'KPI 設定表', tag: 'Tpl' },
+          { name: 'OKR 季度規劃表', tag: 'Tpl' },
+          { name: '績效面談紀錄表', tag: 'Form' },
+          { name: 'PIP 績效改善計畫', tag: 'Tpl' },
+          { name: '360 度回饋問卷', tag: 'Form' }
+        ]
+      },
+      {
+        id: 'all',
+        num: 'V',
+        title: '綜合諮詢',
+        desc: '跨領域整合 · 文件下載 · 全方位建議',
+        prompt: `你是一位資深的全方位 AI 人資顧問（HR Generalist），熟悉台灣勞動法令、招募選才、教育訓練、績效管理、薪酬福利、員工關係、組織發展等所有人資面向。
+
+回答時請：
+1. 判斷使用者問題的核心領域與相關領域
+2. 提供整合性、跨領域的建議（例如：員工流動率問題可能同時涉及招募、訓練、績效、薪酬）
+3. 引用相關法令、最佳實務、可下載文件範本
+4. 必要時拆解為短期、中期、長期行動方案
+5. 提醒應諮詢專業人士的時機（律師、會計師、心理師）
+
+請使用繁體中文回答，展現資深顧問的深度與廣度，先給核心建議再展開細節。`,
+        suggestions: [
+          '我剛創業，如何建立人資制度？',
+          '員工提離職但拒絕交接怎麼辦？',
+          '如何降低員工流動率？',
+          '中小企業 HR 應優先做什麼？',
+          '如何打造良好的雇主品牌？'
+        ],
+        docs: [
+          { name: '人資制度健檢表', tag: 'Tool' },
+          { name: '員工手冊範本', tag: 'Tpl' },
+          { name: '勞健保申辦流程', tag: 'Guide' },
+          { name: 'HR SOP 全集', tag: 'Tool' },
+          { name: '離職交接清單', tag: 'Form' }
+        ]
+      }
+    ];
+
+    let activeCategory = null;
+    let conversation = [];
+    let isLoading = false;
+
+    // ============================================================
+    // HR Function 樹狀導航資料（8 大功能 × 40+ 引導問題）
+    // ============================================================
+    const hrFunctions = [
+      {
+        id: 'recruit',
+        num: '01',
+        name: '招募任用',
+        questions: [
+          { q: '如何撰寫一份能吸引優質人才的 JD？', forms: ['03'] },
+          { q: '面試時哪些問題會踩到法律紅線？', forms: ['02'] },
+          { q: '試用期不適任，可以直接終止嗎？流程怎麼走？', forms: ['02','11'] },
+          { q: '如何設計結構化面試提升判斷準確度？', forms: ['02'] },
+          { q: '如何打造雇主品牌吸引主動投遞？', forms: [] }
+        ],
+        forms: ['02','03'],
+        catBind: 'recruit'
+      },
+      {
+        id: 'performance',
+        num: '02',
+        name: '績效管理',
+        questions: [
+          { q: '小公司怎麼設計簡單可執行的 KPI？', forms: ['07'] },
+          { q: 'KPI 與 OKR 該選哪一個？怎麼搭配？', forms: ['07'] },
+          { q: '績效面談容易踩雷，如何進行才不會傷感情又能改善？', forms: ['07'] },
+          { q: '員工績效不佳，如何啟動 PIP 改善計畫？', forms: ['08'] },
+          { q: '績效低於標準可以扣薪或不發年終嗎？', forms: ['07','08'] }
+        ],
+        forms: ['07','08'],
+        catBind: 'performance'
+      },
+      {
+        id: 'training',
+        num: '03',
+        name: '教育訓練',
+        questions: [
+          { q: '新人到職第一週要安排哪些訓練？', forms: ['04'] },
+          { q: '主管訓練應該包含哪些核心能力？', forms: [] },
+          { q: '訓練成效如何評估？投入產出怎麼算？', forms: [] },
+          { q: '中小企業預算有限，訓練資源該如何選擇？', forms: [] }
+        ],
+        forms: ['04'],
+        catBind: 'all'
+      },
+      {
+        id: 'compensation',
+        num: '04',
+        name: '薪酬福利',
+        questions: [
+          { q: '如何設計合理的薪資結構？本俸 vs. 績效獎金比例？', forms: ['01'] },
+          { q: '加班費怎麼算？平日、休息日、例假日分別怎麼算？', forms: [] },
+          { q: '績效獎金、年終、三節獎金的稅務處理？', forms: [] },
+          { q: '員工要求調薪，如何理性回應與評估？', forms: [] }
+        ],
+        forms: ['01'],
+        catBind: 'all'
+      },
+      {
+        id: 'relations',
+        num: '05',
+        name: '員工關係',
+        questions: [
+          { q: '員工申訴如何受理？流程要怎麼設計？', forms: ['12'] },
+          { q: '收到性騷擾投訴，老闆該怎麼第一步處理？', forms: ['12'] },
+          { q: '職場霸凌如何識別與介入？', forms: ['12'] },
+          { q: '勞資會議怎麼開？多久一次？沒開有罰則嗎？', forms: [] }
+        ],
+        forms: ['12'],
+        catBind: 'er'
+      },
+      {
+        id: 'separation',
+        num: '06',
+        name: '離職資遣',
+        questions: [
+          { q: '員工自願離職但拒絕交接怎麼辦？', forms: ['09'] },
+          { q: '經濟性裁員如何合法資遣？預告期、資遣費怎麼算？', forms: ['10','11'] },
+          { q: '解僱員工最容易被告的 5 個地雷？', forms: ['10'] },
+          { q: '非自願離職證明怎麼開？對員工有什麼影響？', forms: ['11'] },
+          { q: '離職員工想要競業禁止約定，能執行嗎？', forms: [] }
+        ],
+        forms: ['09','10','11'],
+        catBind: 'labor'
+      },
+      {
+        id: 'compliance',
+        num: '07',
+        name: '法令合規',
+        questions: [
+          { q: '勞基法最容易違反的 10 個條款是哪些？', forms: [] },
+          { q: '個資法在 HR 情境如何落地？保留多久要刪？', forms: ['06'] },
+          { q: '工時、休假、特休怎麼計算才合法？', forms: [] },
+          { q: '勞動檢查來了該如何應對？要準備哪些文件？', forms: [] },
+          { q: '保密協議與智財權歸屬怎麼設計？', forms: ['05'] }
+        ],
+        forms: ['05','06'],
+        catBind: 'labor'
+      },
+      {
+        id: 'aihr',
+        num: '08',
+        name: 'AI HR 導入',
+        questions: [
+          { q: '中小企業要導入 AI HR，第一步該做什麼？', forms: [] },
+          { q: '如何把現有 HR 知識轉成 AI 可用的知識庫？', forms: [] },
+          { q: '導入 AI 工具有什麼資料風險？該怎麼防？', forms: ['06'] },
+          { q: 'AI 自動化哪些 HR 流程最有 ROI？', forms: [] }
+        ],
+        forms: [],
+        catBind: 'all'
+      }
+    ];
+
+    // 表單清單（與 forms.html / backend FORMS 一致）
+    const FORMS_DICT = {
+      '01': '勞動契約書',
+      '02': '面試評分表',
+      '03': '職務說明書',
+      '04': '新人報到檢核表',
+      '05': '保密協議書',
+      '06': '個資蒐集同意書',
+      '07': '績效考核表',
+      '08': 'PIP 績效改善計畫',
+      '09': '離職交接清單',
+      '10': '資遣通知書',
+      '11': '非自願離職證明書',
+      '12': '員工申訴表'
+    };
+
+    // ============================================================
+    // 渲染 HR Functions 卡片
+    // ============================================================
+    function renderHrFunctions() {
+      const grid = document.getElementById('functions-grid');
+      const isPro = isUnlocked();
+
+      grid.innerHTML = hrFunctions.map(fn => `
+        <button class="fn-card ${isPro ? '' : 'locked'}" data-fn="${fn.id}">
+          <div class="fn-num">No.${fn.num}</div>
+          <div class="fn-name">${fn.name}</div>
+          <div class="fn-count">${fn.questions.length} 個常見問題</div>
+        </button>
+      `).join('');
+
+      // 綁定點擊
+      grid.querySelectorAll('.fn-card').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const fnId = btn.dataset.fn;
+          if (!isPro) {
+            showUpgradePrompt();
+            return;
+          }
+          expandFunction(fnId);
+        });
+      });
+
+      // Pill 顯示
+      const pill = document.getElementById('hr-fn-pill');
+      const banner = document.getElementById('hr-fn-upgrade');
+      if (isPro) {
+        pill.className = 'pro-pill';
+        pill.textContent = '✓ 已解鎖';
+        banner.classList.remove('show');
+      } else {
+        pill.className = 'lock-pill';
+        pill.textContent = '🔒 會員專屬';
+      }
+    }
+
+    function isUnlocked() {
+      // 沿用現有的 accessState 物件
+      return typeof accessState !== 'undefined' && accessState.isPro === true;
+    }
+
+    function showUpgradePrompt() {
+      // 顯示升級 banner
+      const banner = document.getElementById('hr-fn-upgrade');
+      banner.classList.add('show');
+      // 確保樹狀區是展開的
+      const wrap = document.getElementById('hr-functions');
+      if (!wrap.classList.contains('open')) wrap.classList.add('open');
+      // 平滑滾動到 banner
+      setTimeout(() => banner.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+
+    function toggleHrFunctions() {
+      const wrap = document.getElementById('hr-functions');
+      wrap.classList.toggle('open');
+    }
+
+    function expandFunction(fnId) {
+      const fn = hrFunctions.find(f => f.id === fnId);
+      if (!fn) return;
+
+      // 切換 expanded state
+      document.querySelectorAll('.fn-card').forEach(c => c.classList.remove('expanded'));
+      document.querySelector(`.fn-card[data-fn="${fnId}"]`).classList.add('expanded');
+
+      // 渲染子問題
+      const wrap = document.getElementById('fn-questions');
+      wrap.innerHTML = `
+        <div class="fn-questions-header">
+          <div class="fn-questions-title">
+            <span class="accent-text">— No.${fn.num}</span>${fn.name} · 常見問題
+          </div>
+          <button class="fn-questions-close" onclick="closeFnQuestions()">收 合 ✕</button>
+        </div>
+        <div class="question-list">
+          ${fn.questions.map((qItem, idx) => `
+            <button class="q-item" data-fn="${fnId}" data-idx="${idx}">${qItem.q}</button>
+          `).join('')}
+        </div>
+        ${fn.forms.length > 0 ? `
+          <div class="related-forms">
+            <span class="label">📋 相關表單：</span>
+            ${fn.forms.map(fid => `
+              <span class="form-chip ${isUnlocked() ? '' : 'locked'}" data-form="${fid}">${FORMS_DICT[fid]}</span>
+            `).join('')}
+          </div>
+        ` : ''}
+      `;
+      wrap.classList.add('show');
+
+      // 綁定問題點擊：自動帶入 + 送出
+      wrap.querySelectorAll('.q-item').forEach(b => {
+        b.addEventListener('click', () => {
+          const fId = b.dataset.fn;
+          const idx = parseInt(b.dataset.idx);
+          const fnObj = hrFunctions.find(f => f.id === fId);
+          const qItem = fnObj.questions[idx];
+
+          // 自動切換到對應的諮詢分類
+          const targetCat = categories.find(c => c.id === fnObj.catBind);
+          if (targetCat) selectCategory(targetCat);
+
+          // 帶入問題
+          const input = document.getElementById('user-input');
+          input.value = qItem.q;
+          // 滾動到對話區
+          document.querySelector('.workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // 自動送出
+          setTimeout(() => sendMessage(), 400);
+        });
+      });
+
+      // 綁定表單點擊：付費才能下載
+      wrap.querySelectorAll('.form-chip').forEach(chip => {
+        chip.addEventListener('click', async () => {
+          if (!isUnlocked()) {
+            showUpgradePrompt();
+            return;
+          }
+          const formId = chip.dataset.form;
+          await downloadForm(formId);
+        });
+      });
+    }
+
+    function closeFnQuestions() {
+      document.getElementById('fn-questions').classList.remove('show');
+      document.querySelectorAll('.fn-card').forEach(c => c.classList.remove('expanded'));
+    }
+
+    // 表單下載（會員）
+    async function downloadForm(formId) {
+      const code = (accessState && accessState.code) || '';
+      if (!code) {
+        showUpgradePrompt();
+        return;
+      }
+      try {
+        const res = await fetch(BACKEND_URL + '/api/download-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, formId })
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || '下載失敗');
+        }
+        const data = await res.json();
+        // 觸發下載
+        const link = document.createElement('a');
+        link.href = data.url;
+        link.download = data.filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        alert('下載失敗：' + err.message);
+      }
+    }
+
+    // 初次渲染
+    renderHrFunctions();
+    // 監聽 access state 變化（access code 解鎖後重渲染）
+    window.addEventListener('access-state-changed', renderHrFunctions);
+
+    const catEl = document.getElementById('categories');
+    categories.forEach((cat) => {
+      const btn = document.createElement('button');
+      btn.className = 'cat';
+      btn.dataset.id = cat.id;
+      btn.innerHTML = `
+        <div class="cat-num">${cat.num}</div>
+        <div class="cat-title">${cat.title}</div>
+        <div class="cat-desc">${cat.desc}</div>
+      `;
+      btn.addEventListener('click', () => selectCategory(cat));
+      catEl.appendChild(btn);
+    });
+
+    function selectCategory(cat) {
+      activeCategory = cat;
+      conversation = [];
+
+      document.querySelectorAll('.cat').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-id="${cat.id}"]`).classList.add('active');
+
+      document.getElementById('chat-title').textContent = cat.title + ' · 諮詢中';
+      const ta = document.getElementById('user-input');
+      ta.disabled = false;
+      ta.placeholder = '請輸入您的問題...';
+      ta.focus();
+      document.getElementById('send-btn').disabled = false;
+
+      const sq = document.getElementById('suggested-questions');
+      sq.innerHTML = '';
+      cat.suggestions.forEach(q => {
+        const b = document.createElement('button');
+        b.className = 'suggested-q';
+        b.textContent = q;
+        b.addEventListener('click', () => {
+          document.getElementById('user-input').value = q;
+          sendMessage();
+        });
+        sq.appendChild(b);
+      });
+
+      const docs = document.getElementById('documents');
+      docs.innerHTML = '';
+      cat.docs.forEach(d => {
+        const div = document.createElement('div');
+        div.className = 'doc-item';
+        div.innerHTML = `<a href="#" onclick="event.preventDefault();alert('文件下載功能：實際部署時連結到您的文件庫');">${d.name}</a><span class="doc-tag">${d.tag}</span>`;
+        docs.appendChild(div);
+      });
+
+      const messages = document.getElementById('messages');
+      messages.innerHTML = '';
+      addMessage('ai', `您好，歡迎進入「${cat.title}」諮詢區。\n\n${cat.desc}。\n\n請輸入您的問題，或從右側選擇常見問題開始諮詢。`);
+    }
+
+    function addMessage(role, content) {
+      const messages = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      const label = role === 'user' ? 'You' : 'AI Consultant';
+      div.innerHTML = `
+        <div class="msg-label">— ${label}</div>
+        <div class="msg-bubble"></div>
+      `;
+      const bubble = div.querySelector('.msg-bubble');
+      if (role === 'ai') {
+        bubble.innerHTML = formatStructuredText(content);
+        if (content.includes('🚨') || content.includes('強烈建議轉人工')) {
+          const cta = document.getElementById('consult-cta');
+          if (cta) {
+            cta.classList.add('alert');
+            setTimeout(() => cta.classList.remove('alert'), 4000);
+          }
+        }
+      } else {
+        bubble.textContent = content;
+      }
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    }
+
+    async function sendMessage() {
+      if (isLoading || !activeCategory) return;
+      const input = document.getElementById('user-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage('user', text);
+      input.value = '';
+      conversation.push({ role: 'user', content: text });
+
+      isLoading = true;
+      document.getElementById('send-btn').disabled = true;
+      input.disabled = true;
+
+      const messages = document.getElementById('messages');
+      const typing = document.createElement('div');
+      typing.className = 'msg ai';
+      typing.id = 'typing';
+      typing.innerHTML = `
+        <div class="msg-label">— AI Consultant</div>
+        <div class="msg-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
+      `;
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+
+      try {
+        const response = await fetch(BACKEND_URL + '/api/chat', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            system: activeCategory.prompt + ANSWER_FORMAT,
+            messages: conversation,
+            sessionId: getSessionId(),
+            category: activeCategory.id,
+            accessCode: accessState.code || null
+          })
+        });
+        if (!response.ok) {
+          throw new Error('後端回應異常 (' + response.status + ')');
+        }
+        const data = await response.json();
+        const reply = data.text || data.error || '回覆解析失敗，請稍後再試';
+
+        document.getElementById('typing')?.remove();
+        addMessage('ai', reply);
+        conversation.push({ role: 'assistant', content: reply });
+      } catch (err) {
+        document.getElementById('typing')?.remove();
+        addMessage('ai', '抱歉，目前連線異常，請稍後再試。\n錯誤訊息：' + err.message);
+      } finally {
+        isLoading = false;
+        document.getElementById('send-btn').disabled = false;
+        input.disabled = false;
+        input.focus();
+      }
+    }
+
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+    document.getElementById('user-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    const ta = document.getElementById('user-input');
+    ta.addEventListener('input', () => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.min(ta.scrollHeight, 140) + 'px';
+    });
+
+    // 頁面載入時自動套用已存的 access code 狀態
+    loadAccessState();
+    // access state 載入完成後重新渲染 HR Functions（如果是會員，鎖會自動打開）
+    if (typeof renderHrFunctions === 'function') renderHrFunctions();
+
+    // 點擊 modal 背景關閉
+    document.getElementById('access-modal-bg').addEventListener('click', (e) => {
+      if (e.target.id === 'access-modal-bg') closeAccessModal();
+    });
+  </script>
+  <!-- Access code modal -->
+  <div class="access-modal-bg" id="access-modal-bg">
+    <div class="access-modal">
+      <div class="eyebrow">— Member Access —</div>
+      <h3>輸入 Access Code</h3>
+      <p>解鎖無限問答 + 完整表單下載<br>Access Code 已於付款後寄至您的 Email</p>
+      <input type="text" id="access-input" placeholder="HRAI-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off">
+      <div class="access-error" id="access-error"></div>
+      <div class="access-modal-actions">
+        <button class="btn-cancel" onclick="closeAccessModal()">關 閉</button>
+        <button class="btn-confirm" onclick="submitAccessCode()">驗 證</button>
+      </div>
+      <div class="upgrade-link">
+        還沒有 Access Code？<a href="upgrade.html">立即升級 →</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

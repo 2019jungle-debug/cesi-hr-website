@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>取消訂閱 · 策識永續 AI 人資</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;600&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #f7f2e8; --bg-card: #fffdf8; --ink: #1c2541; --ink-soft: #5a6378;
+    --accent: #b08642; --accent-pale: #f4ead0; --line: #e3d8be; --hot: #c44536;
+  }
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.7;
+    min-height: 100vh; padding: 48px 24px;
+  }
+  .container { max-width: 640px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 36px; }
+  .eyebrow {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; letter-spacing: 5px; color: var(--accent);
+    text-transform: uppercase; font-weight: 600; margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 30px; font-weight: 600;
+    margin-bottom: 14px; line-height: 1.3;
+  }
+  .lede { font-size: 14px; color: var(--ink-soft); }
+
+  .alert {
+    background: var(--accent-pale);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    font-size: 13.5px;
+    line-height: 1.85;
+  }
+  .alert strong { font-family: 'Noto Serif TC', serif; }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--ink);
+    padding: 36px 32px;
+  }
+  .card h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 18px; font-weight: 600;
+    margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 12px; color: var(--ink-soft);
+    margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .field label .req { color: var(--hot); margin-left: 2px; }
+  .field input, .field textarea, .field select {
+    width: 100%; padding: 11px 12px;
+    border: 1px solid var(--line); background: var(--bg);
+    font-family: inherit; font-size: 13.5px;
+    color: var(--ink); outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+  .field textarea { resize: vertical; min-height: 96px; }
+
+  .reasons {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 480px) { .reasons { grid-template-columns: 1fr; } }
+  .reason {
+    display: flex; gap: 8px; align-items: center;
+    padding: 10px 14px; border: 1px solid var(--line);
+    cursor: pointer; transition: all 0.2s;
+    font-size: 13px;
+  }
+  .reason:hover { border-color: var(--accent); }
+  .reason input { width: auto; }
+
+  .submit {
+    width: 100%; padding: 14px;
+    background: var(--ink); color: var(--bg);
+    border: none; cursor: pointer;
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600; font-size: 14px;
+    letter-spacing: 4px;
+    transition: background 0.2s;
+    margin-top: 18px;
+  }
+  .submit:hover:not(:disabled) { background: var(--hot); }
+  .submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .secondary-actions {
+    display: flex; gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .secondary-actions a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 12.5px;
+    padding: 8px 16px;
+    border: 1px solid var(--line);
+    transition: all 0.2s;
+  }
+  .secondary-actions a:hover {
+    color: var(--ink); border-color: var(--accent);
+  }
+
+  .success {
+    background: var(--bg-card);
+    border: 1px solid var(--ink);
+    padding: 56px 40px;
+    text-align: center;
+    display: none;
+  }
+  .success.show { display: block; }
+  .success .check {
+    width: 56px; height: 56px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    margin: 0 auto 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; color: var(--accent);
+    font-weight: 600;
+  }
+  .success h2 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px; font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .success p {
+    color: var(--ink-soft); font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="eyebrow">— Cancel Subscription —</div>
+    <h1>取消訂閱</h1>
+    <p class="lede">很遺憾要與您道別。請填寫以下表單，我們會在 1 個工作日內處理。</p>
+  </header>
+
+  <div class="alert">
+    <strong>取消後會發生什麼？</strong><br>
+    • 您的下一次自動扣款將停止<br>
+    • Access Code 將於本期使用期限到期後失效（不會立即停用）<br>
+    • 對話歷史與已下載的表單仍歸您所有<br>
+    • 隨時可重新訂閱，無任何懲罰
+  </div>
+
+  <div class="card" id="form-card">
+    <h2>取消申請</h2>
+
+    <form id="cancel-form">
+      <div class="field">
+        <label>Access Code <span class="req">*</span></label>
+        <input type="text" name="code" required placeholder="CESI-XXXX-XXXX-XXXX" style="font-family: monospace; letter-spacing: 1px;">
+      </div>
+      <div class="field">
+        <label>訂購人姓名 <span class="req">*</span></label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="field">
+        <label>訂購時填寫的 Email <span class="req">*</span></label>
+        <input type="email" name="email" required>
+      </div>
+
+      <div class="field">
+        <label>取消原因（協助我們改進，可複選）</label>
+        <div class="reasons">
+          <label class="reason"><input type="checkbox" name="reasons" value="too_expensive">價格較預期高</label>
+          <label class="reason"><input type="checkbox" name="reasons" value="not_useful">功能不符需求</label>
+          <label class="reason"><input type="checkbox" name="reasons" value="found_better">找到更好的替代方案</label>
+          <label class="reason"><input type="checkbox" name="reasons" value="no_time">沒有時間使用</label>
+          <label class="reason"><input type="checkbox" name="reasons" value="bugs">遇到技術問題</label>
+          <label class="reason"><input type="checkbox" name="reasons" value="other">其他原因</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>其他回饋（選填，但對我們很重要）</label>
+        <textarea name="feedback" placeholder="任何想對我們說的⋯"></textarea>
+      </div>
+
+      <button type="submit" class="submit" id="submit-btn">確認取消訂閱</button>
+    </form>
+
+    <div class="secondary-actions">
+      <a href="ai-hr-consultant.html">← 回到 AI 顧問</a>
+      <a href="mailto:info@cctmcoach.com?subject=訂閱問題">改寄 Email 詢問</a>
+    </div>
+  </div>
+
+  <div class="success" id="success-card">
+    <div class="check">✓</div>
+    <h2>已收到取消申請</h2>
+    <p>我們會在 1 個工作日內為您處理。</p>
+    <p>您將收到一封確認 Email，後續扣款將停止。</p>
+    <div class="secondary-actions" style="margin-top: 28px;">
+      <a href="ai-hr-consultant.html">回到 AI 顧問</a>
+    </div>
+  </div>
+
+  <footer>© 2026 策識永續 · 依消費者保護法保障您的取消權益</footer>
+</div>
+
+<script>
+  // ⚙️ 部署前請改為您的 Vercel 後端網址
+  const BACKEND_URL = 'https://your-backend.vercel.app';
+
+  document.getElementById('cancel-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true; btn.textContent = '處 理 中 . . .';
+
+    const fd = new FormData(e.target);
+    const reasons = fd.getAll('reasons');
+    const payload = {
+      code: fd.get('code').trim().toUpperCase(),
+      name: fd.get('name'),
+      email: fd.get('email'),
+      reasons,
+      feedback: fd.get('feedback') || '',
+    };
+
+    try {
+      const res = await fetch(BACKEND_URL + '/api/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || '提交失敗');
+      }
+      document.getElementById('form-card').style.display = 'none';
+      document.getElementById('success-card').classList.add('show');
+    } catch (err) {
+      alert('錯誤：' + err.message + '\n\n您也可以直接 Email 至 info@cctmcoach.com 取消。');
+      btn.disabled = false; btn.textContent = '確認取消訂閱';
+    }
+  });
+</script>
+</body>
+</html>
