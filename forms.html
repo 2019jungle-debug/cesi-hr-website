@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -386,7 +386,7 @@
       </div>
     </div>
     <div class="unlock-action" id="unlock-action">
-      <input type="text" id="code-input" placeholder="CESI-XXXX-XXXX-XXXX" autocomplete="off" maxlength="20">
+      <input type="text" id="code-input" placeholder="HRAI-XXXX-XXXX-XXXX" autocomplete="off" maxlength="19">
       <button onclick="verifyCode()">解 鎖</button>
     </div>
     <div class="unlock-error" id="unlock-error"></div>
@@ -433,7 +433,7 @@
 
 <script>
   // ⚙️ 部署前請改為您的 Vercel 後端網址
-  const BACKEND_URL = 'https://your-backend.vercel.app';
+  const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 
   const FORMS = [
     { id: '01', name: '勞動契約書', cat: 'recruit', risk: 'medium',
@@ -480,6 +480,15 @@
   let isUnlocked = false;
   let activeCat = 'all';
 
+  // 自動格式化 Access Code 輸入
+  document.getElementById('code-input').addEventListener('input', (e) => {
+    let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (v.startsWith('HRAI')) v = v.slice(4);
+    const parts = [v.slice(0, 4), v.slice(4, 8), v.slice(8, 12)].filter(Boolean);
+    e.target.value = 'HRAI-' + parts.join('-');
+    if (e.target.value === 'HRAI-') e.target.value = '';
+  });
+
   function showToast(msg, type = '') {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -492,6 +501,11 @@
     const code = input.value.trim().toUpperCase();
     if (!code) {
       showToast('請輸入 Access Code', 'error');
+      return;
+    }
+    if (!/^HRAI-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
+      document.getElementById('unlock-error').textContent = '格式錯誤，請輸入 HRAI-XXXX-XXXX-XXXX';
+      document.getElementById('unlock-error').style.display = 'block';
       return;
     }
 

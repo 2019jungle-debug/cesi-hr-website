@@ -1,10 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>方案與預約 · 策識永續 AI 人資</title>
 <meta name="description" content="從免費試用到企業導入，策識永續提供四種合作方式：AI 訂閱、單次諮詢、企業導入專案、長期陪跑顧問。">
+<meta property="og:title" content="方案與預約 · 策識永續 AI 人資">
+<meta property="og:description" content="從免費試用到企業導入，策識永續提供四種合作方式：AI 訂閱、單次諮詢、企業導入專案、長期陪跑顧問。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cctmcoach.com.tw/pricing-and-booking.html">
+<meta property="og:site_name" content="策識永續人才管理顧問">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="方案與預約 · 策識永續 AI 人資">
+<meta name="twitter:description" content="AI 訂閱、單次諮詢、企業導入專案、長期陪跑顧問，找到最適合您的合作方式。">
+<link rel="canonical" href="https://cctmcoach.com.tw/pricing-and-booking.html">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap');
@@ -105,6 +114,36 @@ body {
   margin-top: 4px;
   text-transform: uppercase;
 }
+/* === Site Nav === */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.site-nav a {
+  font-size: 13px;
+  color: rgba(245, 240, 225, 0.7);
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: color 0.25s;
+}
+.site-nav a:hover { color: var(--gold-bright); }
+.site-nav .nav-cta {
+  padding: 7px 18px;
+  border: 1px solid var(--gold-line);
+  border-radius: 2px;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+.site-nav .nav-cta:hover { background: var(--gold-soft); color: var(--gold-bright); }
+@media (max-width: 720px) {
+  .site-nav { gap: 14px; }
+  .site-nav a { font-size: 12px; }
+  .site-nav .nav-hide { display: none; }
+}
+@media (max-width: 480px) { .site-nav { display: none; } }
+
 .page-num {
   font-family: 'Cormorant Garamond', serif;
   font-size: 16px;
@@ -719,7 +758,13 @@ body {
       </div>
     </a>
   </div>
-  <div class="page-num">02</div>
+  <nav class="site-nav">
+    <a href="landing-page.html" class="nav-hide">首頁</a>
+    <a href="ai-hr-consultant.html" class="nav-hide">AI 顧問</a>
+    <a href="100qa.html" class="nav-hide">100 題 Q&amp;A</a>
+    <a href="forms.html" class="nav-hide">表單下載</a>
+    <a href="upgrade.html" class="nav-cta">立 即 訂 閱</a>
+  </nav>
 </div>
 
 <!-- ===== Hero ===== -->
@@ -905,7 +950,7 @@ body {
 
       <div class="field">
         <label>Access Code（已是會員可填，享 9 折優惠）</label>
-        <input type="text" name="accessCode" placeholder="CESI-XXXX-XXXX-XXXX" style="font-family: monospace; letter-spacing: 1px; text-transform: uppercase;">
+        <input type="text" name="accessCode" id="access-code-input" placeholder="HRAI-XXXX-XXXX-XXXX" maxlength="19" style="font-family: monospace; letter-spacing: 1px; text-transform: uppercase;" autocomplete="off">
       </div>
 
       <div class="submit-row">
@@ -952,7 +997,16 @@ body {
 
 <script>
   // ⚙️ 部署前請改為您的 Vercel 後端網址
-  const BACKEND_URL = 'https://your-backend.vercel.app';
+  const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+
+  // 自動格式化 Access Code 輸入
+  document.getElementById('access-code-input').addEventListener('input', (e) => {
+    let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (v.startsWith('HRAI')) v = v.slice(4);
+    const parts = [v.slice(0, 4), v.slice(4, 8), v.slice(8, 12)].filter(Boolean);
+    e.target.value = 'HRAI-' + parts.join('-');
+    if (e.target.value === 'HRAI-') e.target.value = '';
+  });
 
   document.getElementById('booking-form').addEventListener('submit', async (e) => {
     e.preventDefault();

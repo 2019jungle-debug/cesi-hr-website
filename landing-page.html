@@ -1,10 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>策識永續 AI 人資 · 不只是工具，是顧問的延伸</title>
 <meta name="description" content="AI 人資顧問 × 法令落地 × 風險控管。專為中小企業設計，從招募到留才，提供可持續運作的人才管理系統。">
+<meta property="og:title" content="策識永續 AI 人資 · 不只是工具，是顧問的延伸">
+<meta property="og:description" content="AI 人資顧問 × 法令落地 × 風險控管。專為中小企業設計，從招募到留才，提供可持續運作的人才管理系統。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cctmcoach.com.tw/landing-page.html">
+<meta property="og:site_name" content="策識永續人才管理顧問">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="策識永續 AI 人資 · 不只是工具，是顧問的延伸">
+<meta name="twitter:description" content="AI 人資顧問 × 法令落地 × 風險控管。專為中小企業設計的人才管理系統。">
+<link rel="canonical" href="https://cctmcoach.com.tw/landing-page.html">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap');
@@ -128,6 +137,36 @@ body {
   color: var(--gold-bright);
   letter-spacing: 4px;
 }
+
+/* === Site Nav === */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.site-nav a {
+  font-size: 13px;
+  color: rgba(245, 240, 225, 0.7);
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: color 0.25s;
+}
+.site-nav a:hover { color: var(--gold-bright); }
+.site-nav .nav-cta {
+  padding: 7px 18px;
+  border: 1px solid var(--gold-line);
+  border-radius: 2px;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+.site-nav .nav-cta:hover { background: var(--gold-soft); color: var(--gold-bright); }
+@media (max-width: 720px) {
+  .site-nav { gap: 14px; }
+  .site-nav a { font-size: 12px; }
+  .site-nav .nav-hide { display: none; }
+}
+@media (max-width: 480px) { .site-nav { display: none; } }
 
 /* === Hero === */
 .hero {
@@ -762,7 +801,13 @@ body {
       <div class="tagline">AI HR × 管理顧問 × 人才永續</div>
     </div>
   </div>
-  <div class="page-num">01</div>
+  <nav class="site-nav">
+    <a href="ai-hr-consultant.html" class="nav-hide">AI 顧問</a>
+    <a href="pricing-and-booking.html">方案預約</a>
+    <a href="100qa.html" class="nav-hide">100 題 Q&amp;A</a>
+    <a href="forms.html" class="nav-hide">表單下載</a>
+    <a href="upgrade.html" class="nav-cta">立 即 訂 閱</a>
+  </nav>
 </div>
 
 <!-- ===== Hero ===== -->
