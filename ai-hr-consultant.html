@@ -1255,6 +1255,24 @@
     </footer>
   </div>
 
+  <!-- Access code modal — must be in DOM before the script runs -->
+  <div class="access-modal-bg" id="access-modal-bg">
+    <div class="access-modal">
+      <div class="eyebrow">— Member Access —</div>
+      <h3>輸入 Access Code</h3>
+      <p>解鎖無限問答 + 完整表單下載<br>Access Code 已於付款後寄至您的 Email</p>
+      <input type="text" id="access-input" placeholder="HRAI-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off">
+      <div class="access-error" id="access-error"></div>
+      <div class="access-modal-actions">
+        <button class="btn-cancel" onclick="closeAccessModal()">關 閉</button>
+        <button class="btn-confirm" onclick="submitAccessCode()">驗 證</button>
+      </div>
+      <div class="upgrade-link">
+        還沒有 Access Code？<a href="upgrade.html">立即升級 →</a>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ============================================================
     // 部署設定 — 上線前請改成您的 Vercel 後端網址
@@ -2043,23 +2061,6 @@
       if (e.target.id === 'access-modal-bg') closeAccessModal();
     });
   </script>
-  <!-- Access code modal -->
-  <div class="access-modal-bg" id="access-modal-bg">
-    <div class="access-modal">
-      <div class="eyebrow">— Member Access —</div>
-      <h3>輸入 Access Code</h3>
-      <p>解鎖無限問答 + 完整表單下載<br>Access Code 已於付款後寄至您的 Email</p>
-      <input type="text" id="access-input" placeholder="HRAI-XXXX-XXXX-XXXX" maxlength="19" autocomplete="off">
-      <div class="access-error" id="access-error"></div>
-      <div class="access-modal-actions">
-        <button class="btn-cancel" onclick="closeAccessModal()">關 閉</button>
-        <button class="btn-confirm" onclick="submitAccessCode()">驗 證</button>
-      </div>
-      <div class="upgrade-link">
-        還沒有 Access Code？<a href="upgrade.html">立即升級 →</a>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>
