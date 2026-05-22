@@ -177,6 +177,7 @@
       <button class="tab" onclick="switchTab('members')">會員</button>
       <button class="tab" onclick="switchTab('orders')">訂單</button>
       <button class="tab" onclick="switchTab('cancellations')">取消申請</button>
+      <button class="tab" onclick="switchTab('knowledge')">知識庫</button>
       <button class="tab" onclick="switchTab('system')">系統</button>
     </div>
 
@@ -263,6 +264,73 @@
         <h2>取消申請列表 <span class="meta" id="cancel-count">—</span></h2>
         <div id="cancellations-table"></div>
       </div>
+    </div>
+
+    <!-- 知識庫 -->
+    <div class="panel" id="panel-knowledge">
+
+      <div class="section">
+        <h2>快取同步 <span class="meta">Cache Sync</span></h2>
+        <div style="padding: 22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <div style="font-size:13px; color:var(--ink-soft); flex:1; min-width:200px;">
+            AI HR 每 30 分鐘自動從 GitHub 讀取最新知識。<br>
+            點「立即同步」可強制清除快取，讓新增內容即時生效。
+          </div>
+          <button class="btn primary" onclick="syncKnowledge()" id="sync-btn">↻ 立即同步知識庫</button>
+        </div>
+        <div id="sync-result" style="padding: 0 22px 16px; font-size:12px; color:var(--ink-soft); display:none;"></div>
+      </div>
+
+      <div class="section">
+        <h2>上傳檔案 <span class="meta">Upload File</span></h2>
+        <div style="padding: 22px;">
+          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:20px;">
+            支援格式：<b>.txt · .md · .pdf · .docx</b>（最大 10MB）<br>
+            上傳後內容會自動追加到對應分類的知識庫，並立即生效。
+          </div>
+          <div style="display:grid; gap:14px; max-width:480px;">
+            <div>
+              <label style="font-size:11px; letter-spacing:2px; color:var(--accent); display:block; margin-bottom:6px;">— 選擇分類</label>
+              <select id="kb-category" style="width:100%; padding:9px 12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-family:inherit; font-size:13px;">
+                <option value="">請選擇分類...</option>
+                <option value="labour">勞動法規</option>
+                <option value="recruitment">招募面試</option>
+                <option value="training">教育訓練</option>
+                <option value="performance">績效考核</option>
+                <option value="safety">職業安全</option>
+                <option value="general">綜合人資（所有分類共用）</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px; letter-spacing:2px; color:var(--accent); display:block; margin-bottom:6px;">— 選擇檔案</label>
+              <input type="file" id="kb-file" accept=".txt,.md,.pdf,.docx"
+                style="width:100%; padding:9px 12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-size:13px; cursor:pointer;">
+            </div>
+            <div>
+              <button class="btn primary" onclick="uploadKnowledge()" id="upload-btn" style="width:100%;">↑ 上傳至知識庫</button>
+            </div>
+          </div>
+          <div id="upload-result" style="margin-top:14px; font-size:13px; display:none; padding:12px 16px; border:1px solid var(--line);"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>直接編輯 GitHub <span class="meta">Edit on GitHub</span></h2>
+        <div style="padding: 22px;">
+          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">
+            點選分類直接在 GitHub 上編輯對應的知識庫文件（可貼入文字、法條、整篇文章）。
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/labour-law.md" target="_blank" class="btn">⚖ 勞動法規</a>
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/recruitment.md" target="_blank" class="btn">👥 招募面試</a>
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/training.md" target="_blank" class="btn">📚 教育訓練</a>
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/performance.md" target="_blank" class="btn">📊 績效考核</a>
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/safety.md" target="_blank" class="btn">🦺 職業安全</a>
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/general.md" target="_blank" class="btn">📋 綜合人資</a>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- 系統 -->
@@ -384,6 +452,76 @@
     } catch (e) {
       document.getElementById('err').textContent = e.message;
       password = '';
+    }
+  }
+
+  async function syncKnowledge() {
+    const btn = document.getElementById('sync-btn');
+    const result = document.getElementById('sync-result');
+    btn.disabled = true;
+    btn.textContent = '同步中...';
+    result.style.display = 'none';
+    try {
+      const r = await api('sync-knowledge', {});
+      result.style.display = 'block';
+      result.style.color = 'var(--ink-soft)';
+      result.textContent = '✅ ' + r.message;
+    } catch (e) {
+      result.style.display = 'block';
+      result.style.color = 'var(--hot)';
+      result.textContent = '❌ 同步失敗：' + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '↻ 立即同步知識庫';
+    }
+  }
+
+  async function uploadKnowledge() {
+    const category = document.getElementById('kb-category').value;
+    const fileInput = document.getElementById('kb-file');
+    const file = fileInput.files[0];
+    const resultEl = document.getElementById('upload-result');
+    const btn = document.getElementById('upload-btn');
+
+    resultEl.style.display = 'none';
+    if (!category) { alert('請選擇分類'); return; }
+    if (!file) { alert('請選擇要上傳的檔案'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '上傳中...';
+
+    try {
+      const formData = new FormData();
+      formData.append('password', sessionStorage.getItem('admin_pwd') || '');
+      formData.append('category', category);
+      formData.append('file', file);
+
+      const res = await fetch(BACKEND + '/api/upload-knowledge', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+
+      resultEl.style.display = 'block';
+      if (res.ok) {
+        resultEl.style.background = 'rgba(100,180,100,0.08)';
+        resultEl.style.borderColor = 'rgba(100,180,100,0.3)';
+        resultEl.style.color = 'var(--ink)';
+        resultEl.textContent = '✅ ' + data.message + `（${data.chars?.toLocaleString()} 字元）`;
+        fileInput.value = '';
+      } else {
+        resultEl.style.background = 'rgba(196,69,54,0.08)';
+        resultEl.style.borderColor = 'rgba(196,69,54,0.3)';
+        resultEl.style.color = 'var(--hot)';
+        resultEl.textContent = '❌ ' + (data.error || '上傳失敗');
+      }
+    } catch (e) {
+      resultEl.style.display = 'block';
+      resultEl.style.color = 'var(--hot)';
+      resultEl.textContent = '❌ 連線錯誤：' + e.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '↑ 上傳至知識庫';
     }
   }
 
