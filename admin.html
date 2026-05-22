@@ -463,10 +463,15 @@
     btn.textContent = '同步中...';
     result.style.display = 'none';
     try {
-      const r = await api('sync-knowledge', {});
+      const res = await fetch(BACKEND_URL + '/api/sync-knowledge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: sessionStorage.getItem('admin_pwd') || '' }),
+      });
+      const data = await res.json();
       result.style.display = 'block';
-      result.style.color = 'var(--ink-soft)';
-      result.textContent = '✅ ' + r.message;
+      result.style.color = res.ok ? 'var(--ink-soft)' : 'var(--hot)';
+      result.textContent = res.ok ? '✅ ' + data.message : '❌ ' + (data.error || '同步失敗');
     } catch (e) {
       result.style.display = 'block';
       result.style.color = 'var(--hot)';
