@@ -303,8 +303,9 @@
             </div>
             <div>
               <label style="font-size:11px; letter-spacing:2px; color:var(--accent); display:block; margin-bottom:6px;">— 選擇檔案</label>
-              <input type="file" id="kb-file" accept=".txt,.md,.pdf,.docx"
+              <input type="file" id="kb-file" accept=".txt,.md,.pdf,.docx" multiple
                 style="width:100%; padding:9px 12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-size:13px; cursor:pointer;">
+              <div style="font-size:11px; color:var(--ink-faded); margin-top:5px;">可按住 Ctrl（Windows）或 ⌘（Mac）同時選取多個檔案</div>
             </div>
             <div>
               <button class="btn primary" onclick="uploadKnowledge()" id="upload-btn" style="width:100%;">↑ 上傳至知識庫</button>
@@ -479,50 +480,67 @@
   async function uploadKnowledge() {
     const category = document.getElementById('kb-category').value;
     const fileInput = document.getElementById('kb-file');
-    const file = fileInput.files[0];
+    const files = Array.from(fileInput.files);
     const resultEl = document.getElementById('upload-result');
     const btn = document.getElementById('upload-btn');
 
     resultEl.style.display = 'none';
     if (!category) { alert('請選擇分類'); return; }
-    if (!file) { alert('請選擇要上傳的檔案'); return; }
+    if (!files.length) { alert('請選擇要上傳的檔案'); return; }
 
     btn.disabled = true;
-    btn.textContent = '上傳中...';
+    resultEl.style.display = 'block';
+    resultEl.style.background = 'transparent';
+    resultEl.style.borderColor = 'var(--line)';
+    resultEl.style.color = 'var(--ink-soft)';
+    resultEl.innerHTML = `上傳中，共 ${files.length} 個檔案...<br>`;
 
-    try {
-      const formData = new FormData();
-      formData.append('password', sessionStorage.getItem('admin_pwd') || '');
-      formData.append('category', category);
-      formData.append('file', file);
+    const results = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      btn.textContent = `上傳中 ${i + 1} / ${files.length}...`;
+      resultEl.innerHTML += `⏳ ${file.name}...<br>`;
+      resultEl.scrollTop = resultEl.scrollHeight;
 
-      const res = await fetch(BACKEND + '/api/upload-knowledge', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
+      try {
+        const formData = new FormData();
+        formData.append('password', sessionStorage.getItem('admin_pwd') || '');
+        formData.append('category', category);
+        formData.append('file', file);
 
-      resultEl.style.display = 'block';
-      if (res.ok) {
-        resultEl.style.background = 'rgba(100,180,100,0.08)';
-        resultEl.style.borderColor = 'rgba(100,180,100,0.3)';
-        resultEl.style.color = 'var(--ink)';
-        resultEl.textContent = '✅ ' + data.message + `（${data.chars?.toLocaleString()} 字元）`;
-        fileInput.value = '';
-      } else {
-        resultEl.style.background = 'rgba(196,69,54,0.08)';
-        resultEl.style.borderColor = 'rgba(196,69,54,0.3)';
-        resultEl.style.color = 'var(--hot)';
-        resultEl.textContent = '❌ ' + (data.error || '上傳失敗');
+        const res = await fetch(BACKEND_URL + '/api/upload-knowledge', {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          results.push({ ok: true, name: file.name, msg: `${data.chars?.toLocaleString()} 字元` });
+        } else {
+          results.push({ ok: false, name: file.name, msg: data.error || '上傳失敗' });
+        }
+      } catch (e) {
+        results.push({ ok: false, name: file.name, msg: e.message });
       }
-    } catch (e) {
-      resultEl.style.display = 'block';
-      resultEl.style.color = 'var(--hot)';
-      resultEl.textContent = '❌ 連線錯誤：' + e.message;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '↑ 上傳至知識庫';
     }
+
+    // 顯示結果摘要
+    const ok = results.filter(r => r.ok).length;
+    const fail = results.length - ok;
+    let html = `<b>完成：${ok} 成功 / ${fail} 失敗</b><br><br>`;
+    results.forEach(r => {
+      html += r.ok
+        ? `✅ ${r.name}（${r.msg}）<br>`
+        : `❌ ${r.name}：${r.msg}<br>`;
+    });
+    resultEl.innerHTML = html;
+    resultEl.style.background = ok > 0 ? 'rgba(100,180,100,0.06)' : 'rgba(196,69,54,0.06)';
+    resultEl.style.borderColor = ok > 0 ? 'rgba(100,180,100,0.3)' : 'rgba(196,69,54,0.3)';
+    resultEl.style.color = 'var(--ink)';
+
+    if (ok > 0) fileInput.value = '';
+    btn.disabled = false;
+    btn.textContent = '↑ 上傳至知識庫';
   }
 
   function logout() {
