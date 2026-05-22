@@ -1563,8 +1563,39 @@
         ]
       },
       {
-        id: 'all',
+        id: 'safety',
         num: 'V',
+        title: '職業安全',
+        desc: '職安法規、職災處理與安全管理',
+        prompt: `你是一位專精於台灣職業安全衛生的 AI 人資顧問，熟悉《職業安全衛生法》、《職業災害勞工保護法》及相關施行細則，並具備職安管理實務經驗。
+
+回答時請：
+1. 法規遵循：說明職安法的雇主義務（安全衛生設施、教育訓練、健康檢查、風險評估）
+2. 職災處理：發生職災的通報程序、職災補償（職業災害補償與勞保給付差異）、法律責任
+3. 安全管理制度：自護組織設置、安全衛生委員會、危害辨識與風險控制（HIRAC）
+4. 健康促進：勞工健康服務、過勞預防、心理健康（母性健康保護）
+5. 職安稽查：勞動檢查因應、改善措施、罰則說明
+6. 提醒：涉及重大職災或刑事責任時，務必建議雇主諮詢律師
+
+請使用繁體中文回答，兼顧法律合規與實務操作，提供具體可行的建議。`,
+        suggestions: [
+          '員工發生職災，公司應如何處理？',
+          '職安法規定雇主有哪些義務？',
+          '如何建立安全衛生管理制度？',
+          '勞動檢查時需要準備哪些文件？',
+          '過勞認定的標準是什麼？'
+        ],
+        docs: [
+          { name: '職災通報記錄表', tag: 'Form' },
+          { name: '危害辨識評估表', tag: 'Form' },
+          { name: '安全衛生教育訓練紀錄', tag: 'Form' },
+          { name: '健康檢查管理表', tag: 'Tpl' },
+          { name: '職安自護組織設置規範', tag: 'Ref' }
+        ]
+      },
+      {
+        id: 'all',
+        num: 'VI',
         title: '綜合諮詢',
         desc: '跨領域整合 · 文件下載 · 全方位建議',
         prompt: `你是一位資深的全方位 AI 人資顧問（HR Generalist），熟悉台灣勞動法令、招募選才、教育訓練、績效管理、薪酬福利、員工關係、組織發展等所有人資面向。
@@ -2014,9 +2045,11 @@
             messages: conversation,
             sessionId: getSessionId(),
             category: activeCategory.id,
-            accessCode: accessState.code || null
+            accessCode: accessState.code || null,
+            stream: true
           })
         });
+
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
           document.getElementById('typing')?.remove();
@@ -2035,12 +2068,50 @@
           input.focus();
           return;
         }
-        const data = await response.json();
-        const reply = data.text || data.error || '回覆解析失敗，請稍後再試';
 
+        // 串流模式：移除 typing 動畫，建立空白訊息泡泡，逐字填入
         document.getElementById('typing')?.remove();
-        addMessage('ai', reply);
-        conversation.push({ role: 'assistant', content: reply });
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'msg ai';
+        aiDiv.innerHTML = `<div class="msg-label">— AI Consultant</div><div class="msg-bubble"></div>`;
+        document.getElementById('messages').appendChild(aiDiv);
+        const bubble = aiDiv.querySelector('.msg-bubble');
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = '';
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop(); // 保留不完整的行
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const payload = line.slice(6).trim();
+            if (payload === '[DONE]') break;
+            try {
+              const parsed = JSON.parse(payload);
+              if (parsed.error) {
+                fullText = parsed.error;
+                break;
+              }
+              if (parsed.text) {
+                fullText += parsed.text;
+                bubble.innerHTML = formatStructuredText(fullText);
+                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+              }
+            } catch (_) {}
+          }
+        }
+
+        // 最終渲染確保格式完整
+        bubble.innerHTML = formatStructuredText(fullText || '抱歉，無法取得回覆，請稍後再試。');
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        conversation.push({ role: 'assistant', content: fullText });
+
       } catch (err) {
         document.getElementById('typing')?.remove();
         addMessage('ai', '抱歉，目前連線異常，請稍後再試。\n錯誤訊息：' + err.message);
