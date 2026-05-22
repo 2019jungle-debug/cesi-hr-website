@@ -2018,6 +2018,19 @@
           })
         });
         if (!response.ok) {
+          if (response.status === 429) {
+            const errData = await response.json().catch(() => ({}));
+            document.getElementById('typing')?.remove();
+            const limitMsg = errData.limitReached
+              ? '📋 今日免費額度（10 題）已用完。\n\n升級專業版可享無限提問，立即前往：\nhttps://ai.cctmcoach.com.tw/upgrade.html'
+              : (errData.error || '請求過於頻繁，請稍後再試。');
+            addMessage('ai', limitMsg);
+            isLoading = false;
+            document.getElementById('send-btn').disabled = false;
+            input.disabled = false;
+            input.focus();
+            return;
+          }
           throw new Error('後端回應異常 (' + response.status + ')');
         }
         const data = await response.json();
