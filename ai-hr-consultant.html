@@ -2018,20 +2018,22 @@
           })
         });
         if (!response.ok) {
-          if (response.status === 429) {
-            const errData = await response.json().catch(() => ({}));
-            document.getElementById('typing')?.remove();
-            const limitMsg = errData.limitReached
-              ? '📋 今日免費額度（10 題）已用完。\n\n升級專業版可享無限提問，立即前往：\nhttps://ai.cctmcoach.com.tw/upgrade.html'
-              : (errData.error || '請求過於頻繁，請稍後再試。');
-            addMessage('ai', limitMsg);
-            isLoading = false;
-            document.getElementById('send-btn').disabled = false;
-            input.disabled = false;
-            input.focus();
-            return;
+          const errData = await response.json().catch(() => ({}));
+          document.getElementById('typing')?.remove();
+          let userMsg;
+          if (response.status === 429 && errData.limitReached) {
+            userMsg = '📋 今日免費額度（10 題）已用完。\n\n升級專業版可享無限提問，立即前往：\nhttps://ai.cctmcoach.com.tw/upgrade.html';
+          } else if (response.status === 503) {
+            userMsg = '⏳ AI 服務目前忙碌，請稍候 30 秒後再試。';
+          } else {
+            userMsg = errData.error || '抱歉，服務暫時無法使用，請稍後再試。';
           }
-          throw new Error('後端回應異常 (' + response.status + ')');
+          addMessage('ai', userMsg);
+          isLoading = false;
+          document.getElementById('send-btn').disabled = false;
+          input.disabled = false;
+          input.focus();
+          return;
         }
         const data = await response.json();
         const reply = data.text || data.error || '回覆解析失敗，請稍後再試';
