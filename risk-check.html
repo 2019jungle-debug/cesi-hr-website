@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 勞資風險自評 · 策識永續</title>
+<meta name="description" content="10 題快速自評，立即了解您的企業勞資法令合規風險，AI 即時分析並提供改善建議。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1c2541;
+    --navy-deep: #0d1b2a;
+    --gold: #d4af6e;
+    --gold-bright: #e8c97a;
+    --ivory: #f5f0e1;
+    --cream: #faf6ed;
+    --ink: #2c2c2c;
+    --success: #6b8e23;
+    --danger: #c0392b;
+    --warning: #d4a017;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif TC', 'Microsoft JhengHei', serif;
+    background: var(--navy-deep);
+    color: var(--ivory);
+    min-height: 100vh;
+  }
+
+  /* === Header === */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: rgba(13,27,42,0.95);
+    border-bottom: 1px solid rgba(212,175,110,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-logo {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--gold-bright);
+    text-decoration: none;
+  }
+  .header-back {
+    font-size: 13px;
+    color: rgba(245,240,225,0.6);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .header-back:hover { color: var(--gold); }
+
+  /* === Hero === */
+  .hero {
+    text-align: center;
+    padding: 60px 24px 48px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(212,175,110,0.15);
+    border: 1px solid rgba(212,175,110,0.35);
+    color: var(--gold-bright);
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--gold-bright); }
+  .hero p {
+    font-size: 16px;
+    line-height: 1.9;
+    color: rgba(245,240,225,0.82);
+    margin-bottom: 12px;
+  }
+  .hero-meta {
+    font-size: 13px;
+    color: rgba(245,240,225,0.5);
+    margin-top: 8px;
+  }
+
+  /* === Progress Bar === */
+  .progress-wrap {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    padding: 0 24px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: rgba(245,240,225,0.6);
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* === Company Info Form === */
+  .company-form {
+    max-width: 720px;
+    margin: 0 auto 40px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 600px) {
+    .company-form { grid-template-columns: 1fr; }
+  }
+  .company-input {
+    padding: 11px 16px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(212,175,110,0.25);
+    border-radius: 8px;
+    color: var(--ivory);
+    font-size: 14px;
+    font-family: 'Microsoft JhengHei', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .company-input::placeholder { color: rgba(245,240,225,0.35); }
+  .company-input:focus { border-color: var(--gold); }
+
+  /* === Question Cards === */
+  .questions-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .question-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,175,110,0.18);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .question-card.answered { border-color: rgba(212,175,110,0.4); }
+
+  .question-num {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .question-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(245,240,225,0.92);
+    margin-bottom: 14px;
+  }
+
+  .options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .option-btn {
+    padding: 8px 22px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
+    color: rgba(245,240,225,0.7);
+    font-size: 14px;
+    font-family: 'Microsoft JhengHei', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .option-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .option-btn.selected-yes {
+    background: rgba(107,142,35,0.25);
+    border-color: #6b8e23;
+    color: #9ab85a;
+    font-weight: 700;
+  }
+  .option-btn.selected-no {
+    background: rgba(192,57,43,0.25);
+    border-color: #c0392b;
+    color: #e07070;
+    font-weight: 700;
+  }
+  .option-btn.selected-unsure {
+    background: rgba(212,160,23,0.2);
+    border-color: var(--warning);
+    color: #e8c060;
+    font-weight: 700;
+  }
+
+  /* === Submit === */
+  .submit-wrap {
+    max-width: 720px;
+    margin: 32px auto 64px;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .btn-gold {
+    display: inline-block;
+    padding: 18px 52px;
+    background: linear-gradient(135deg, var(--gold), #b8933c);
+    color: var(--navy-deep);
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 4px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,175,110,0.4); }
+  .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .submit-note {
+    font-size: 12px;
+    color: rgba(245,240,225,0.45);
+    margin-top: 12px;
+  }
+
+  /* === Loading === */
+  .loading-wrap {
+    display: none;
+    text-align: center;
+    padding: 80px 24px;
+  }
+  .loading-spinner {
+    width: 52px;
+    height: 52px;
+    border: 3px solid rgba(212,175,110,0.2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 16px; color: rgba(245,240,225,0.7); }
+
+  /* === Result === */
+  .result-wrap {
+    display: none;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  .risk-banner {
+    border-radius: 14px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .risk-banner.high { background: rgba(192,57,43,0.2); border: 2px solid rgba(192,57,43,0.5); }
+  .risk-banner.mid  { background: rgba(212,160,23,0.15); border: 2px solid rgba(212,160,23,0.4); }
+  .risk-banner.low  { background: rgba(107,142,35,0.15); border: 2px solid rgba(107,142,35,0.4); }
+
+  .risk-level-label {
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+  .risk-level-text {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .risk-banner.high .risk-level-text { color: #e07070; }
+  .risk-banner.mid  .risk-level-text { color: #e8c060; }
+  .risk-banner.low  .risk-level-text { color: #9ab85a; }
+
+  .risk-score {
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 14px;
+  }
+  .risk-summary {
+    font-size: 15px;
+    line-height: 1.8;
+    color: rgba(245,240,225,0.85);
+  }
+
+  .result-section {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,175,110,0.2);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .result-section h3 {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gold-bright);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(212,175,110,0.2);
+  }
+
+  .risk-item {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .risk-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .risk-item-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .urgency-tag {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .urgency-now  { background: rgba(192,57,43,0.3); color: #e07070; border: 1px solid rgba(192,57,43,0.4); }
+  .urgency-soon { background: rgba(212,160,23,0.2); color: #e8c060; border: 1px solid rgba(212,160,23,0.35); }
+  .urgency-suggest { background: rgba(107,142,35,0.2); color: #9ab85a; border: 1px solid rgba(107,142,35,0.35); }
+
+  .risk-item-title {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: rgba(245,240,225,0.92);
+  }
+  .risk-item-desc {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: rgba(245,240,225,0.68);
+    margin-top: 4px;
+  }
+
+  .suggestion-list {
+    list-style: none;
+    padding: 0;
+  }
+  .suggestion-list li {
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(245,240,225,0.82);
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .suggestion-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+
+  /* === CTA Result === */
+  .result-cta {
+    background: linear-gradient(135deg, rgba(212,175,110,0.12), rgba(212,175,110,0.05));
+    border: 1px solid rgba(212,175,110,0.3);
+    border-radius: 14px;
+    padding: 32px;
+    text-align: center;
+    margin-top: 28px;
+  }
+  .result-cta h3 {
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold-bright);
+    margin-bottom: 10px;
+  }
+  .result-cta p {
+    font-size: 14px;
+    color: rgba(245,240,225,0.75);
+    margin-bottom: 22px;
+    line-height: 1.8;
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-outline {
+    display: inline-block;
+    padding: 14px 32px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Microsoft JhengHei', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: rgba(212,175,110,0.1); }
+
+  .disclaimer {
+    font-size: 11px;
+    color: rgba(245,240,225,0.35);
+    text-align: center;
+    margin-top: 24px;
+    line-height: 1.7;
+  }
+
+  /* === Retry === */
+  .retry-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(245,240,225,0.6);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 14px;
+    font-family: 'Microsoft JhengHei', sans-serif;
+    transition: all 0.2s;
+  }
+  .retry-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  @media (max-width: 480px) {
+    .header { padding: 14px 16px; }
+    .hero { padding: 40px 16px 32px; }
+    .questions-wrap, .submit-wrap, .result-wrap, .progress-wrap { padding: 0 16px; }
+    .company-form { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <a href="landing-page.html" class="header-logo">策識永續 AI 人資</a>
+  <a href="landing-page.html" class="header-back">← 返回首頁</a>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">AI POWERED · 免費評估</div>
+  <h1>企業勞資風險<span>快速自評</span></h1>
+  <p>10 題是非題，AI 即時分析您的企業<br>在台灣勞基法下的合規風險與潛在缺失</p>
+  <p class="hero-meta">⏱ 約 3 分鐘完成 · 免費 · 不需要登入</p>
+</div>
+
+<!-- Form -->
+<div id="assessment-form">
+
+  <!-- 進度條 -->
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span id="progress-text">0 / 10 題已完成</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <!-- 公司基本資料 -->
+  <div class="company-form">
+    <input type="text" id="cf-company" class="company-input" placeholder="公司名稱（選填）">
+    <select id="cf-industry" class="company-input">
+      <option value="">產業別（選填）</option>
+      <option>餐飲業</option>
+      <option>製造業</option>
+      <option>零售業</option>
+      <option>服務業</option>
+      <option>科技業</option>
+      <option>建築營造</option>
+      <option>醫療照護</option>
+      <option>教育訓練</option>
+      <option>其他</option>
+    </select>
+    <select id="cf-size" class="company-input">
+      <option value="">員工人數（選填）</option>
+      <option>1-9 人</option>
+      <option>10-29 人</option>
+      <option>30-99 人</option>
+      <option>100-299 人</option>
+      <option>300 人以上</option>
+    </select>
+  </div>
+
+  <!-- 題目 -->
+  <div class="questions-wrap" id="questions-wrap"></div>
+
+  <!-- 送出 -->
+  <div class="submit-wrap">
+    <button class="btn-gold" id="submit-btn" onclick="submitAssessment()" disabled>
+      開始 AI 分析
+    </button>
+    <p class="submit-note">請完成所有 10 題後送出 · 本評估結果僅供參考</p>
+  </div>
+
+</div>
+
+<!-- Loading -->
+<div class="loading-wrap" id="loading-wrap">
+  <div class="loading-spinner"></div>
+  <p class="loading-text">AI 正在分析您的勞資風險…</p>
+  <p style="font-size:13px;color:rgba(245,240,225,0.45);margin-top:8px;">約需 5-10 秒</p>
+</div>
+
+<!-- Result -->
+<div class="result-wrap" id="result-wrap"></div>
+
+<script>
+  const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+
+  const QUESTIONS = [
+    { id: 'q1',  text: '公司有與每位員工簽訂書面勞動契約，並保存契約副本' },
+    { id: 'q2',  text: '公司有制定工作規則，且 30 人以上已向主管機關核備' },
+    { id: 'q3',  text: '加班費依勞基法規定正確計算（平日延時 1.33 倍、休假 2 倍）' },
+    { id: 'q4',  text: '公司有每日紀錄員工出勤時間（電子打卡或書面簽到）' },
+    { id: 'q5',  text: '員工每 7 天至少有 1 天例假，排班制度符合勞基法規定' },
+    { id: 'q6',  text: '公司有依規定為所有勞工提撥勞工退休金（不低於薪資 6%）' },
+    { id: 'q7',  text: '公司有建立性別平等及職場霸凌防治措施，並告知員工申訴管道' },
+    { id: 'q8',  text: '試用期員工享有與正式員工相同的勞基法保障（不可任意解雇）' },
+    { id: 'q9',  text: '解雇或資遣員工時，均依法辦理預告期與資遣費計算' },
+    { id: 'q10', text: '公司主管對勞基法基本規定有了解，不會要求員工做出違法行為' },
+  ];
+
+  const answers = {};
+
+  function renderQuestions() {
+    const wrap = document.getElementById('questions-wrap');
+    wrap.innerHTML = QUESTIONS.map((q, i) => `
+      <div class="question-card" id="card-${q.id}">
+        <div class="question-num">第 ${i+1} 題 / 共 10 題</div>
+        <div class="question-text">${q.text}</div>
+        <div class="options">
+          <button class="option-btn" onclick="selectAnswer('${q.id}','yes',this)">✅ 符合</button>
+          <button class="option-btn" onclick="selectAnswer('${q.id}','no',this)">❌ 不符合</button>
+          <button class="option-btn" onclick="selectAnswer('${q.id}','unsure',this)">⚠️ 不確定</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function selectAnswer(qid, value, btn) {
+    answers[qid] = value;
+    // 更新按鈕樣式
+    const card = document.getElementById('card-' + qid);
+    card.querySelectorAll('.option-btn').forEach(b => {
+      b.classList.remove('selected-yes','selected-no','selected-unsure');
+    });
+    btn.classList.add('selected-' + value);
+    card.classList.add('answered');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = Object.keys(answers).length;
+    const pct = Math.round((count / 10) * 100);
+    document.getElementById('progress-text').textContent = `${count} / 10 題已完成`;
+    document.getElementById('progress-pct').textContent = pct + '%';
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('submit-btn').disabled = count < 10;
+  }
+
+  async function submitAssessment() {
+    document.getElementById('assessment-form').style.display = 'none';
+    document.getElementById('loading-wrap').style.display = 'block';
+
+    const payload = {
+      answers,
+      company:  document.getElementById('cf-company').value.trim(),
+      industry: document.getElementById('cf-industry').value,
+      size:     document.getElementById('cf-size').value,
+    };
+
+    try {
+      const res = await fetch(BACKEND_URL + '/api/risk-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || '分析失敗');
+      renderResult(data.result, payload);
+    } catch (err) {
+      renderError(err.message);
+    } finally {
+      document.getElementById('loading-wrap').style.display = 'none';
+    }
+  }
+
+  function renderResult(r, payload) {
+    const levelClass = r.riskLevel.includes('高') ? 'high' : r.riskLevel.includes('中') ? 'mid' : 'low';
+    const urgencyMap = {
+      '立即處理': '<span class="urgency-tag urgency-now">立即處理</span>',
+      '盡快處理': '<span class="urgency-tag urgency-soon">盡快處理</span>',
+      '建議改善': '<span class="urgency-tag urgency-suggest">建議改善</span>',
+    };
+
+    const risksHtml = r.risks && r.risks.length > 0
+      ? r.risks.map(item => `
+          <div class="risk-item">
+            <div class="risk-item-header">
+              ${urgencyMap[item.urgency] || ''}
+              <div class="risk-item-title">${item.title}</div>
+            </div>
+            <div class="risk-item-desc">${item.description}</div>
+          </div>
+        `).join('')
+      : '<p style="color:rgba(245,240,225,0.6);font-size:14px;">🎉 未發現明顯風險項目，請繼續保持！</p>';
+
+    const suggestionsHtml = (r.suggestions || []).map(s => `<li>${s}</li>`).join('');
+
+    const companyLabel = payload.company ? `${payload.company} · ` : '';
+
+    const resultHtml = `
+      <div style="text-align:center;margin-bottom:28px;">
+        <p style="font-size:13px;color:rgba(245,240,225,0.5);">${companyLabel}勞資風險評估報告</p>
+      </div>
+
+      <div class="risk-banner ${levelClass}">
+        <div class="risk-level-label">整體風險評級</div>
+        <div class="risk-level-text">${r.riskLevel}</div>
+        <div class="risk-score">風險指數：${r.riskScore} / 100</div>
+        <div class="risk-summary">${r.summary}</div>
+      </div>
+
+      ${r.risks && r.risks.length > 0 ? `
+      <div class="result-section">
+        <h3>⚠️ 發現的風險項目（${r.risks.length} 項）</h3>
+        ${risksHtml}
+      </div>` : `
+      <div class="result-section">
+        <h3>✅ 風險評估</h3>
+        ${risksHtml}
+      </div>`}
+
+      ${suggestionsHtml ? `
+      <div class="result-section">
+        <h3>💡 改善建議</h3>
+        <ul class="suggestion-list">${suggestionsHtml}</ul>
+      </div>` : ''}
+
+      <div class="result-cta">
+        <h3>需要專業顧問協助改善？</h3>
+        <p>策識永續提供 <strong>AI 即時顧問</strong> 解答法令疑問，<br>
+           或由真人顧問到場協助建立合規制度，<strong>讓您不再擔心勞檢風險</strong>。</p>
+        <div class="cta-buttons">
+          <a href="ai-hr-consultant.html" class="btn-gold">立即諮詢 AI 顧問</a>
+          <a href="pricing-and-booking.html" class="btn-outline">預約真人顧問</a>
+        </div>
+      </div>
+
+      <p class="disclaimer">${r.disclaimer || '本評估結果僅供參考，不構成法律建議。實際勞動法令適用請諮詢專業顧問或勞工局。'}</p>
+
+      <div style="text-align:center;margin-top:20px;">
+        <button class="retry-btn" onclick="location.reload()">重新評估</button>
+      </div>
+    `;
+
+    const wrap = document.getElementById('result-wrap');
+    wrap.innerHTML = resultHtml;
+    wrap.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderError(msg) {
+    document.getElementById('result-wrap').innerHTML = `
+      <div style="text-align:center;padding:60px 24px;">
+        <p style="font-size:40px;margin-bottom:16px;">😕</p>
+        <p style="font-size:18px;margin-bottom:8px;">分析時發生錯誤</p>
+        <p style="font-size:13px;color:rgba(245,240,225,0.5);margin-bottom:24px;">${msg}</p>
+        <button class="retry-btn" onclick="location.reload()">重新整理</button>
+      </div>
+    `;
+    document.getElementById('result-wrap').style.display = 'block';
+  }
+
+  renderQuestions();
+</script>
+</body>
+</html>
