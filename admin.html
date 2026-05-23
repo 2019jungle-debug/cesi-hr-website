@@ -796,7 +796,11 @@
             : `<div style="color:var(--warn); font-size:11px;">⚠ 無法辨識，請手動選擇：
                 <select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
                   <option value="">— 選擇 —</option>
-                  ${Object.entries(FORM_NAMES_ADMIN).map(([id, n]) => `<option value="${id}">${n}</option>`).join('')}
+                  ${LIFECYCLE_GROUPS.map(g =>
+                    `<optgroup label="${g.emoji} ${g.label}">${
+                      g.forms.map(id => `<option value="${id}">${FORM_NAMES_ADMIN[id] || id}</option>`).join('')
+                    }</optgroup>`
+                  ).join('')}
                 </select>
               </div>`
           }
