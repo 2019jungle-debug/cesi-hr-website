@@ -609,6 +609,7 @@
     resignation:          '離職申請單',
     separation_interview: '離職面談紀錄表',
     service_cert:         '服務證明書',
+    other:                '其他表單',
   };
 
   // 員工生命週期 8 類定義
@@ -653,6 +654,11 @@
       hint: '離職申請單、離職交接清單、離職面談紀錄表、資遣通知書、非自願離職證明書、服務證明書',
       forms: ['resignation', 'handover', 'separation_interview', 'layoff_notice', 'unemployment_cert', 'service_cert'],
     },
+    {
+      key: 'other', label: '其他表單', ghFile: 'forms-other.md', emoji: '🗂',
+      hint: '無法分類的表單依原始檔名命名，多份共存、不互相覆蓋',
+      forms: [], isOther: true,
+    },
   ];
 
   async function loadFormDocStatus() {
@@ -670,6 +676,23 @@
       const GH_BASE = 'https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/';
 
       const html = LIFECYCLE_GROUPS.map(group => {
+        // 「其他表單」特殊顯示：不需要固定卡片，只顯示說明與 GitHub 連結
+        if (group.isOther) {
+          return `<div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--line);">
+              <span style="font-size:16px;">${group.emoji}</span>
+              <div style="flex:1; min-width:0;">
+                <div style="font-weight:600; font-size:13px; color:var(--ink);">${group.label}</div>
+                <div style="font-size:11px; color:var(--ink-faded); margin-top:1px;">${group.hint}</div>
+              </div>
+              <a href="${GH_BASE}${group.ghFile}" target="_blank" style="font-size:11px; color:var(--accent); text-decoration:none; padding:3px 8px; border:1px solid var(--accent); border-radius:4px; white-space:nowrap;">📝 編輯</a>
+            </div>
+            <div style="padding:10px 14px; font-size:12px; color:var(--ink-faded);">
+              上傳時無法自動辨識的檔案，會依原始檔名存入此區域，可點「編輯」在 GitHub 查閱全部內容。
+            </div>
+          </div>`;
+        }
+
         const cards = group.forms.map(id => {
           const meta = metas[id];
           const hasDoc = !!meta;
@@ -682,7 +705,7 @@
         }).join('');
 
         const uploadedCount = group.forms.filter(id => !!metas[id]).length;
-        const allDone = uploadedCount === group.forms.length;
+        const allDone = group.forms.length > 0 && uploadedCount === group.forms.length;
 
         return `<div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--line);">
@@ -781,9 +804,11 @@
     dropzone.querySelector('span:nth-child(2)').textContent = `已選 ${files.length} 個檔案`;
 
     const items = Array.from(files).map(file => {
-      const detected = detectFormId(file.name);
-      const name = detected ? FORM_NAMES_ADMIN[detected] : null;
-      return { file, formId: detected, formName: name };
+      const detected = detectFormId(file.name) || 'other';
+      const name = detected === 'other'
+        ? `其他表單（${file.name.replace(/\.[^.]+$/, '').replace(/^\d+[-_\s]*/, '').trim() || file.name}）`
+        : FORM_NAMES_ADMIN[detected];
+      return { file, formId: detected, formName: name, isOther: detected === 'other' };
     });
 
     listDiv.innerHTML = items.map((item, i) => `
@@ -791,14 +816,24 @@
         <span style="font-size:16px;">📄</span>
         <div style="flex:1; min-width:0;">
           <div style="color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.file.name}</div>
-          ${item.formId
-            ? `<div style="color:#6b8e23; font-size:11px;">✅ 自動辨識：${item.formName}</div>`
-            : `<div style="color:var(--warn); font-size:11px;">⚠ 無法辨識，請手動選擇：
-                <select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
-                  <option value="">— 選擇 —</option>
-                  ${LIFECYCLE_GROUPS.map(g =>
+          ${item.isOther
+            ? `<div style="color:var(--info); font-size:11px;">🗂 ${item.formName}
+                &nbsp;<select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
+                  <option value="other" selected>🗂 其他（依檔名命名）</option>
+                  ${LIFECYCLE_GROUPS.filter(g => !g.isOther).map(g =>
                     `<optgroup label="${g.emoji} ${g.label}">${
                       g.forms.map(id => `<option value="${id}">${FORM_NAMES_ADMIN[id] || id}</option>`).join('')
+                    }</optgroup>`
+                  ).join('')}
+                </select>
+              </div>`
+            : `<div style="color:#6b8e23; font-size:11px;">✅ 自動辨識：${item.formName}
+                &nbsp;<select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
+                  <option value="${item.formId}" selected>${item.formName}</option>
+                  <option value="other">🗂 其他（依檔名命名）</option>
+                  ${LIFECYCLE_GROUPS.filter(g => !g.isOther).map(g =>
+                    `<optgroup label="${g.emoji} ${g.label}">${
+                      g.forms.filter(id => id !== item.formId).map(id => `<option value="${id}">${FORM_NAMES_ADMIN[id] || id}</option>`).join('')
                     }</optgroup>`
                   ).join('')}
                 </select>
@@ -851,21 +886,15 @@
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      const formId = detectFormId(file.name) || manualFormId[i] || '';
+      // 優先用手動選擇，否則自動辨識，最後 fallback 到 other
+      const formId = manualFormId[i] || detectFormId(file.name) || 'other';
       const rowEl = document.getElementById(`fdp-${i}`);
 
-      if (!formId) {
-        if (rowEl) rowEl.style.borderColor = 'var(--hot)';
-        const row = document.createElement('div');
-        row.style.cssText = 'padding:6px 10px; font-size:12px; color:var(--hot);';
-        row.textContent = `❌ ${file.name} — 無法辨識表單，跳過`;
-        resultEl.appendChild(row);
-        failCount++;
-        continue;
-      }
-
       // 顯示進行中
-      btn.textContent = `上傳中 ${i+1}/${files.length}：${FORM_NAMES_ADMIN[formId]}...`;
+      const displayName = formId === 'other'
+        ? `其他（${file.name.replace(/\.[^.]+$/, '')}）`
+        : (FORM_NAMES_ADMIN[formId] || formId);
+      btn.textContent = `上傳中 ${i+1}/${files.length}：${displayName}...`;
       if (rowEl) {
         rowEl.style.borderColor = 'var(--accent)';
         rowEl.querySelector('span:first-child').textContent = '⏳';
@@ -881,14 +910,15 @@
         const data = await res.json();
         const row = document.createElement('div');
         row.style.cssText = 'padding:6px 10px; font-size:12px; border-radius:5px; margin-bottom:4px;';
+        const label = data.formName || displayName;
         if (res.ok) {
           row.style.color = '#6b8e23';
-          row.innerHTML = `✅ <b>${FORM_NAMES_ADMIN[formId]}</b> — 已上傳（${data.extractedChars?.toLocaleString()} 字）`;
+          row.innerHTML = `✅ <b>${label}</b> — 已上傳（${data.extractedChars?.toLocaleString()} 字）`;
           if (rowEl) { rowEl.style.borderColor = '#6b8e23'; rowEl.querySelector('span:first-child').textContent = '✅'; }
           successCount++;
         } else {
           row.style.color = 'var(--hot)';
-          row.innerHTML = `❌ <b>${FORM_NAMES_ADMIN[formId]}</b> — ${data.error || '失敗'}`;
+          row.innerHTML = `❌ <b>${label}</b> — ${data.error || '失敗'}`;
           if (rowEl) { rowEl.style.borderColor = 'var(--hot)'; rowEl.querySelector('span:first-child').textContent = '❌'; }
           failCount++;
         }
