@@ -730,6 +730,89 @@ body {
   font-weight: 500;
 }
 
+/* === Case Studies Section === */
+.case-section { background: rgba(0,0,0,0.15); }
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+@media (max-width: 760px) {
+  .case-grid { grid-template-columns: 1fr; }
+}
+
+.case-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,175,110,0.2);
+  border-radius: 14px;
+  padding: 28px;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.case-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(212,175,110,0.45);
+}
+
+.case-industry {
+  font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gold-bright);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(212,175,110,0.2);
+}
+
+.case-problem, .case-result {
+  margin-bottom: 16px;
+}
+.case-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.problem-label {
+  background: rgba(200,80,80,0.2);
+  color: #f08080;
+  border: 1px solid rgba(200,80,80,0.3);
+}
+.result-label {
+  background: rgba(107,142,35,0.2);
+  color: #9ab85a;
+  border: 1px solid rgba(107,142,35,0.3);
+}
+.case-problem p {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: rgba(245,240,225,0.75);
+  margin: 0;
+}
+.case-result ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.case-result li {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: rgba(245,240,225,0.88);
+  padding: 3px 0;
+}
+.case-result strong { color: var(--gold-bright); }
+
+.case-cta-text {
+  font-size: 18px;
+  color: rgba(245,240,225,0.9);
+  margin-bottom: 24px;
+}
+
 /* === Lead / Resource Section === */
 .lead-section { background: rgba(255,255,255,0.02); }
 
@@ -1138,6 +1221,92 @@ body {
         <div class="stat-label">Custom</div>
         <div class="stat-sub">客製化諮詢服務</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 成功案例 ===== -->
+<section class="section case-section" id="cases">
+  <div class="section-heading">
+    <div class="section-eyebrow">— Client Results —</div>
+    <h2>真實企業，<br><span style="color:var(--gold-bright)">真實改變</span></h2>
+    <div class="divider-elegant"></div>
+    <p class="section-subtitle">以下為策識永續輔導企業的實際成果（資料已去識別化）</p>
+  </div>
+
+  <div class="case-grid">
+
+    <div class="case-card">
+      <div class="case-industry">🍜 餐飲連鎖業</div>
+      <div class="case-problem">
+        <span class="case-label problem-label">輔導前困境</span>
+        <p>新人三個月內離職率高達 60%，店長不知道如何帶人，每月重複招募消耗大量成本。</p>
+      </div>
+      <div class="case-result">
+        <span class="case-label result-label">輔導後成果</span>
+        <ul>
+          <li>✅ 新人離職率下降 <strong>38%</strong></li>
+          <li>✅ 建立標準化到職訓練 SOP</li>
+          <li>✅ 導入 AI 協助主管每月 1 on 1 面談</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-industry">🏭 傳統製造業</div>
+      <div class="case-problem">
+        <span class="case-label problem-label">輔導前困境</span>
+        <p>加班費計算混亂，兩年內收到 3 次勞檢缺失通知，法遵風險持續升高。</p>
+      </div>
+      <div class="case-result">
+        <span class="case-label result-label">輔導後成果</span>
+        <ul>
+          <li>✅ 勞資糾紛歸零</li>
+          <li>✅ 建立合規薪資與排班制度</li>
+          <li>✅ AI 即時解答主管勞基法疑問</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-industry">🏢 二代接班企業</div>
+      <div class="case-problem">
+        <span class="case-label problem-label">輔導前困境</span>
+        <p>創辦人退休交棒，組織職責不清，主管各做各的，員工不知道聽誰的指令。</p>
+      </div>
+      <div class="case-result">
+        <span class="case-label result-label">輔導後成果</span>
+        <ul>
+          <li>✅ 完成組織架構重整</li>
+          <li>✅ 建立績效制度與 KPI 體系</li>
+          <li>✅ 主管管理能力提升，接班順利完成</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case-card">
+      <div class="case-industry">🛒 零售服務業</div>
+      <div class="case-problem">
+        <span class="case-label problem-label">輔導前困境</span>
+        <p>快速展店但沒有人資制度，招募全靠直覺，每個門市的管理標準都不一樣。</p>
+      </div>
+      <div class="case-result">
+        <span class="case-label result-label">輔導後成果</span>
+        <ul>
+          <li>✅ 建立跨門市招募與面試 SOP</li>
+          <li>✅ AI 輔助履歷篩選，縮短招募週期 40%</li>
+          <li>✅ 統一管理標準，降低人事糾紛</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center; margin-top:48px;">
+    <p class="case-cta-text">想了解我們如何協助您的企業？</p>
+    <div class="hero-cta" style="margin-bottom:0;">
+      <a href="ai-hr-consultant.html" class="btn-gold">免費體驗 AI 顧問</a>
+      <a href="pricing-and-booking.html" class="btn-outline" style="border-color:var(--gold);color:var(--gold);">預 約 諮 詢</a>
     </div>
   </div>
 </section>
