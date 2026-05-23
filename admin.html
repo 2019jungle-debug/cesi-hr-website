@@ -339,12 +339,9 @@
             <b style="color:var(--ink);">AI HR 顧問</b>將學習每份表單的用途，並在回答相關問題時自動推薦給客戶（含免責聲明）。
           </div>
 
-          <!-- 狀態卡片：哪些表單已上傳 -->
-          <div style="margin-bottom:20px;">
-            <div style="font-family:'Cormorant Garamond',serif; font-size:11px; letter-spacing:3px; color:var(--accent); margin-bottom:10px;">— 表單上傳狀態</div>
-            <div id="form-doc-status" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap:8px;">
-              <div style="color:var(--ink-faded); font-size:12px;">載入中...</div>
-            </div>
+          <!-- 狀態卡片：依生命週期分組 -->
+          <div id="form-doc-status" style="margin-bottom:20px;">
+            <div style="color:var(--ink-faded); font-size:12px;">載入中...</div>
           </div>
 
           <!-- 上傳表單 -->
@@ -384,8 +381,13 @@
 
           <!-- GitHub 直連編輯表單知識庫 -->
           <div style="margin-top:16px; font-size:12px; color:var(--ink-faded);">
-            或直接在 GitHub 編輯表單知識庫：
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms.md" target="_blank" style="color:var(--accent); text-decoration:none; margin-left:6px;">📝 編輯 forms.md →</a>
+            或直接在 GitHub 編輯各分類表單知識庫：
+            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-recruitment.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🔍 招募任用</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-onboarding.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🏁 到職報到</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-employment.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">⚙️ 在職管理</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-separation.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🚪 離職資遣</a>
+            </div>
           </div>
         </div>
       </div>
@@ -601,6 +603,26 @@
     complaint:         '員工申訴表',
   };
 
+  // 員工生命週期分類定義
+  const LIFECYCLE_GROUPS = [
+    {
+      key: 'recruitment', label: '招募任用', ghFile: 'forms-recruitment.md', emoji: '🔍',
+      forms: ['interview_sheet', 'job_description', 'labor_contract'],
+    },
+    {
+      key: 'onboarding', label: '到職報到', ghFile: 'forms-onboarding.md', emoji: '🏁',
+      forms: ['onboarding', 'nda', 'privacy_consent'],
+    },
+    {
+      key: 'employment', label: '在職管理', ghFile: 'forms-employment.md', emoji: '⚙️',
+      forms: ['performance', 'pip', 'complaint'],
+    },
+    {
+      key: 'separation', label: '離職資遣', ghFile: 'forms-separation.md', emoji: '🚪',
+      forms: ['handover', 'layoff_notice', 'unemployment_cert'],
+    },
+  ];
+
   async function loadFormDocStatus() {
     const el = document.getElementById('form-doc-status');
     if (!el) return;
@@ -612,16 +634,37 @@
       });
       const data = await res.json();
       const metas = data.metas || {};
-      const html = Object.entries(FORM_NAMES_ADMIN).map(([id, name]) => {
-        const meta = metas[id];
-        const hasDoc = !!meta;
-        const date = meta?.updatedAt ? new Date(meta.updatedAt).toLocaleDateString('zh-TW') : '';
-        return `<div style="display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; border:1px solid var(--line); background:var(--bg-card); font-size:12px;">
-          <span style="color:${hasDoc ? '#6b8e23' : 'var(--ink-faded)'}; font-size:14px;">${hasDoc ? '✅' : '⬜'}</span>
-          <span style="flex:1; color:var(--ink);">${name}</span>
-          ${hasDoc ? `<span style="color:var(--ink-faded); font-size:11px;">${date}</span>` : '<span style="color:var(--ink-faded); font-size:11px;">尚未上傳</span>'}
+
+      const GH_BASE = 'https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/';
+
+      const html = LIFECYCLE_GROUPS.map(group => {
+        const cards = group.forms.map(id => {
+          const meta = metas[id];
+          const hasDoc = !!meta;
+          const date = meta?.updatedAt ? new Date(meta.updatedAt).toLocaleDateString('zh-TW') : '';
+          return `<div style="display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; border:1px solid var(--line); background:var(--bg); font-size:12px;">
+            <span style="font-size:13px;">${hasDoc ? '✅' : '⬜'}</span>
+            <span style="flex:1; color:var(--ink);">${FORM_NAMES_ADMIN[id]}</span>
+            <span style="color:var(--ink-faded); font-size:11px;">${hasDoc ? date : '未上傳'}</span>
+          </div>`;
+        }).join('');
+
+        const uploadedCount = group.forms.filter(id => !!metas[id]).length;
+        const allDone = uploadedCount === group.forms.length;
+
+        return `<div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--line);">
+            <span style="font-size:16px;">${group.emoji}</span>
+            <span style="font-weight:600; font-size:13px; color:var(--ink); flex:1;">${group.label}</span>
+            <span style="font-size:11px; color:${allDone ? '#6b8e23' : 'var(--warn)'}; font-weight:600;">${uploadedCount}/${group.forms.length}</span>
+            <a href="${GH_BASE}${group.ghFile}" target="_blank" style="font-size:11px; color:var(--accent); text-decoration:none; padding:3px 8px; border:1px solid var(--accent); border-radius:4px;">📝 編輯</a>
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:6px; padding:10px;">
+            ${cards}
+          </div>
         </div>`;
       }).join('');
+
       el.innerHTML = html;
     } catch (e) {
       el.innerHTML = `<div style="color:var(--ink-faded); font-size:12px;">無法載入狀態：${e.message}</div>`;
