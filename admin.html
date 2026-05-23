@@ -379,13 +379,17 @@
             <div id="form-doc-result" style="margin-top:12px; font-size:13px; display:none;"></div>
           </div>
 
-          <!-- GitHub 直連編輯表單知識庫 -->
+          <!-- GitHub 直連編輯表單知識庫（8 類） -->
           <div style="margin-top:16px; font-size:12px; color:var(--ink-faded);">
             或直接在 GitHub 編輯各分類表單知識庫：
             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-recruitment.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🔍 招募任用</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-recruitment.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🔍 招募甄選</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-hiring.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">📝 任用簽約</a>
               <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-onboarding.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🏁 到職報到</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-employment.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">⚙️ 在職管理</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-compliance.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">⚖️ 法規合規</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-performance.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">📊 績效考核</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-coaching.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🎯 績效輔導</a>
+              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-relations.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🤝 員工關係</a>
               <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-separation.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🚪 離職資遣</a>
             </div>
           </div>
@@ -603,22 +607,46 @@
     complaint:         '員工申訴表',
   };
 
-  // 員工生命週期分類定義
+  // 員工生命週期 8 類定義
   const LIFECYCLE_GROUPS = [
     {
-      key: 'recruitment', label: '招募任用', ghFile: 'forms-recruitment.md', emoji: '🔍',
-      forms: ['interview_sheet', 'job_description', 'labor_contract'],
+      key: 'recruitment', label: '招募甄選', ghFile: 'forms-recruitment.md', emoji: '🔍',
+      hint: '職務說明書、面試評分表｜未來：錄取通知書、薪資談判記錄',
+      forms: ['interview_sheet', 'job_description'],
+    },
+    {
+      key: 'hiring', label: '任用簽約', ghFile: 'forms-hiring.md', emoji: '📝',
+      hint: '勞動契約書｜未來：試用期評估表、工作規則簽收單',
+      forms: ['labor_contract'],
     },
     {
       key: 'onboarding', label: '到職報到', ghFile: 'forms-onboarding.md', emoji: '🏁',
-      forms: ['onboarding', 'nda', 'privacy_consent'],
+      hint: '新人報到檢核表｜未來：設備領用單、職前訓練計畫',
+      forms: ['onboarding'],
     },
     {
-      key: 'employment', label: '在職管理', ghFile: 'forms-employment.md', emoji: '⚙️',
-      forms: ['performance', 'pip', 'complaint'],
+      key: 'compliance', label: '法規合規', ghFile: 'forms-compliance.md', emoji: '⚖️',
+      hint: '保密協議書、個資蒐集同意書｜未來：競業禁止協議、智財歸屬說明',
+      forms: ['nda', 'privacy_consent'],
+    },
+    {
+      key: 'performance', label: '績效考核', ghFile: 'forms-performance.md', emoji: '📊',
+      hint: '績效考核表｜未來：360度評估表、OKR 目標設定表',
+      forms: ['performance'],
+    },
+    {
+      key: 'coaching', label: '績效輔導', ghFile: 'forms-coaching.md', emoji: '🎯',
+      hint: 'PIP 績效改善計畫｜未來：口頭警告記錄、書面懲戒通知',
+      forms: ['pip'],
+    },
+    {
+      key: 'relations', label: '員工關係', ghFile: 'forms-relations.md', emoji: '🤝',
+      hint: '員工申訴表｜未來：獎懲記錄、勞資會議記錄、職場調查表',
+      forms: ['complaint'],
     },
     {
       key: 'separation', label: '離職資遣', ghFile: 'forms-separation.md', emoji: '🚪',
+      hint: '離職交接清單、資遣通知書、非自願離職證明書｜未來：離職面談記錄',
       forms: ['handover', 'layoff_notice', 'unemployment_cert'],
     },
   ];
@@ -655,9 +683,12 @@
         return `<div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--line);">
             <span style="font-size:16px;">${group.emoji}</span>
-            <span style="font-weight:600; font-size:13px; color:var(--ink); flex:1;">${group.label}</span>
-            <span style="font-size:11px; color:${allDone ? '#6b8e23' : 'var(--warn)'}; font-weight:600;">${uploadedCount}/${group.forms.length}</span>
-            <a href="${GH_BASE}${group.ghFile}" target="_blank" style="font-size:11px; color:var(--accent); text-decoration:none; padding:3px 8px; border:1px solid var(--accent); border-radius:4px;">📝 編輯</a>
+            <div style="flex:1; min-width:0;">
+              <div style="font-weight:600; font-size:13px; color:var(--ink);">${group.label}</div>
+              <div style="font-size:11px; color:var(--ink-faded); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${group.hint}</div>
+            </div>
+            <span style="font-size:11px; color:${allDone ? '#6b8e23' : 'var(--warn)'}; font-weight:600; white-space:nowrap;">${uploadedCount}/${group.forms.length}</span>
+            <a href="${GH_BASE}${group.ghFile}" target="_blank" style="font-size:11px; color:var(--accent); text-decoration:none; padding:3px 8px; border:1px solid var(--accent); border-radius:4px; white-space:nowrap;">📝 編輯</a>
           </div>
           <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:6px; padding:10px;">
             ${cards}
