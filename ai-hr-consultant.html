@@ -921,6 +921,77 @@
     border-color: var(--success);
   }
 
+  /* === 表單推薦卡片 === */
+  .form-suggest-box {
+    margin: 14px 0 6px 0;
+    border: 1.5px solid var(--accent-soft);
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(176,134,66,0.06) 0%, rgba(255,253,248,0.95) 100%);
+    overflow: hidden;
+  }
+  .form-suggest-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px 8px;
+    border-bottom: 1px solid var(--accent-soft);
+    background: rgba(176,134,66,0.08);
+  }
+  .form-suggest-icon { font-size: 16px; }
+  .form-suggest-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-deep);
+    letter-spacing: 0.05em;
+  }
+  .form-suggest-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .form-suggest-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+  }
+  .form-suggest-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .form-suggest-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .form-suggest-btn:hover { background: var(--accent-deep); }
+  .form-suggest-btn:disabled { opacity: 0.6; cursor: wait; }
+  .form-suggest-disclaimer {
+    padding: 8px 16px 10px;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--accent-soft);
+    line-height: 1.5;
+  }
+  .form-suggest-disclaimer strong { color: var(--hot); }
+
   /* === Consult CTA Card === */
   .consult-card {
     background: linear-gradient(135deg, var(--ink) 0%, #2a3656 100%);
@@ -2063,6 +2134,93 @@
       return div;
     }
 
+    // 表單 ID → 中文名稱對照
+    const FORM_NAMES_MAP = {
+      labor_contract:    '勞動契約書',
+      interview_sheet:   '面試評分表',
+      job_description:   '職務說明書',
+      onboarding:        '新人報到檢核表',
+      nda:               '保密協議書',
+      privacy_consent:   '個資蒐集同意書',
+      performance:       '績效考核表',
+      pip:               'PIP 績效改善計畫',
+      handover:          '離職交接清單',
+      layoff_notice:     '資遣通知書',
+      unemployment_cert: '非自願離職證明書',
+      complaint:         '員工申訴表',
+    };
+
+    // 表單推薦卡片（AI 自動推薦）
+    function addFormSuggestions(containerDiv, formIds) {
+      const validIds = formIds.filter(id => FORM_NAMES_MAP[id]);
+      if (!validIds.length) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'form-suggest-box';
+      wrapper.innerHTML = `
+        <div class="form-suggest-header">
+          <span class="form-suggest-icon">📋</span>
+          <span class="form-suggest-title">AI 推薦相關表單</span>
+        </div>
+        <div class="form-suggest-cards">
+          ${validIds.map(id => `
+            <div class="form-suggest-card">
+              <div class="form-suggest-name">${FORM_NAMES_MAP[id]}</div>
+              <button class="form-suggest-btn" onclick="downloadSuggestedForm('${id}', this)">
+                ⬇ 下載表單
+              </button>
+            </div>
+          `).join('')}
+        </div>
+        <div class="form-suggest-disclaimer">
+          ⚠️ 以上表單<strong>僅供參考</strong>，使用前建議諮詢專業人資顧問，以確保符合個案情境及最新法規。
+        </div>`;
+      containerDiv.appendChild(wrapper);
+    }
+
+    // 下載 AI 推薦的表單
+    async function downloadSuggestedForm(formId, btn) {
+      const code = document.getElementById('access-code-input')?.value?.trim()?.toUpperCase() || '';
+      if (!code) {
+        alert('請先輸入 Access Code 才能下載表單');
+        return;
+      }
+      const formName = FORM_NAMES_MAP[formId] || formId;
+      const origText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '下載中...';
+      try {
+        const res = await fetch(BACKEND_URL + '/api/download-form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, formId }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || '下載失敗');
+        }
+        const blob = await res.blob();
+        const contentDisposition = res.headers.get('content-disposition') || '';
+        const nameMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/);
+        const filename = nameMatch ? decodeURIComponent(nameMatch[1]) : `${formName}_策識永續.docx`;
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl; link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+        btn.innerHTML = '✓ 已下載';
+        btn.style.background = '#4a7c59';
+        setTimeout(() => { btn.innerHTML = origText; btn.style.background = ''; btn.disabled = false; }, 3000);
+      } catch (err) {
+        alert('下載失敗：' + err.message);
+        btn.innerHTML = origText;
+        btn.disabled = false;
+      }
+    }
+
     function addCopyButton(containerDiv, question, answer) {
       const btn = document.createElement('button');
       btn.className = 'copy-btn';
@@ -2169,6 +2327,7 @@
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split('\n');
           buffer = lines.pop(); // 保留不完整的行
+          let suggestedFormIds = [];
           for (const line of lines) {
             if (!line.startsWith('data: ')) continue;
             const payload = line.slice(6).trim();
@@ -2181,18 +2340,30 @@
               }
               if (parsed.text) {
                 fullText += parsed.text;
-                bubble.innerHTML = formatStructuredText(fullText);
+                // 過濾掉 [[FORMS: ...]] 標記再顯示
+                const displayText = fullText.replace(/\n*\[\[FORMS:[^\]]*\]\]/g, '').trim();
+                bubble.innerHTML = formatStructuredText(displayText);
                 document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+              }
+              if (parsed.forms && Array.isArray(parsed.forms)) {
+                suggestedFormIds = parsed.forms;
               }
             } catch (_) {}
           }
         }
 
-        // 最終渲染確保格式完整
-        bubble.innerHTML = formatStructuredText(fullText || '抱歉，無法取得回覆，請稍後再試。');
+        // 最終渲染（移除 [[FORMS: ...]] 標記）
+        const cleanText = (fullText || '抱歉，無法取得回覆，請稍後再試。')
+          .replace(/\n*\[\[FORMS:[^\]]*\]\]/g, '').trim();
+        bubble.innerHTML = formatStructuredText(cleanText);
         document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
-        conversation.push({ role: 'assistant', content: fullText });
-        addCopyButton(aiDiv, text, fullText);
+        conversation.push({ role: 'assistant', content: cleanText });
+        addCopyButton(aiDiv, text, cleanText);
+
+        // 顯示表單推薦卡片
+        if (suggestedFormIds.length > 0) {
+          addFormSuggestions(aiDiv, suggestedFormIds);
+        }
 
       } catch (err) {
         document.getElementById('typing')?.remove();
