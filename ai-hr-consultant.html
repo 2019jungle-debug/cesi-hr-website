@@ -2320,6 +2320,7 @@
         const decoder = new TextDecoder();
         let fullText = '';
         let buffer = '';
+        let suggestedFormIds = [];
 
         while (true) {
           const { done, value } = await reader.read();
@@ -2327,7 +2328,6 @@
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split('\n');
           buffer = lines.pop(); // 保留不完整的行
-          let suggestedFormIds = [];
           for (const line of lines) {
             if (!line.startsWith('data: ')) continue;
             const payload = line.slice(6).trim();
