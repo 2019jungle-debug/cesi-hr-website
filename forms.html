@@ -593,15 +593,20 @@
         const err = await res.json().catch(() => ({}));
         throw new Error(err.error || '下載失敗');
       }
-      const data = await res.json();
-      // 觸發下載
+      // 後端直接回傳 blob（已加浮水印）
+      const blob = await res.blob();
+      const contentDisposition = res.headers.get('content-disposition') || '';
+      const nameMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/);
+      const filename = nameMatch ? decodeURIComponent(nameMatch[1]) : `${formName}.pdf`;
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = data.url;
-      link.download = data.filename;
+      link.href = blobUrl;
+      link.download = filename;
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
       showToast(`✓ ${formName} 已開始下載`, 'success');
     } catch (err) {
       showToast(err.message, 'error');
