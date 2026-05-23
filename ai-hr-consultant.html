@@ -1762,6 +1762,22 @@
       '12': '員工申訴表'
     };
 
+    // 數字 ID → 後端 key 對應（download-form.js 期待字串 key）
+    const FORM_ID_MAP = {
+      '01': 'labor_contract',
+      '02': 'interview_sheet',
+      '03': 'job_description',
+      '04': 'onboarding',
+      '05': 'nda',
+      '06': 'privacy_consent',
+      '07': 'performance',
+      '08': 'pip',
+      '09': 'handover',
+      '10': 'layoff_notice',
+      '11': 'unemployment_cert',
+      '12': 'complaint',
+    };
+
     // ============================================================
     // 渲染 HR Functions 卡片
     // ============================================================
@@ -1904,10 +1920,12 @@
         return;
       }
       try {
+        // 將數字 ID 轉換為後端期待的字串 key
+        const backendFormId = FORM_ID_MAP[formId] || formId;
         const res = await fetch(BACKEND_URL + '/api/download-form', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code, formId })
+          body: JSON.stringify({ code, formId: backendFormId })
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
