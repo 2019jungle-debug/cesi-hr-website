@@ -593,18 +593,22 @@
 
   // ─── HR 表單知識庫上傳 ────────────────────────────────────────
   const FORM_NAMES_ADMIN = {
-    labor_contract:    '勞動契約書',
-    interview_sheet:   '面試評分表',
-    job_description:   '職務說明書',
-    onboarding:        '新人報到檢核表',
-    nda:               '保密協議書',
-    privacy_consent:   '個資蒐集同意書',
-    performance:       '績效考核表',
-    pip:               'PIP 績效改善計畫',
-    handover:          '離職交接清單',
-    layoff_notice:     '資遣通知書',
-    unemployment_cert: '非自願離職證明書',
-    complaint:         '員工申訴表',
+    labor_contract:       '勞動契約書',
+    interview_sheet:      '面試評分表',
+    job_description:      '職務說明書',
+    onboarding:           '新人報到檢核表',
+    nda:                  '保密協議書',
+    privacy_consent:      '個資蒐集同意書',
+    performance:          '績效考核表',
+    pip:                  'PIP 績效改善計畫',
+    handover:             '離職交接清單',
+    layoff_notice:        '資遣通知書',
+    unemployment_cert:    '非自願離職證明書',
+    complaint:            '員工申訴表',
+    employment_cert:      '在職證明書',
+    resignation:          '離職申請單',
+    separation_interview: '離職面談紀錄表',
+    service_cert:         '服務證明書',
   };
 
   // 員工生命週期 8 類定義
@@ -641,13 +645,13 @@
     },
     {
       key: 'relations', label: '員工關係', ghFile: 'forms-relations.md', emoji: '🤝',
-      hint: '員工申訴表｜未來：獎懲記錄、勞資會議記錄、職場調查表',
-      forms: ['complaint'],
+      hint: '員工申訴表、在職證明書｜未來：獎懲記錄、勞資會議記錄、職場調查表',
+      forms: ['complaint', 'employment_cert'],
     },
     {
       key: 'separation', label: '離職資遣', ghFile: 'forms-separation.md', emoji: '🚪',
-      hint: '離職交接清單、資遣通知書、非自願離職證明書｜未來：離職面談記錄',
-      forms: ['handover', 'layoff_notice', 'unemployment_cert'],
+      hint: '離職申請單、離職交接清單、離職面談紀錄表、資遣通知書、非自願離職證明書、服務證明書',
+      forms: ['resignation', 'handover', 'separation_interview', 'layoff_notice', 'unemployment_cert', 'service_cert'],
     },
   ];
 
@@ -702,7 +706,7 @@
     }
   }
 
-  // 檔名前綴 → formId 對照
+  // 檔名前綴 → formId 對照（可持續新增）
   const FILENAME_TO_FORM_ID = {
     '01': 'labor_contract',
     '02': 'interview_sheet',
@@ -716,11 +720,49 @@
     '10': 'layoff_notice',
     '11': 'unemployment_cert',
     '12': 'complaint',
+    '13': 'employment_cert',
+    '14': 'resignation',
+    '15': 'handover',           // 離職交接清單（重新編號）
+    '16': 'separation_interview',
+    '17': 'service_cert',
   };
 
+  // 檔名關鍵字 → formId（前綴對不上時的備援）
+  const KEYWORD_TO_FORM_ID = [
+    { kw: '非自願離職',  id: 'unemployment_cert' },
+    { kw: '資遣通知',    id: 'layoff_notice' },
+    { kw: '離職交接',    id: 'handover' },
+    { kw: '離職面談',    id: 'separation_interview' },
+    { kw: '離職申請',    id: 'resignation' },
+    { kw: '服務證明',    id: 'service_cert' },
+    { kw: '在職證明',    id: 'employment_cert' },
+    { kw: '在職說明',    id: 'employment_cert' },
+    { kw: '個資蒐集',    id: 'privacy_consent' },
+    { kw: '個人資料',    id: 'privacy_consent' },
+    { kw: '保密協議',    id: 'nda' },
+    { kw: '新人報到',    id: 'onboarding' },
+    { kw: '績效改善',    id: 'pip' },
+    { kw: 'PIP',         id: 'pip' },
+    { kw: '績效考核',    id: 'performance' },
+    { kw: '員工申訴',    id: 'complaint' },
+    { kw: '職務說明',    id: 'job_description' },
+    { kw: '面試評分',    id: 'interview_sheet' },
+    { kw: '勞動契約',    id: 'labor_contract' },
+  ];
+
   function detectFormId(filename) {
+    // 1. 先嘗試數字前綴（01~17）
     const m = filename.match(/^(\d{2})[_\-\s]/);
-    return m ? (FILENAME_TO_FORM_ID[m[1]] || null) : null;
+    if (m && FILENAME_TO_FORM_ID[m[1]]) return FILENAME_TO_FORM_ID[m[1]];
+    // 2. 嘗試單位數字前綴（1-9）
+    const m1 = filename.match(/^(\d)[_\-\s]/);
+    if (m1 && FILENAME_TO_FORM_ID['0' + m1[1]]) return FILENAME_TO_FORM_ID['0' + m1[1]];
+    // 3. 關鍵字比對（無前綴或前綴不認識時）
+    const base = filename.replace(/\.[^.]+$/, ''); // 去掉副檔名
+    for (const { kw, id } of KEYWORD_TO_FORM_ID) {
+      if (base.includes(kw)) return id;
+    }
+    return null;
   }
 
   // 選擇檔案後預覽對應關係
