@@ -730,6 +730,89 @@ body {
   font-weight: 500;
 }
 
+/* === Lead / Resource Section === */
+.lead-section { background: rgba(255,255,255,0.02); }
+
+.resource-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  max-width: 760px;
+  margin: 0 auto 44px;
+}
+.resource-tag {
+  background: rgba(212,175,110,0.12);
+  border: 1px solid rgba(212,175,110,0.3);
+  color: rgba(245,240,225,0.85);
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13.5px;
+  letter-spacing: 0.5px;
+}
+
+.lead-form-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.lead-form-box, .lead-success-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(212,175,110,0.25);
+  border-radius: 16px;
+  padding: 40px 36px;
+  text-align: center;
+}
+.lead-form-box h3, .lead-success-box h3 {
+  font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold-bright);
+  margin: 0 0 8px;
+}
+.lead-form-desc {
+  font-size: 14px;
+  color: rgba(245,240,225,0.75);
+  margin: 0 0 24px;
+}
+.lead-form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (max-width: 560px) {
+  .lead-form-row { flex-direction: column; }
+  .lead-form-box, .lead-success-box { padding: 28px 20px; }
+}
+.lead-input {
+  flex: 1;
+  padding: 13px 16px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(212,175,110,0.3);
+  border-radius: 8px;
+  color: var(--ivory);
+  font-size: 14px;
+  font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.lead-input::placeholder { color: rgba(245,240,225,0.4); }
+.lead-input:focus { border-color: var(--gold); }
+.lead-submit {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  letter-spacing: 3px;
+  margin-top: 8px;
+  cursor: pointer;
+  border: none;
+}
+.lead-privacy {
+  font-size: 12px;
+  color: rgba(245,240,225,0.5);
+  margin-top: 12px;
+}
+.lead-success-icon { font-size: 48px; margin-bottom: 12px; }
+
 /* === Final CTA === */
 .final-cta {
   position: relative;
@@ -1059,6 +1142,61 @@ body {
   </div>
 </section>
 
+<!-- ===== 免費資源下載 + 名單累積 ===== -->
+<section class="section lead-section" id="free-resources">
+  <div class="section-heading">
+    <div class="section-eyebrow">— 免費資源 Free Resources —</div>
+    <h2>12 份 HR 必備表單<br><span style="color:var(--gold-bright)">免費下載</span></h2>
+    <div class="divider-elegant"></div>
+    <p class="section-subtitle">涵蓋招募、到職、績效、離職全流程，留下資料即可免費取得</p>
+  </div>
+
+  <!-- 表單預覽 -->
+  <div class="resource-preview">
+    <div class="resource-tag">📄 勞動契約書</div>
+    <div class="resource-tag">📄 面試評核表</div>
+    <div class="resource-tag">📄 職務說明書</div>
+    <div class="resource-tag">📄 新人到職清單</div>
+    <div class="resource-tag">📄 保密協議書</div>
+    <div class="resource-tag">📄 績效考核表</div>
+    <div class="resource-tag">📄 績效改善計畫</div>
+    <div class="resource-tag">📄 工作交接清單</div>
+    <div class="resource-tag">📄 資遣通知書</div>
+    <div class="resource-tag">+ 3 份更多</div>
+  </div>
+
+  <!-- 留資料表單 -->
+  <div class="lead-form-wrap">
+    <div class="lead-form-box" id="lead-form-box">
+      <h3>🎁 免費取得全套表單</h3>
+      <p class="lead-form-desc">留下您的資料，立即解鎖 12 份 HR 必備表單下載</p>
+      <form class="lead-form" id="lead-form" onsubmit="submitLead(event)">
+        <div class="lead-form-row">
+          <input type="text" id="lead-name" placeholder="您的姓名 *" required class="lead-input">
+          <input type="text" id="lead-company" placeholder="公司名稱" class="lead-input">
+        </div>
+        <div class="lead-form-row">
+          <input type="email" id="lead-email" placeholder="Email *" required class="lead-input">
+          <input type="tel" id="lead-line" placeholder="LINE ID（選填）" class="lead-input">
+        </div>
+        <button type="submit" class="btn-gold lead-submit" id="lead-submit-btn">
+          立即免費下載 →
+        </button>
+        <p class="lead-privacy">✅ 您的資料僅用於提供 HR 資源，不會外洩或用於廣告</p>
+      </form>
+    </div>
+    <!-- 成功畫面 -->
+    <div class="lead-success-box" id="lead-success-box" style="display:none;">
+      <div class="lead-success-icon">🎉</div>
+      <h3>感謝您！表單已解鎖</h3>
+      <p>點擊下方按鈕前往下載全部 12 份表單</p>
+      <a href="ai-hr-consultant.html#forms" class="btn-gold" style="display:inline-block;margin-top:12px;">前往下載表單 →</a>
+      <p style="margin-top:16px;font-size:13px;opacity:0.7;">也可以直接體驗 AI 顧問，提問任何人資問題</p>
+      <a href="ai-hr-consultant.html" class="btn-outline" style="display:inline-block;margin-top:8px;border-color:var(--gold);color:var(--gold);">體驗 AI 顧問</a>
+    </div>
+  </div>
+</section>
+
 <!-- ===== Final CTA ===== -->
 <section class="final-cta">
   <div class="section-eyebrow">— Begin with Strategy, Build Sustainability —</div>
@@ -1098,5 +1236,38 @@ body {
 </footer>
 
 </div>
+
+<script>
+  const BACKEND_URL = 'https://cesi-hr-api-qfgkqrzfyq-de.a.run.app';
+
+  async function submitLead(e) {
+    e.preventDefault();
+    const btn = document.getElementById('lead-submit-btn');
+    btn.textContent = '處理中...';
+    btn.disabled = true;
+
+    const payload = {
+      name:    document.getElementById('lead-name').value.trim(),
+      company: document.getElementById('lead-company').value.trim(),
+      email:   document.getElementById('lead-email').value.trim(),
+      lineId:  document.getElementById('lead-line').value.trim(),
+      source:  'landing-free-resource',
+    };
+
+    try {
+      await fetch(BACKEND_URL + '/api/lead-capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (_) {
+      // 即使 API 失敗，仍顯示成功（不影響用戶體驗）
+    }
+
+    // 顯示成功畫面
+    document.getElementById('lead-form-box').style.display = 'none';
+    document.getElementById('lead-success-box').style.display = 'block';
+  }
+</script>
 </body>
 </html>
