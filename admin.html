@@ -348,45 +348,38 @@
           </div>
 
           <!-- 上傳表單 -->
-          <div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:18px; max-width:560px;">
-            <div style="font-size:13px; font-weight:600; color:var(--ink); margin-bottom:14px;">上傳表單文件至知識庫</div>
+          <div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:18px; max-width:640px;">
+            <div style="font-size:13px; font-weight:600; color:var(--ink); margin-bottom:6px;">上傳表單文件至知識庫</div>
+            <div style="font-size:12px; color:var(--ink-faded); margin-bottom:14px; line-height:1.6;">
+              支援批次上傳 · 自動辨識檔名（如 <code style="background:rgba(255,255,255,0.1); padding:1px 5px; border-radius:3px;">01_勞動契約書.docx</code>）<br>
+              也可手動指定表單後單獨上傳
+            </div>
 
             <div style="display:grid; gap:12px;">
+              <!-- 拖放 / 多選檔案區 -->
               <div>
-                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 選擇表單</label>
-                <select id="form-doc-select" style="width:100%; margin-top:6px; padding:9px 12px; background:var(--bg-card); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:13px; font-family:inherit;">
-                  <option value="">請選擇要更新的表單...</option>
-                  <option value="labor_contract">01 · 勞動契約書</option>
-                  <option value="interview_sheet">02 · 面試評分表</option>
-                  <option value="job_description">03 · 職務說明書</option>
-                  <option value="onboarding">04 · 新人報到檢核表</option>
-                  <option value="nda">05 · 保密協議書</option>
-                  <option value="privacy_consent">06 · 個資蒐集同意書</option>
-                  <option value="performance">07 · 績效考核表</option>
-                  <option value="pip">08 · PIP 績效改善計畫</option>
-                  <option value="handover">09 · 離職交接清單</option>
-                  <option value="layoff_notice">10 · 資遣通知書</option>
-                  <option value="unemployment_cert">11 · 非自願離職證明書</option>
-                  <option value="complaint">12 · 員工申訴表</option>
-                </select>
+                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 選擇檔案（可多選，DOCX / PDF）</label>
+                <label id="form-doc-dropzone" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; margin-top:8px; padding:20px; border:2px dashed var(--line); border-radius:8px; cursor:pointer; transition:border-color 0.2s; min-height:80px; text-align:center;">
+                  <span style="font-size:22px;">📂</span>
+                  <span style="font-size:13px; color:var(--ink-soft);">點此選擇或將檔案拖曳至此</span>
+                  <span style="font-size:11px; color:var(--ink-faded);">可一次選取全部 12 份表單，系統自動辨識對應關係</span>
+                  <input id="form-doc-file" type="file" accept=".docx,.pdf" multiple style="display:none;" onchange="previewFormFiles(this.files)">
+                </label>
               </div>
 
-              <div>
-                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 用途說明（選填）</label>
-                <input id="form-doc-desc" type="text" placeholder="例：適用情境、注意事項..." style="width:100%; margin-top:6px; padding:9px 12px; background:var(--bg-card); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:13px; font-family:inherit; box-sizing:border-box;">
+              <!-- 檔案預覽 / 對應結果 -->
+              <div id="form-doc-preview" style="display:none;">
+                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 上傳清單</label>
+                <div id="form-doc-preview-list" style="margin-top:8px; display:grid; gap:6px; max-height:300px; overflow-y:auto;"></div>
               </div>
 
-              <div>
-                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 選擇檔案（DOCX / PDF，最大 20MB）</label>
-                <input id="form-doc-file" type="file" accept=".docx,.pdf" style="display:block; margin-top:6px; width:100%; padding:8px 12px; background:var(--bg-card); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:12px;">
-              </div>
-
-              <button class="btn primary" onclick="uploadFormDoc()" id="form-doc-btn" style="width:100%;">
-                📤 上傳至表單知識庫
+              <button class="btn primary" onclick="uploadFormDocBatch()" id="form-doc-btn" style="width:100%; display:none;">
+                📤 開始批次上傳
               </button>
             </div>
 
-            <div id="form-doc-result" style="margin-top:12px; font-size:13px; display:none; padding:12px 16px; border-radius:6px; border:1px solid var(--line);"></div>
+            <!-- 進度與結果 -->
+            <div id="form-doc-result" style="margin-top:12px; font-size:13px; display:none;"></div>
           </div>
 
           <!-- GitHub 直連編輯表單知識庫 -->
@@ -635,56 +628,170 @@
     }
   }
 
-  async function uploadFormDoc() {
-    const formId = document.getElementById('form-doc-select').value;
-    const desc = document.getElementById('form-doc-desc').value.trim();
+  // 檔名前綴 → formId 對照
+  const FILENAME_TO_FORM_ID = {
+    '01': 'labor_contract',
+    '02': 'interview_sheet',
+    '03': 'job_description',
+    '04': 'onboarding',
+    '05': 'nda',
+    '06': 'privacy_consent',
+    '07': 'performance',
+    '08': 'pip',
+    '09': 'handover',
+    '10': 'layoff_notice',
+    '11': 'unemployment_cert',
+    '12': 'complaint',
+  };
+
+  function detectFormId(filename) {
+    const m = filename.match(/^(\d{2})[_\-\s]/);
+    return m ? (FILENAME_TO_FORM_ID[m[1]] || null) : null;
+  }
+
+  // 選擇檔案後預覽對應關係
+  function previewFormFiles(files) {
+    const previewDiv = document.getElementById('form-doc-preview');
+    const listDiv = document.getElementById('form-doc-preview-list');
+    const btn = document.getElementById('form-doc-btn');
+    const dropzone = document.getElementById('form-doc-dropzone');
+
+    if (!files || files.length === 0) {
+      previewDiv.style.display = 'none';
+      btn.style.display = 'none';
+      return;
+    }
+
+    dropzone.querySelector('span:nth-child(2)').textContent = `已選 ${files.length} 個檔案`;
+
+    const items = Array.from(files).map(file => {
+      const detected = detectFormId(file.name);
+      const name = detected ? FORM_NAMES_ADMIN[detected] : null;
+      return { file, formId: detected, formName: name };
+    });
+
+    listDiv.innerHTML = items.map((item, i) => `
+      <div id="fdp-${i}" style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:6px; border:1px solid var(--line); background:var(--bg-card); font-size:12px;">
+        <span style="font-size:16px;">📄</span>
+        <div style="flex:1; min-width:0;">
+          <div style="color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.file.name}</div>
+          ${item.formId
+            ? `<div style="color:#6b8e23; font-size:11px;">✅ 自動辨識：${item.formName}</div>`
+            : `<div style="color:var(--warn); font-size:11px;">⚠ 無法辨識，請手動選擇：
+                <select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
+                  <option value="">— 選擇 —</option>
+                  ${Object.entries(FORM_NAMES_ADMIN).map(([id, n]) => `<option value="${id}">${n}</option>`).join('')}
+                </select>
+              </div>`
+          }
+        </div>
+        <span style="color:var(--ink-faded); white-space:nowrap;">${(item.file.size/1024).toFixed(0)} KB</span>
+      </div>`).join('');
+
+    previewDiv.style.display = 'block';
+    btn.style.display = 'block';
+    btn.textContent = `📤 開始批次上傳（${files.length} 個檔案）`;
+  }
+
+  // 手動覆蓋 formId 的暫存
+  const manualFormId = {};
+
+  // 拖曳支援
+  document.addEventListener('DOMContentLoaded', () => {
+    const dz = document.getElementById('form-doc-dropzone');
+    if (!dz) return;
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = 'var(--accent)'; });
+    dz.addEventListener('dragleave', () => { dz.style.borderColor = 'var(--line)'; });
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.style.borderColor = 'var(--line)';
+      const fi = document.getElementById('form-doc-file');
+      // 建立 DataTransfer 同步到 input
+      const dt = new DataTransfer();
+      Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
+      fi.files = dt.files;
+      previewFormFiles(fi.files);
+    });
+  });
+
+  // 批次上傳
+  async function uploadFormDocBatch() {
     const fileInput = document.getElementById('form-doc-file');
+    const files = Array.from(fileInput.files);
     const resultEl = document.getElementById('form-doc-result');
     const btn = document.getElementById('form-doc-btn');
-    const file = fileInput.files[0];
-
-    resultEl.style.display = 'none';
-    if (!formId) { alert('請選擇表單'); return; }
-    if (!file) { alert('請選擇要上傳的 DOCX 或 PDF 檔案'); return; }
+    if (!files.length) { alert('請先選擇檔案'); return; }
 
     btn.disabled = true;
-    btn.textContent = '上傳中...';
     resultEl.style.display = 'block';
-    resultEl.style.color = 'var(--ink-soft)';
-    resultEl.style.borderColor = 'var(--line)';
-    resultEl.textContent = `正在上傳「${file.name}」並抽取文字內容...`;
+    resultEl.innerHTML = '';
 
-    const formData = new FormData();
-    formData.append('password', sessionStorage.getItem('admin_pwd') || '');
-    formData.append('formId', formId);
-    formData.append('description', desc);
-    formData.append('file', file);
+    let successCount = 0;
+    let failCount = 0;
 
-    try {
-      const res = await fetch(BACKEND_URL + '/api/upload-form-doc', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        resultEl.textContent = '❌ ' + (data.error || '上傳失敗');
-        resultEl.style.color = 'var(--hot)';
-        resultEl.style.borderColor = 'var(--hot)';
-      } else {
-        resultEl.innerHTML = `✅ ${data.message}<br><span style="color:var(--ink-faded);font-size:11px;">抽取字數：${data.extractedChars?.toLocaleString()} 字</span>`;
-        resultEl.style.color = '#6b8e23';
-        resultEl.style.borderColor = '#6b8e23';
-        fileInput.value = '';
-        document.getElementById('form-doc-desc').value = '';
-        document.getElementById('form-doc-select').value = '';
-        setTimeout(loadFormDocStatus, 1000);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const formId = detectFormId(file.name) || manualFormId[i] || '';
+      const rowEl = document.getElementById(`fdp-${i}`);
+
+      if (!formId) {
+        if (rowEl) rowEl.style.borderColor = 'var(--hot)';
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:6px 10px; font-size:12px; color:var(--hot);';
+        row.textContent = `❌ ${file.name} — 無法辨識表單，跳過`;
+        resultEl.appendChild(row);
+        failCount++;
+        continue;
       }
-    } catch (e) {
-      resultEl.textContent = '❌ 連線失敗：' + e.message;
-      resultEl.style.color = 'var(--hot)';
+
+      // 顯示進行中
+      btn.textContent = `上傳中 ${i+1}/${files.length}：${FORM_NAMES_ADMIN[formId]}...`;
+      if (rowEl) {
+        rowEl.style.borderColor = 'var(--accent)';
+        rowEl.querySelector('span:first-child').textContent = '⏳';
+      }
+
+      const fd = new FormData();
+      fd.append('password', sessionStorage.getItem('admin_pwd') || '');
+      fd.append('formId', formId);
+      fd.append('file', file);
+
+      try {
+        const res = await fetch(BACKEND_URL + '/api/upload-form-doc', { method: 'POST', body: fd });
+        const data = await res.json();
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:6px 10px; font-size:12px; border-radius:5px; margin-bottom:4px;';
+        if (res.ok) {
+          row.style.color = '#6b8e23';
+          row.innerHTML = `✅ <b>${FORM_NAMES_ADMIN[formId]}</b> — 已上傳（${data.extractedChars?.toLocaleString()} 字）`;
+          if (rowEl) { rowEl.style.borderColor = '#6b8e23'; rowEl.querySelector('span:first-child').textContent = '✅'; }
+          successCount++;
+        } else {
+          row.style.color = 'var(--hot)';
+          row.innerHTML = `❌ <b>${FORM_NAMES_ADMIN[formId]}</b> — ${data.error || '失敗'}`;
+          if (rowEl) { rowEl.style.borderColor = 'var(--hot)'; rowEl.querySelector('span:first-child').textContent = '❌'; }
+          failCount++;
+        }
+        resultEl.appendChild(row);
+      } catch (e) {
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:6px 10px; font-size:12px; color:var(--hot);';
+        row.textContent = `❌ ${file.name} — 連線失敗：${e.message}`;
+        resultEl.appendChild(row);
+        failCount++;
+      }
     }
+
+    // 總結
+    const summary = document.createElement('div');
+    summary.style.cssText = 'margin-top:10px; padding:10px 14px; border-radius:6px; font-size:13px; font-weight:600; background:var(--bg-card); border:1px solid var(--line);';
+    summary.textContent = `完成：✅ ${successCount} 份成功　${failCount > 0 ? `❌ ${failCount} 份失敗` : ''}`;
+    resultEl.appendChild(summary);
+
     btn.disabled = false;
-    btn.textContent = '📤 上傳至表單知識庫';
+    btn.textContent = '📤 開始批次上傳';
+    fileInput.value = '';
+    if (successCount > 0) setTimeout(loadFormDocStatus, 1500);
   }
   // ─── HR 表單知識庫上傳 END ────────────────────────────────────
 
