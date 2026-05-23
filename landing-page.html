@@ -279,6 +279,26 @@ body {
   font-size: 11px;
 }
 
+.hero-pain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 36px;
+  max-width: 560px;
+  text-align: left;
+  display: inline-block;
+}
+.hero-pain-list li {
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(245, 240, 225, 0.9);
+  padding: 10px 18px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.06);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  letter-spacing: 0.5px;
+}
+
 .hero-lede {
   font-size: 18px;
   line-height: 2;
@@ -356,6 +376,58 @@ body {
   font-weight: 400;
 }
 .hero-meta strong { color: var(--gold-bright); font-weight: 700; }
+
+/* === Pain Points Section === */
+.pain-section {
+  background: rgba(255,255,255,0.03);
+}
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .pain-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .pain-grid { grid-template-columns: 1fr; }
+}
+.pain-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(212,175,110,0.2);
+  border-radius: 12px;
+  padding: 28px 22px;
+  text-align: center;
+  transition: transform 0.3s, border-color 0.3s;
+}
+.pain-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(212,175,110,0.5);
+}
+.pain-icon {
+  font-size: 36px;
+  margin-bottom: 14px;
+}
+.pain-card h3 {
+  font-family: 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold-bright);
+  margin: 0 0 12px;
+}
+.pain-card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(245,240,225,0.8);
+  margin: 0;
+}
+.pain-cta-text {
+  font-size: 18px;
+  color: rgba(245,240,225,0.9);
+  margin-bottom: 24px;
+}
 
 /* === Section === */
 .section {
@@ -816,29 +888,73 @@ body {
     <div class="hero-logo"></div>
   </div>
 
-  <div class="hero-tagline fade-up d1">— Proposal Book / 2026 —</div>
+  <div class="hero-tagline fade-up d1">— 南台灣企業 AI 管理升級顧問 —</div>
 
   <h1 class="fade-up d2">
-    AI 時代的<br>
-    <span class="accent">人才管理智慧</span>
+    你的公司，<br>
+    還在用<span class="accent">傳統方式</span>管理人才嗎？
   </h1>
 
   <div class="divider-elegant fade-up d3"></div>
 
-  <p class="hero-lede fade-up d3">
-    我們不只交付一份報告，<br>
-    而是協助中小企業，<br>
-    把 AI、制度、主管教練、風險控管，<br>
-    真正落地成可持續運作的人才管理系統。
+  <ul class="hero-pain-list fade-up d3">
+    <li>😓 招人招不到，留人留不住</li>
+    <li>⚠️ 勞資糾紛、職場霸凌，不知如何處理</li>
+    <li>📋 制度不完整，主管不知道怎麼帶人</li>
+    <li>🤖 知道要導入 AI，但不知道從哪裡開始</li>
+  </ul>
+
+  <p class="hero-lede fade-up d4">
+    策識永續結合 <strong>AI 即時顧問 × 真人諮詢</strong>，<br>
+    協助中小企業快速解決人資痛點，<br>
+    從法令合規到制度落地，<strong>現在就能開始。</strong>
   </p>
 
-  <div class="hero-cta fade-up d4">
-    <a href="ai-hr-consultant.html" class="btn-gold">免 費 試 用</a>
+  <div class="hero-cta fade-up d5">
+    <a href="ai-hr-consultant.html" class="btn-gold">免費體驗 AI 顧問</a>
     <a href="pricing-and-booking.html" class="btn-outline">預 約 諮 詢</a>
   </div>
 
-  <div class="hero-meta fade-up d5">
+  <div class="hero-meta fade-up d6">
     <strong>30 天免費試用</strong> · 無需綁卡 · 立即可用
+  </div>
+</section>
+
+<!-- ===== Pain Points Section ===== -->
+<section class="section pain-section">
+  <div class="section-heading">
+    <div class="section-eyebrow">— 你是否有這些困境？ —</div>
+    <h2>這些問題，<br>正在<span style="color:var(--gold-bright)">悄悄傷害</span>你的企業</h2>
+    <div class="divider-elegant"></div>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">👥</div>
+      <h3>人才留不住</h3>
+      <p>招募成本高、新人三個月就離職，HR 每天都在重複做同樣的事，卻看不到改善。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">⚖️</div>
+      <h3>勞資風險高</h3>
+      <p>加班費怎麼算？試用期能直接解雇嗎？霸凌申訴流程不清楚，一個不小心就面臨訴訟。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📉</div>
+      <h3>主管不會帶人</h3>
+      <p>技術主管升職後不知道如何管理，年輕員工難溝通，績效面談不知道怎麼開口。</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🤖</div>
+      <h3>AI 不知從何導入</h3>
+      <p>知道 AI 是趨勢，但導入後沒有落地，員工不知道怎麼用，效果等於零。</p>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top: 48px;">
+    <p class="pain-cta-text">這些問題，<strong>策識永續都有解方</strong>。立即體驗 AI 顧問，或預約真人諮詢。</p>
+    <div class="hero-cta" style="margin-bottom:0;">
+      <a href="ai-hr-consultant.html" class="btn-gold">立即免費體驗</a>
+      <a href="pricing-and-booking.html" class="btn-outline" style="border-color:var(--gold);color:var(--gold);">預 約 諮 詢</a>
+    </div>
   </div>
 </section>
 
