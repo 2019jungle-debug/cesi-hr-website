@@ -330,6 +330,74 @@
         </div>
       </div>
 
+      <!-- ===== HR 表單知識庫上傳 ===== -->
+      <div class="section">
+        <h2>HR 表單知識庫 <span class="meta">Form Documents</span></h2>
+        <div style="padding: 22px;">
+          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:20px; line-height:1.7;">
+            上傳 HR 表單文件後，系統會自動抽取內容並加入知識庫。<br>
+            <b style="color:var(--ink);">AI HR 顧問</b>將學習每份表單的用途，並在回答相關問題時自動推薦給客戶（含免責聲明）。
+          </div>
+
+          <!-- 狀態卡片：哪些表單已上傳 -->
+          <div style="margin-bottom:20px;">
+            <div style="font-family:'Cormorant Garamond',serif; font-size:11px; letter-spacing:3px; color:var(--accent); margin-bottom:10px;">— 表單上傳狀態</div>
+            <div id="form-doc-status" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap:8px;">
+              <div style="color:var(--ink-faded); font-size:12px;">載入中...</div>
+            </div>
+          </div>
+
+          <!-- 上傳表單 -->
+          <div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:18px; max-width:560px;">
+            <div style="font-size:13px; font-weight:600; color:var(--ink); margin-bottom:14px;">上傳表單文件至知識庫</div>
+
+            <div style="display:grid; gap:12px;">
+              <div>
+                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 選擇表單</label>
+                <select id="form-doc-select" style="width:100%; margin-top:6px; padding:9px 12px; background:var(--bg-card); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:13px; font-family:inherit;">
+                  <option value="">請選擇要更新的表單...</option>
+                  <option value="labor_contract">01 · 勞動契約書</option>
+                  <option value="interview_sheet">02 · 面試評分表</option>
+                  <option value="job_description">03 · 職務說明書</option>
+                  <option value="onboarding">04 · 新人報到檢核表</option>
+                  <option value="nda">05 · 保密協議書</option>
+                  <option value="privacy_consent">06 · 個資蒐集同意書</option>
+                  <option value="performance">07 · 績效考核表</option>
+                  <option value="pip">08 · PIP 績效改善計畫</option>
+                  <option value="handover">09 · 離職交接清單</option>
+                  <option value="layoff_notice">10 · 資遣通知書</option>
+                  <option value="unemployment_cert">11 · 非自願離職證明書</option>
+                  <option value="complaint">12 · 員工申訴表</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 用途說明（選填）</label>
+                <input id="form-doc-desc" type="text" placeholder="例：適用情境、注意事項..." style="width:100%; margin-top:6px; padding:9px 12px; background:var(--bg-card); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:13px; font-family:inherit; box-sizing:border-box;">
+              </div>
+
+              <div>
+                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 選擇檔案（DOCX / PDF，最大 20MB）</label>
+                <input id="form-doc-file" type="file" accept=".docx,.pdf" style="display:block; margin-top:6px; width:100%; padding:8px 12px; background:var(--bg-card); border:1px solid var(--line); border-radius:6px; color:var(--ink); font-size:12px;">
+              </div>
+
+              <button class="btn primary" onclick="uploadFormDoc()" id="form-doc-btn" style="width:100%;">
+                📤 上傳至表單知識庫
+              </button>
+            </div>
+
+            <div id="form-doc-result" style="margin-top:12px; font-size:13px; display:none; padding:12px 16px; border-radius:6px; border:1px solid var(--line);"></div>
+          </div>
+
+          <!-- GitHub 直連編輯表單知識庫 -->
+          <div style="margin-top:16px; font-size:12px; color:var(--ink-faded);">
+            或直接在 GitHub 編輯表單知識庫：
+            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms.md" target="_blank" style="color:var(--accent); text-decoration:none; margin-left:6px;">📝 編輯 forms.md →</a>
+          </div>
+        </div>
+      </div>
+      <!-- ===== HR 表單知識庫上傳 END ===== -->
+
       <div class="section">
         <h2>直接編輯 GitHub <span class="meta">Edit on GitHub</span></h2>
         <div style="padding: 22px;">
@@ -524,6 +592,102 @@
     }
   }
 
+  // ─── HR 表單知識庫上傳 ────────────────────────────────────────
+  const FORM_NAMES_ADMIN = {
+    labor_contract:    '勞動契約書',
+    interview_sheet:   '面試評分表',
+    job_description:   '職務說明書',
+    onboarding:        '新人報到檢核表',
+    nda:               '保密協議書',
+    privacy_consent:   '個資蒐集同意書',
+    performance:       '績效考核表',
+    pip:               'PIP 績效改善計畫',
+    handover:          '離職交接清單',
+    layoff_notice:     '資遣通知書',
+    unemployment_cert: '非自願離職證明書',
+    complaint:         '員工申訴表',
+  };
+
+  async function loadFormDocStatus() {
+    const el = document.getElementById('form-doc-status');
+    if (!el) return;
+    try {
+      const res = await fetch(BACKEND_URL + '/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: sessionStorage.getItem('admin_pwd') || '', action: 'list_form_meta' }),
+      });
+      const data = await res.json();
+      const metas = data.metas || {};
+      const html = Object.entries(FORM_NAMES_ADMIN).map(([id, name]) => {
+        const meta = metas[id];
+        const hasDoc = !!meta;
+        const date = meta?.updatedAt ? new Date(meta.updatedAt).toLocaleDateString('zh-TW') : '';
+        return `<div style="display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; border:1px solid var(--line); background:var(--bg-card); font-size:12px;">
+          <span style="color:${hasDoc ? '#6b8e23' : 'var(--ink-faded)'}; font-size:14px;">${hasDoc ? '✅' : '⬜'}</span>
+          <span style="flex:1; color:var(--ink);">${name}</span>
+          ${hasDoc ? `<span style="color:var(--ink-faded); font-size:11px;">${date}</span>` : '<span style="color:var(--ink-faded); font-size:11px;">尚未上傳</span>'}
+        </div>`;
+      }).join('');
+      el.innerHTML = html;
+    } catch (e) {
+      el.innerHTML = `<div style="color:var(--ink-faded); font-size:12px;">無法載入狀態：${e.message}</div>`;
+    }
+  }
+
+  async function uploadFormDoc() {
+    const formId = document.getElementById('form-doc-select').value;
+    const desc = document.getElementById('form-doc-desc').value.trim();
+    const fileInput = document.getElementById('form-doc-file');
+    const resultEl = document.getElementById('form-doc-result');
+    const btn = document.getElementById('form-doc-btn');
+    const file = fileInput.files[0];
+
+    resultEl.style.display = 'none';
+    if (!formId) { alert('請選擇表單'); return; }
+    if (!file) { alert('請選擇要上傳的 DOCX 或 PDF 檔案'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '上傳中...';
+    resultEl.style.display = 'block';
+    resultEl.style.color = 'var(--ink-soft)';
+    resultEl.style.borderColor = 'var(--line)';
+    resultEl.textContent = `正在上傳「${file.name}」並抽取文字內容...`;
+
+    const formData = new FormData();
+    formData.append('password', sessionStorage.getItem('admin_pwd') || '');
+    formData.append('formId', formId);
+    formData.append('description', desc);
+    formData.append('file', file);
+
+    try {
+      const res = await fetch(BACKEND_URL + '/api/upload-form-doc', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        resultEl.textContent = '❌ ' + (data.error || '上傳失敗');
+        resultEl.style.color = 'var(--hot)';
+        resultEl.style.borderColor = 'var(--hot)';
+      } else {
+        resultEl.innerHTML = `✅ ${data.message}<br><span style="color:var(--ink-faded);font-size:11px;">抽取字數：${data.extractedChars?.toLocaleString()} 字</span>`;
+        resultEl.style.color = '#6b8e23';
+        resultEl.style.borderColor = '#6b8e23';
+        fileInput.value = '';
+        document.getElementById('form-doc-desc').value = '';
+        document.getElementById('form-doc-select').value = '';
+        setTimeout(loadFormDocStatus, 1000);
+      }
+    } catch (e) {
+      resultEl.textContent = '❌ 連線失敗：' + e.message;
+      resultEl.style.color = 'var(--hot)';
+    }
+    btn.disabled = false;
+    btn.textContent = '📤 上傳至表單知識庫';
+  }
+  // ─── HR 表單知識庫上傳 END ────────────────────────────────────
+
   async function uploadKnowledge() {
     const category = document.getElementById('kb-category').value;
     const fileInput = document.getElementById('kb-file');
@@ -606,6 +770,7 @@
     if (name === 'orders') loadOrders();
     if (name === 'cancellations') loadCancellations();
     if (name === 'system') loadSystem();
+    if (name === 'knowledge') loadFormDocStatus();
   }
 
   async function refresh() {
