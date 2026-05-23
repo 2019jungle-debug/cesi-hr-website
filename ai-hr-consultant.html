@@ -1961,7 +1961,7 @@
         const blob = await res.blob();
         const contentDisposition = res.headers.get('content-disposition') || '';
         const nameMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/);
-        const filename = nameMatch ? decodeURIComponent(nameMatch[1]) : `表單.pdf`;
+        const filename = nameMatch ? decodeURIComponent(nameMatch[1]) : `表單_策識永續.docx`;
         const blobUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = blobUrl;
