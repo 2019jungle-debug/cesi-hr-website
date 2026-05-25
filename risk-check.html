@@ -501,6 +501,107 @@
     line-height: 1.7;
   }
 
+  /* === Contact Gate === */
+  .contact-gate {
+    max-width: 680px; margin: 0 auto 40px; padding: 0 24px;
+    display: none;
+  }
+  .gate-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,175,110,0.45);
+    border-radius: 16px; padding: 40px 36px;
+    position: relative; overflow: hidden;
+  }
+  .gate-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), #e8d5a0, var(--gold));
+  }
+  .gate-badge {
+    display: inline-block; font-size: 11px; letter-spacing: 3px;
+    color: var(--gold); border: 1px solid rgba(212,175,110,0.4);
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 18px;
+  }
+  .gate-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--ivory); margin-bottom: 10px; line-height: 1.4;
+  }
+  .gate-title span { color: var(--gold); }
+  .gate-sub {
+    font-size: 14px; line-height: 1.75;
+    color: rgba(245,240,225,0.65); margin-bottom: 28px;
+  }
+  .gate-form-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .gate-form-grid .full-width { grid-column: 1 / -1; }
+  .gate-field label {
+    display: block; font-size: 11px; letter-spacing: 1.5px;
+    color: rgba(245,240,225,0.5); margin-bottom: 6px; text-transform: uppercase;
+  }
+  .gate-field label .req { color: var(--gold); margin-left: 2px; }
+  .gate-field input {
+    width: 100%; padding: 11px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(212,175,110,0.25);
+    border-radius: 6px; color: var(--ivory);
+    font-size: 14px; font-family: 'Microsoft JhengHei', sans-serif;
+    outline: none; transition: border 0.2s;
+  }
+  .gate-field input:focus { border-color: rgba(212,175,110,0.6); }
+  .gate-field input::placeholder { color: rgba(245,240,225,0.3); }
+  .gate-submit-btn {
+    width: 100%; padding: 16px;
+    background: linear-gradient(135deg, var(--gold), #c9973a);
+    color: #1a1a2e; border: none; border-radius: 8px; cursor: pointer;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 17px; font-weight: 700; letter-spacing: 2px;
+    margin-bottom: 20px; transition: opacity 0.2s;
+  }
+  .gate-submit-btn:hover { opacity: 0.88; }
+  .gate-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .gate-divider {
+    text-align: center; font-size: 12px;
+    color: rgba(245,240,225,0.3); letter-spacing: 2px; margin-bottom: 16px;
+    position: relative;
+  }
+  .gate-divider::before, .gate-divider::after {
+    content: ''; position: absolute; top: 50%;
+    width: calc(50% - 30px); height: 1px;
+    background: rgba(212,175,110,0.2);
+  }
+  .gate-divider::before { left: 0; }
+  .gate-divider::after { right: 0; }
+  .gate-contact-alt {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; padding: 18px 22px; text-align: center;
+  }
+  .gate-contact-alt p {
+    font-size: 13px; color: rgba(245,240,225,0.55); margin-bottom: 12px;
+  }
+  .gate-contact-links {
+    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+  }
+  .gate-contact-link {
+    font-size: 14px; color: var(--gold); text-decoration: none;
+    letter-spacing: 0.5px; padding: 8px 18px;
+    border: 1px solid rgba(212,175,110,0.3); border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .gate-contact-link:hover { background: rgba(212,175,110,0.12); }
+  .gate-privacy {
+    font-size: 11px; color: rgba(245,240,225,0.3);
+    text-align: center; margin-top: 18px; line-height: 1.6;
+  }
+  @media (max-width: 580px) {
+    .gate-card { padding: 28px 20px; }
+    .gate-form-grid { grid-template-columns: 1fr; }
+    .gate-form-grid .full-width { grid-column: 1; }
+  }
+
   /* === Retry === */
   .retry-btn {
     background: transparent;
@@ -588,6 +689,59 @@
     <p class="submit-note">請完成所有 20 題後送出 · 本評估結果僅供參考</p>
   </div>
 
+</div>
+
+<!-- Contact Gate -->
+<div class="contact-gate" id="contact-gate">
+  <div class="gate-card">
+    <div class="gate-badge">✅ 評估完成</div>
+    <h2 class="gate-title">領取您的<span>專屬風險報告</span></h2>
+    <p class="gate-sub">AI 已完成分析，請填寫以下資料以接收完整風險報告及改善建議，<br>報告將寄送至您填寫的電子信箱。</p>
+
+    <div class="gate-form-grid">
+      <div class="gate-field">
+        <label>公司名稱 <span class="req">*</span></label>
+        <input type="text" id="g-company" placeholder="例：策識永續有限公司">
+      </div>
+      <div class="gate-field">
+        <label>職稱 <span class="req">*</span></label>
+        <input type="text" id="g-title" placeholder="例：人資主任、總經理">
+      </div>
+      <div class="gate-field">
+        <label>姓名 <span class="req">*</span></label>
+        <input type="text" id="g-name" placeholder="請輸入您的姓名">
+      </div>
+      <div class="gate-field">
+        <label>聯絡電話 <span class="req">*</span></label>
+        <input type="tel" id="g-phone" placeholder="例：0912-345-678">
+      </div>
+      <div class="gate-field full-width">
+        <label>電子信箱 <span class="req">*</span>（報告將寄至此信箱）</label>
+        <input type="email" id="g-email" placeholder="例：hr@company.com.tw">
+      </div>
+      <div class="gate-field full-width">
+        <label>郵寄地址（選填，如需紙本報告）</label>
+        <input type="text" id="g-address" placeholder="例：台北市信義區松仁路…">
+      </div>
+    </div>
+
+    <button class="gate-submit-btn" id="gate-submit-btn" onclick="submitWithContact()">
+      送出資料並取得完整報告 →
+    </button>
+
+    <div class="gate-divider">或</div>
+
+    <div class="gate-contact-alt">
+      <p>不想填表？直接聯繫策識永續顧問索取報告</p>
+      <div class="gate-contact-links">
+        <a href="mailto:info@cctmcoach.com" class="gate-contact-link">✉ 寄 Email 索取</a>
+        <a href="https://lin.ee/策識永續" class="gate-contact-link" target="_blank">💬 LINE 諮詢</a>
+        <a href="pricing-and-booking.html" class="gate-contact-link">📅 預約顧問</a>
+      </div>
+    </div>
+
+    <p class="gate-privacy">🔒 您的資料受到保護，僅用於寄送評估報告與後續顧問諮詢聯繫，不會轉售第三方。</p>
+  </div>
 </div>
 
 <!-- Loading -->
@@ -680,15 +834,58 @@
     document.getElementById('submit-btn').disabled = count < TOTAL;
   }
 
-  async function submitAssessment() {
+  // 計算罰鍰（共用）
+  function calcFines() {
+    const fineItems = QUESTIONS
+      .filter(q => answers[q.id] === 'no' || answers[q.id] === 'unsure')
+      .map(q => ({ ...q.fine, title: q.text.slice(0, 18) + '…', cat: q.cat }));
+    const totalMin = fineItems.reduce((s, f) => s + f.min, 0);
+    const totalMax = fineItems.reduce((s, f) => s + f.max, 0);
+    return { fineItems, totalMin, totalMax };
+  }
+
+  // Step 1：點「開始 AI 分析」→ 顯示聯絡閘門
+  function submitAssessment() {
     document.getElementById('assessment-form').style.display = 'none';
+    document.getElementById('contact-gate').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 把原本 company-form 的資訊預填到 gate
+    const company = document.getElementById('cf-company')?.value?.trim();
+    if (company) document.getElementById('g-company').value = company;
+  }
+
+  // Step 2：填好聯絡資料 → 實際呼叫 API
+  async function submitWithContact() {
+    const company  = document.getElementById('g-company').value.trim();
+    const jobTitle = document.getElementById('g-title').value.trim();
+    const name     = document.getElementById('g-name').value.trim();
+    const phone    = document.getElementById('g-phone').value.trim();
+    const email    = document.getElementById('g-email').value.trim();
+    const address  = document.getElementById('g-address').value.trim();
+
+    // 必填驗證
+    if (!company || !jobTitle || !name || !phone || !email) {
+      alert('請填寫標示 * 的必填欄位（公司名稱、職稱、姓名、電話、電子信箱）');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('請輸入有效的電子信箱格式');
+      return;
+    }
+
+    const btn = document.getElementById('gate-submit-btn');
+    btn.disabled = true;
+    btn.textContent = '分析中…';
+
+    document.getElementById('contact-gate').style.display = 'none';
     document.getElementById('loading-wrap').style.display = 'block';
 
     const payload = {
       answers,
-      company:  document.getElementById('cf-company').value.trim(),
-      industry: document.getElementById('cf-industry').value,
-      size:     document.getElementById('cf-size').value,
+      company,
+      industry: document.getElementById('cf-industry')?.value || '',
+      size:     document.getElementById('cf-size')?.value || '',
+      contact: { company, jobTitle, name, phone, email, address },
     };
 
     try {
@@ -699,13 +896,7 @@
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error || '分析失敗');
-      // 計算罰鍰範圍（不符合 + 不確定 的題目）
-      const fineItems = QUESTIONS
-        .filter(q => answers[q.id] === 'no' || answers[q.id] === 'unsure')
-        .map(q => ({ ...q.fine, title: q.text.slice(0, 18) + '…', cat: q.cat }));
-      const totalMin = fineItems.reduce((s, f) => s + f.min, 0);
-      const totalMax = fineItems.reduce((s, f) => s + f.max, 0);
-      renderResult(data.result, payload, { fineItems, totalMin, totalMax });
+      renderResult(data.result, payload, calcFines());
     } catch (err) {
       renderError(err.message);
     } finally {
