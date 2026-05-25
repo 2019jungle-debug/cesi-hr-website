@@ -177,6 +177,7 @@
       <button class="tab" onclick="switchTab('members')">會員</button>
       <button class="tab" onclick="switchTab('orders')">訂單</button>
       <button class="tab" onclick="switchTab('cancellations')">取消申請</button>
+      <button class="tab" onclick="switchTab('leads')">潛在客戶</button>
       <button class="tab" onclick="switchTab('knowledge')">知識庫</button>
       <button class="tab" onclick="switchTab('system')">系統</button>
     </div>
@@ -263,6 +264,55 @@
       <div class="section">
         <h2>取消申請列表 <span class="meta" id="cancel-count">—</span></h2>
         <div id="cancellations-table"></div>
+      </div>
+    </div>
+
+    <!-- 潛在客戶 -->
+    <div class="panel" id="panel-leads">
+      <div class="section">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+          <h2>潛在客戶資料庫 <span class="meta">Risk Assessment Leads</span></h2>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <select id="leads-filter-risk" onchange="filterLeads()" style="padding:7px 12px;background:var(--bg-elev);border:1px solid var(--line);color:var(--ink);font-size:12px;border-radius:4px;">
+              <option value="">全部風險等級</option>
+              <option value="高風險">高風險</option>
+              <option value="中風險">中風險</option>
+              <option value="低風險">低風險</option>
+            </select>
+            <input id="leads-search" type="text" placeholder="搜尋公司 / 姓名 / 信箱…" oninput="filterLeads()"
+              style="padding:7px 12px;background:var(--bg-elev);border:1px solid var(--line);color:var(--ink);font-size:12px;border-radius:4px;width:220px;">
+            <button onclick="downloadLeadsCsv()" style="padding:7px 16px;background:var(--success);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;">⬇ 下載 CSV</button>
+            <button onclick="loadLeads()" style="padding:7px 16px;background:var(--bg-elev);color:var(--ink-soft);border:1px solid var(--line);border-radius:4px;cursor:pointer;font-size:12px;">🔄 重新載入</button>
+          </div>
+        </div>
+
+        <!-- 統計卡片 -->
+        <div id="leads-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;"></div>
+
+        <!-- 表格 -->
+        <div style="overflow-x:auto;">
+          <table id="leads-table" style="width:100%;border-collapse:collapse;font-size:12.5px;">
+            <thead>
+              <tr style="background:var(--bg-elev);text-align:left;">
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap;">評估日期</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">公司名稱</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">姓名</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">職稱</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">電話</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">電子信箱</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">郵寄地址</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">產業</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">人數</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap;">風險評級</th>
+                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">風險指數</th>
+              </tr>
+            </thead>
+            <tbody id="leads-tbody">
+              <tr><td colspan="11" style="text-align:center;padding:40px;color:var(--ink-faded);">點選「重新載入」讀取資料</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p id="leads-count" style="font-size:12px;color:var(--ink-faded);margin-top:10px;text-align:right;"></p>
       </div>
     </div>
 
@@ -1028,6 +1078,129 @@
     if (name === 'cancellations') loadCancellations();
     if (name === 'system') loadSystem();
     if (name === 'knowledge') loadFormDocStatus();
+    if (name === 'leads') loadLeads();
+  }
+
+  // ── 潛在客戶 (Leads) ────────────────────────────────────────────
+  let allLeads = [];
+
+  async function loadLeads() {
+    const tbody = document.getElementById('leads-tbody');
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--ink-faded);">載入中…</td></tr>`;
+    try {
+      const data = await callAdmin('list_risk_leads');
+      allLeads = (data.leads || []).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+      renderLeads(allLeads);
+      renderLeadStats(allLeads);
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--hot);">載入失敗：${e.message}</td></tr>`;
+    }
+  }
+
+  function riskColor(level) {
+    if (!level) return 'var(--ink-faded)';
+    return level.includes('高') ? 'var(--hot)' : level.includes('中') ? 'var(--warn)' : 'var(--success)';
+  }
+
+  function renderLeads(leads) {
+    const tbody = document.getElementById('leads-tbody');
+    document.getElementById('leads-count').textContent = `共 ${leads.length} 筆`;
+    if (!leads.length) {
+      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--ink-faded);">尚無資料</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = leads.map((l, i) => {
+      const date = l.createdAt ? l.createdAt.slice(0, 10) : '—';
+      const bg = i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)';
+      const riskC = riskColor(l.riskLevel);
+      return `<tr style="background:${bg};" onmouseover="this.style.background='rgba(212,168,87,0.05)'" onmouseout="this.style.background='${bg}'">
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-faded);white-space:nowrap;">${date}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);font-weight:600;">${l.company || '—'}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">${l.name || '—'}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);">${l.jobTitle || '—'}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">
+          ${l.phone ? `<a href="tel:${l.phone}" style="color:var(--accent);text-decoration:none;">${l.phone}</a>` : '—'}
+        </td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">
+          ${l.email ? `<a href="mailto:${l.email}" style="color:var(--accent);text-decoration:none;">${l.email}</a>` : '—'}
+        </td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${l.address || ''}">${l.address || '—'}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);">${l.industry || '—'}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);">${l.size || '—'}</td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">
+          <span style="color:${riskC};font-weight:700;">${l.riskLevel || '—'}</span>
+        </td>
+        <td style="padding:9px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:600;color:${riskC};">${l.riskScore ?? '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderLeadStats(leads) {
+    const high   = leads.filter(l => l.riskLevel?.includes('高')).length;
+    const mid    = leads.filter(l => l.riskLevel?.includes('中')).length;
+    const low    = leads.filter(l => l.riskLevel?.includes('低')).length;
+    const hasEmail = leads.filter(l => l.email).length;
+    const stats = [
+      { label: '總筆數',      val: leads.length,  color: 'var(--accent)' },
+      { label: '高風險',      val: high,           color: 'var(--hot)' },
+      { label: '中風險',      val: mid,            color: 'var(--warn)' },
+      { label: '低風險',      val: low,            color: 'var(--success)' },
+      { label: '已留信箱',    val: hasEmail,       color: 'var(--info)' },
+    ];
+    document.getElementById('leads-stats').innerHTML = stats.map(s => `
+      <div style="background:var(--bg-elev);border:1px solid var(--line);border-radius:6px;padding:14px 18px;text-align:center;">
+        <div style="font-size:26px;font-weight:700;color:${s.color};">${s.val}</div>
+        <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;letter-spacing:1px;">${s.label}</div>
+      </div>`).join('');
+  }
+
+  function filterLeads() {
+    const risk   = document.getElementById('leads-filter-risk').value;
+    const search = document.getElementById('leads-search').value.toLowerCase();
+    const filtered = allLeads.filter(l => {
+      const matchRisk = !risk || (l.riskLevel || '').includes(risk);
+      const matchSearch = !search ||
+        (l.company || '').toLowerCase().includes(search) ||
+        (l.name    || '').toLowerCase().includes(search) ||
+        (l.email   || '').toLowerCase().includes(search) ||
+        (l.phone   || '').toLowerCase().includes(search);
+      return matchRisk && matchSearch;
+    });
+    renderLeads(filtered);
+  }
+
+  function downloadLeadsCsv() {
+    if (!allLeads.length) { showToast('尚無資料可下載'); return; }
+    const risk   = document.getElementById('leads-filter-risk').value;
+    const search = document.getElementById('leads-search').value.toLowerCase();
+    const data   = allLeads.filter(l => {
+      const matchRisk = !risk || (l.riskLevel || '').includes(risk);
+      const matchSearch = !search ||
+        (l.company || '').toLowerCase().includes(search) ||
+        (l.name    || '').toLowerCase().includes(search) ||
+        (l.email   || '').toLowerCase().includes(search);
+      return matchRisk && matchSearch;
+    });
+
+    const headers = ['評估日期','公司名稱','姓名','職稱','電話','電子信箱','郵寄地址','產業','員工人數','風險評級','風險指數'];
+    const rows = data.map(l => [
+      l.createdAt?.slice(0,10) || '',
+      l.company  || '', l.name    || '', l.jobTitle || '',
+      l.phone    || '', l.email   || '', l.address  || '',
+      l.industry || '', l.size    || '',
+      l.riskLevel|| '', l.riskScore ?? '',
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
+
+    const bom = '﻿'; // BOM for Excel 中文
+    const csv = bom + [headers.join(','), ...rows].join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `潛在客戶_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`已下載 ${data.length} 筆資料`);
   }
 
   async function refresh() {
