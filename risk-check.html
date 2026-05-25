@@ -257,7 +257,19 @@
     transition: all 0.3s;
   }
   .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,175,110,0.4); }
-  .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-gold:disabled {
+    opacity: 1;
+    background: #3a4050;
+    color: rgba(245,240,225,0.35);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-gold:not(:disabled) { animation: pulse-ready 2s infinite; }
+  @keyframes pulse-ready {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,110,0); }
+    50% { box-shadow: 0 0 0 8px rgba(212,175,110,0.2); }
+  }
   .submit-note {
     font-size: 12px;
     color: rgba(245,240,225,0.45);
@@ -684,7 +696,7 @@
   <!-- 送出 -->
   <div class="submit-wrap">
     <button class="btn-gold" id="submit-btn" onclick="submitAssessment()" disabled>
-      開始 AI 分析
+      開始 AI 分析（還差 20 題）
     </button>
     <p class="submit-note">請完成所有 20 題後送出 · 本評估結果僅供參考</p>
   </div>
@@ -831,7 +843,10 @@
     document.getElementById('progress-text').textContent = `${count} / ${TOTAL} 題已完成`;
     document.getElementById('progress-pct').textContent = pct + '%';
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('submit-btn').disabled = count < TOTAL;
+    const btn = document.getElementById('submit-btn');
+    const done = count >= TOTAL;
+    btn.disabled = !done;
+    btn.textContent = done ? '✅ 全部完成，開始 AI 分析 →' : `開始 AI 分析（還差 ${TOTAL - count} 題）`;
   }
 
   // 計算罰鍰（共用）
@@ -846,12 +861,22 @@
 
   // Step 1：點「開始 AI 分析」→ 顯示聯絡閘門
   function submitAssessment() {
-    document.getElementById('assessment-form').style.display = 'none';
-    document.getElementById('contact-gate').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    // 把原本 company-form 的資訊預填到 gate
-    const company = document.getElementById('cf-company')?.value?.trim();
-    if (company) document.getElementById('g-company').value = company;
+    try {
+      // 預填公司名稱
+      const cfCompany = document.getElementById('cf-company');
+      if (cfCompany && cfCompany.value.trim()) {
+        document.getElementById('g-company').value = cfCompany.value.trim();
+      }
+      // 隱藏答題區，顯示聯絡閘門
+      document.getElementById('assessment-form').style.display = 'none';
+      const gate = document.getElementById('contact-gate');
+      gate.style.display = 'block';
+      // 滾到聯絡閘門（不要滾到頁頂）
+      gate.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (e) {
+      console.error('submitAssessment error:', e);
+      alert('發生錯誤，請重新整理頁面後再試。錯誤：' + e.message);
+    }
   }
 
   // Step 2：填好聯絡資料 → 實際呼叫 API
