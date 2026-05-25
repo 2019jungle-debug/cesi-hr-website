@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI 勞資風險自評 · 策識永續</title>
-<meta name="description" content="10 題快速自評，立即了解您的企業勞資法令合規風險，AI 即時分析並提供改善建議。">
+<meta name="description" content="20 題快速自評，立即了解您的企業勞資法令合規風險，AI 即時分析並提供改善建議。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
@@ -161,6 +161,19 @@
     margin: 0 auto;
     padding: 0 24px;
   }
+
+  .question-cat-header {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding: 18px 4px 8px;
+    margin-top: 8px;
+    border-bottom: 1px solid rgba(212,175,110,0.25);
+    margin-bottom: 14px;
+  }
+  .question-cat-header:first-child { margin-top: 0; }
 
   .question-card {
     background: rgba(255,255,255,0.05);
@@ -470,8 +483,8 @@
 <div class="hero">
   <div class="hero-badge">AI POWERED · 免費評估</div>
   <h1>企業勞資風險<span>快速自評</span></h1>
-  <p>10 題是非題，AI 即時分析您的企業<br>在台灣勞基法下的合規風險與潛在缺失</p>
-  <p class="hero-meta">⏱ 約 3 分鐘完成 · 免費 · 不需要登入</p>
+  <p>20 題自評，AI 即時分析您的企業<br>在台灣勞動法令下的合規風險與潛在缺失</p>
+  <p class="hero-meta">⏱ 約 5 分鐘完成 · 免費 · 不需要登入</p>
 </div>
 
 <!-- Form -->
@@ -480,7 +493,7 @@
   <!-- 進度條 -->
   <div class="progress-wrap">
     <div class="progress-header">
-      <span id="progress-text">0 / 10 題已完成</span>
+      <span id="progress-text">0 / 20 題已完成</span>
       <span id="progress-pct">0%</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -519,7 +532,7 @@
     <button class="btn-gold" id="submit-btn" onclick="submitAssessment()" disabled>
       開始 AI 分析
     </button>
-    <p class="submit-note">請完成所有 10 題後送出 · 本評估結果僅供參考</p>
+    <p class="submit-note">請完成所有 20 題後送出 · 本評估結果僅供參考</p>
   </div>
 
 </div>
@@ -538,25 +551,51 @@
   const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 
   const QUESTIONS = [
-    { id: 'q1',  text: '公司有與每位員工簽訂書面勞動契約，並保存契約副本' },
-    { id: 'q2',  text: '公司有制定工作規則，且 30 人以上已向主管機關核備' },
-    { id: 'q3',  text: '加班費依勞基法規定正確計算（平日延時：前 2 小時 1.33 倍、第 3～4 小時 1.66 倍；休息日另依規定計給；加班時數均無條件進位）' },
-    { id: 'q4',  text: '公司有每日紀錄員工出勤時間（電子打卡或書面簽到）' },
-    { id: 'q5',  text: '員工每 7 天至少有 1 天例假，排班制度符合勞基法規定' },
-    { id: 'q6',  text: '公司有依規定為所有勞工提撥勞工退休金（不低於薪資 6%）' },
-    { id: 'q7',  text: '公司有建立性別平等及職場霸凌防治措施，並告知員工申訴管道' },
-    { id: 'q8',  text: '試用期員工享有與正式員工相同的勞基法保障（不可任意解雇）' },
-    { id: 'q9',  text: '解雇或資遣員工時，均依法辦理預告期與資遣費計算' },
-    { id: 'q10', text: '公司主管對勞基法基本規定有了解，不會要求員工做出違法行為' },
+    // ── 人事文件 ──
+    { id: 'q1',  cat: '人事文件', text: '公司已為每位員工置備勞工名卡（人事資料卡），記載姓名、薪資、進退日期等，並隨時更新' },
+    { id: 'q2',  cat: '人事文件', text: '公司已與每位員工簽訂書面勞動契約（雙方各執一份），繼續性工作使用不定期契約，無以短期定期契約規避資遣費的情形' },
+    // ── 薪資管理 ──
+    { id: 'q3',  cat: '薪資管理', text: '所有員工（含計時、兼職、外籍移工）薪資均不低於最低工資（2026年：月薪 28,590 元、時薪 190 元），固定津貼已計入核算' },
+    { id: 'q4',  cat: '薪資管理', text: '工資全額直接給付給勞工，未曾無故扣減或預扣薪資作為違約金、損失賠償' },
+    { id: 'q5',  cat: '薪資管理', text: '工資清冊完整載明各項目（底薪、加班費、各類津貼、扣款明細），員工已簽收確認，並保存 5 年' },
+    { id: 'q6',  cat: '薪資管理', text: '加班費依法正確計算：平日延時前 2h 加 1/3 以上、再 2h 加 2/3；休息日按加成給薪；例假日及國定假日出勤均加倍' },
+    // ── 工時管理 ──
+    { id: 'q7',  cat: '工時管理', text: '出勤紀錄逐日記載至分鐘，保存 5 年；員工申請副本可立即提供；紀錄未遭主管竄改' },
+    { id: 'q8',  cat: '工時管理', text: '每日正常工時不超過 8 小時、每週不超過 40 小時；採彈性工時者已開勞資會議並保有核備文件' },
+    { id: 'q9',  cat: '工時管理', text: '加班時數每月不超過 46 小時（或經勞資會議同意之 54 小時上限）；每日工作總時數（含加班）不超過 12 小時' },
+    { id: 'q10', cat: '工時管理', text: '以補休替代加班費時，補休期限未超過次一年度終了；逾期未休者已折算工資給付，無拖延或拒付情形' },
+    // ── 休假管理 ──
+    { id: 'q11', cat: '休假管理', text: '每 7 日安排例假 1 日、休息日 1 日；例假日未強制排班；休息日出勤均依規定給付加成加班費' },
+    { id: 'q12', cat: '休假管理', text: '全年 11 天國定假日出勤者，工資均已加倍給付，未以補休替代' },
+    { id: 'q13', cat: '休假管理', text: '特別休假天數依年資正確計算，由員工自主排定，未強制年底清假' },
+    { id: 'q14', cat: '休假管理', text: '年度終了或契約終止時，未休特別休假已折算工資發給，未以員工簽名放棄為由免除給薪義務' },
+    { id: 'q15', cat: '休假管理', text: '請假規則完備（病假、事假、家庭照顧假），未以無代班人員為由拒絕員工請假，病假薪資依規定給付' },
+    // ── 性別平等 ──
+    { id: 'q16', cat: '性別平等', text: '產假 8 週、陪產假 7 天依規定核給；育嬰留停申請未遭拒絕，留停後未對員工降調或解僱' },
+    { id: 'q17', cat: '性別平等', text: '公司已訂定性騷擾防治措施（10 人以上）、公告申訴窗口，知悉性騷擾情事會立即調查處理並留存紀錄' },
+    // ── 退休資遣 ──
+    { id: 'q18', cat: '退休資遣', text: '每月按時為全體勞工提撥不低於月薪 6% 的勞退金，投保薪資未低報，新進人員 30 日內已完成提繳' },
+    { id: 'q19', cat: '退休資遣', text: '資遣員工時依法給予預告期（或代替預告工資），資遣費依年資正確計算，並於終止後 30 日內給付；10 人以上資遣已通報主管機關' },
+    // ── 職災保險 ──
+    { id: 'q20', cat: '職災保險', text: '勞工自到職日即辦理勞保加保（含職災保險），未以試用期為由延後；投保薪資與實際薪資相符，職災事故發生已依規通報及給予補償' },
   ];
 
   const answers = {};
 
+  const TOTAL = QUESTIONS.length; // 20
+
   function renderQuestions() {
     const wrap = document.getElementById('questions-wrap');
-    wrap.innerHTML = QUESTIONS.map((q, i) => `
+    let lastCat = '';
+    wrap.innerHTML = QUESTIONS.map((q, i) => {
+      const catHeader = q.cat !== lastCat
+        ? `<div class="question-cat-header">${q.cat}</div>`
+        : '';
+      lastCat = q.cat;
+      return `
+      ${catHeader}
       <div class="question-card" id="card-${q.id}">
-        <div class="question-num">第 ${i+1} 題 / 共 10 題</div>
+        <div class="question-num">第 ${i+1} 題 / 共 ${TOTAL} 題</div>
         <div class="question-text">${q.text}</div>
         <div class="options">
           <button class="option-btn" onclick="selectAnswer('${q.id}','yes',this)">✅ 符合</button>
@@ -564,7 +603,7 @@
           <button class="option-btn" onclick="selectAnswer('${q.id}','unsure',this)">⚠️ 不確定</button>
         </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
   function selectAnswer(qid, value, btn) {
@@ -581,11 +620,11 @@
 
   function updateProgress() {
     const count = Object.keys(answers).length;
-    const pct = Math.round((count / 10) * 100);
-    document.getElementById('progress-text').textContent = `${count} / 10 題已完成`;
+    const pct = Math.round((count / TOTAL) * 100);
+    document.getElementById('progress-text').textContent = `${count} / ${TOTAL} 題已完成`;
     document.getElementById('progress-pct').textContent = pct + '%';
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('submit-btn').disabled = count < 10;
+    document.getElementById('submit-btn').disabled = count < TOTAL;
   }
 
   async function submitAssessment() {
