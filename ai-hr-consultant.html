@@ -473,6 +473,50 @@
     line-height: 1.8;
   }
 
+  /* === 手機版登入提示列 === */
+  .mobile-login-bar {
+    display: none;
+  }
+  @media (max-width: 600px) {
+    .mobile-login-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+    .mobile-login-bar .mobile-login-hint {
+      flex: 1;
+      line-height: 1.5;
+    }
+    .mobile-login-bar .mobile-login-btn {
+      padding: 7px 14px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      cursor: pointer;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .mobile-login-bar.is-pro {
+      border-left-color: var(--success);
+      background: rgba(107,142,35,0.06);
+    }
+    .mobile-login-bar.is-pro .mobile-login-btn {
+      background: var(--success);
+    }
+  }
+
   .header-meta .date {
     font-family: 'Cormorant Garamond', serif;
     font-size: 18px;
@@ -1284,7 +1328,7 @@
           <h3>人資功能分類引導</h3>
         </div>
         <div class="meta">
-          <span class="lock-pill" id="hr-fn-pill">會員專屬</span>
+          <span class="lock-pill" id="hr-fn-pill" onclick="event.stopPropagation(); openAccessModal()" style="cursor:pointer;">會員專屬</span>
           <span class="toggle-arrow">▾</span>
         </div>
       </div>
@@ -1298,6 +1342,12 @@
           <a href="upgrade.html">立 即 升 級</a>
         </div>
       </div>
+    </div>
+
+    <!-- 手機版登入提示列（桌機隱藏） -->
+    <div class="mobile-login-bar" id="mobile-login-bar">
+      <div class="mobile-login-hint" id="mobile-login-hint">尚未登入，每日限 10 問</div>
+      <button class="mobile-login-btn" id="mobile-login-btn" onclick="openAccessModal()">🔑 登 入</button>
     </div>
 
     <div class="categories" id="categories"></div>
@@ -1908,10 +1958,32 @@
       if (isPro) {
         pill.className = 'pro-pill';
         pill.textContent = '✓ 已解鎖';
+        pill.style.cursor = 'default';
+        pill.onclick = null;
         banner.classList.remove('show');
       } else {
         pill.className = 'lock-pill';
-        pill.textContent = '🔒 會員專屬';
+        pill.textContent = '🔒 登入解鎖';
+        pill.style.cursor = 'pointer';
+        pill.onclick = (e) => { e.stopPropagation(); openAccessModal(); };
+      }
+
+      // 手機版登入列更新
+      const mobileBar = document.getElementById('mobile-login-bar');
+      const mobileHint = document.getElementById('mobile-login-hint');
+      const mobileBtn = document.getElementById('mobile-login-btn');
+      if (mobileBar) {
+        if (isPro) {
+          mobileBar.classList.add('is-pro');
+          mobileHint.textContent = '✓ 會員已登入，享無限問答 + 表單下載';
+          mobileBtn.textContent = '管理帳號';
+          mobileBtn.onclick = openAccessModal;
+        } else {
+          mobileBar.classList.remove('is-pro');
+          mobileHint.textContent = '尚未登入 · 免費版每日限 10 問';
+          mobileBtn.textContent = '🔑 登 入';
+          mobileBtn.onclick = openAccessModal;
+        }
       }
     }
 
@@ -1921,13 +1993,16 @@
     }
 
     function showUpgradePrompt() {
-      // 顯示升級 banner
+      // 手機優先：直接開登入 modal 比捲動到 banner 更直覺
+      if (window.innerWidth <= 600) {
+        openAccessModal();
+        return;
+      }
+      // 桌機：顯示升級 banner
       const banner = document.getElementById('hr-fn-upgrade');
       banner.classList.add('show');
-      // 確保樹狀區是展開的
       const wrap = document.getElementById('hr-functions');
       if (!wrap.classList.contains('open')) wrap.classList.add('open');
-      // 平滑滾動到 banner
       setTimeout(() => banner.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
     }
 
