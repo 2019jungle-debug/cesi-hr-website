@@ -398,24 +398,24 @@ body {
 .cost-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 18px 4px;
+  gap: 20px;
+  padding: 26px 4px;
   border-top: 1px solid rgba(212,175,110,0.13);
 }
 .cost-label {
   flex: 0 0 auto;
-  width: 160px;
-  font-size: 15px;
+  width: 220px;
+  font-size: 30px;
   color: rgba(245,240,225,0.7);
   font-family: 'Microsoft JhengHei', sans-serif;
 }
 .cost-arrow {
   color: rgba(212,175,110,0.5);
-  font-size: 18px;
+  font-size: 32px;
 }
 .cost-amount {
   flex: 1;
-  font-size: 16px;
+  font-size: 32px;
   color: rgba(245,240,225,0.55);
   font-family: 'Microsoft JhengHei', sans-serif;
 }
@@ -425,9 +425,11 @@ body {
 .cost-amount.red-text strong {
   color: #e07070;
 }
-@media (max-width: 480px) {
-  .cost-label { width: 130px; font-size: 14px; }
-  .cost-amount { font-size: 14px; }
+@media (max-width: 600px) {
+  .cost-label { width: 140px; font-size: 18px; }
+  .cost-amount { font-size: 18px; }
+  .cost-arrow { font-size: 18px; }
+  .cost-row { gap: 10px; padding: 18px 4px; }
 }
 
 .pain-card {
@@ -1132,7 +1134,7 @@ body {
 <section class="section" style="padding:80px 0 72px;background:linear-gradient(180deg,var(--navy-deep) 0%,#0d1a3a 100%);">
   <div class="section-heading">
     <div class="section-eyebrow" style="color:rgba(224,112,112,0.8);">— 先算清楚再決定 —</div>
-    <h2 style="font-size:clamp(22px,4vw,38px);line-height:1.4;">
+    <h2 style="font-size:clamp(36px,6vw,72px);line-height:1.4;">
       你每年，<br>可能已經在<span style="color:#e07070;">悄悄出血</span>
     </h2>
     <div class="divider-elegant"></div>
@@ -1176,11 +1178,11 @@ body {
 
     <!-- 結論 -->
     <div style="margin-top:40px;padding:32px 28px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.35);border-radius:12px;text-align:center;">
-      <div style="font-size:14px;color:rgba(245,240,225,0.55);letter-spacing:2px;margin-bottom:12px;">把以上風險加總起來</div>
-      <div style="font-size:clamp(20px,4vw,32px);font-weight:700;color:#f0e0e0;line-height:1.4;font-family:'Microsoft JhengHei',sans-serif;">
+      <div style="font-size:22px;color:rgba(245,240,225,0.55);letter-spacing:2px;margin-bottom:16px;">把以上風險加總起來</div>
+      <div style="font-size:clamp(28px,5vw,56px);font-weight:700;color:#f0e0e0;line-height:1.4;font-family:'Microsoft JhengHei',sans-serif;">
         你的公司每年<br>可能已在損失 <span style="color:#e07070;font-size:1.2em;">50 ~ 300 萬</span>
       </div>
-      <div style="margin-top:16px;font-size:14px;color:rgba(245,240,225,0.5);">而這些損失，大多數企業主根本不知道正在發生</div>
+      <div style="margin-top:20px;font-size:22px;color:rgba(245,240,225,0.5);">而這些損失，大多數企業主根本不知道正在發生</div>
     </div>
   </div>
 
