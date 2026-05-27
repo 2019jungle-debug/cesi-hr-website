@@ -394,6 +394,42 @@ body {
 @media (max-width: 560px) {
   .pain-grid { grid-template-columns: 1fr; }
 }
+/* ── Cost Row ── */
+.cost-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 4px;
+  border-top: 1px solid rgba(212,175,110,0.13);
+}
+.cost-label {
+  flex: 0 0 auto;
+  width: 160px;
+  font-size: 15px;
+  color: rgba(245,240,225,0.7);
+  font-family: 'Microsoft JhengHei', sans-serif;
+}
+.cost-arrow {
+  color: rgba(212,175,110,0.5);
+  font-size: 18px;
+}
+.cost-amount {
+  flex: 1;
+  font-size: 16px;
+  color: rgba(245,240,225,0.55);
+  font-family: 'Microsoft JhengHei', sans-serif;
+}
+.cost-amount strong {
+  color: var(--gold-bright);
+}
+.cost-amount.red-text strong {
+  color: #e07070;
+}
+@media (max-width: 480px) {
+  .cost-label { width: 130px; font-size: 14px; }
+  .cost-amount { font-size: 14px; }
+}
+
 .pain-card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(212,175,110,0.2);
@@ -1089,6 +1125,70 @@ body {
 
   <div class="hero-meta fade-up d6">
     <strong>30 天免費試用</strong> · 無需綁卡 · 立即可用
+  </div>
+</section>
+
+<!-- ===== Cost Reality Section ===== -->
+<section class="section" style="padding:80px 0 72px;background:linear-gradient(180deg,var(--navy-deep) 0%,#0d1a3a 100%);">
+  <div class="section-heading">
+    <div class="section-eyebrow" style="color:rgba(224,112,112,0.8);">— 先算清楚再決定 —</div>
+    <h2 style="font-size:clamp(22px,4vw,38px);line-height:1.4;">
+      你每年，<br>可能已經在<span style="color:#e07070;">悄悄出血</span>
+    </h2>
+    <div class="divider-elegant"></div>
+  </div>
+
+  <div style="max-width:680px;margin:0 auto 48px;padding:0 24px;">
+    <div style="display:flex;flex-direction:column;gap:0;">
+
+      <!-- Row items -->
+      <div class="cost-row">
+        <div class="cost-label">招錯一個人</div>
+        <div class="cost-arrow">→</div>
+        <div class="cost-amount">損失 <strong>20 ~ 80 萬</strong></div>
+      </div>
+      <div class="cost-row">
+        <div class="cost-label">勞檢一次缺失</div>
+        <div class="cost-arrow">→</div>
+        <div class="cost-amount">罰款 <strong>2 ~ 100 萬</strong></div>
+      </div>
+      <div class="cost-row">
+        <div class="cost-label">職場霸凌申訴</div>
+        <div class="cost-arrow">→</div>
+        <div class="cost-amount red-text"><strong>名譽損失 + 離職潮</strong></div>
+      </div>
+      <div class="cost-row">
+        <div class="cost-label">HR 人工處理作業</div>
+        <div class="cost-arrow">→</div>
+        <div class="cost-amount">每月浪費 <strong>30 ~ 80 小時</strong></div>
+      </div>
+      <div class="cost-row">
+        <div class="cost-label">面試問題不合法</div>
+        <div class="cost-arrow">→</div>
+        <div class="cost-amount red-text"><strong>潛在性別歧視訴訟</strong></div>
+      </div>
+      <div class="cost-row" style="border-bottom:1px solid rgba(212,175,110,0.15);">
+        <div class="cost-label">工作規則過舊</div>
+        <div class="cost-arrow">→</div>
+        <div class="cost-amount red-text"><strong>全面高風險曝露</strong></div>
+      </div>
+    </div>
+
+    <!-- 結論 -->
+    <div style="margin-top:40px;padding:32px 28px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.35);border-radius:12px;text-align:center;">
+      <div style="font-size:14px;color:rgba(245,240,225,0.55);letter-spacing:2px;margin-bottom:12px;">把以上風險加總起來</div>
+      <div style="font-size:clamp(20px,4vw,32px);font-weight:700;color:#f0e0e0;line-height:1.4;font-family:'Microsoft JhengHei',sans-serif;">
+        你的公司每年<br>可能已在損失 <span style="color:#e07070;font-size:1.2em;">50 ~ 300 萬</span>
+      </div>
+      <div style="margin-top:16px;font-size:14px;color:rgba(245,240,225,0.5);">而這些損失，大多數企業主根本不知道正在發生</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;">
+    <a href="risk-check.html" style="display:inline-flex;align-items:center;gap:10px;background:rgba(192,57,43,0.28);border:1px solid rgba(192,57,43,0.55);color:#e08888;padding:16px 40px;border-radius:8px;font-size:18px;text-decoration:none;font-family:'Microsoft JhengHei',sans-serif;font-weight:700;transition:all 0.2s;" onmouseover="this.style.background='rgba(192,57,43,0.45)'" onmouseout="this.style.background='rgba(192,57,43,0.28)'">
+      ⚡ 3 分鐘自評，看看你的公司風險有多高 →
+    </a>
+    <p style="margin-top:12px;font-size:12px;color:rgba(245,240,225,0.35);">完全免費 · 即時 AI 分析 · 不留資料也能看結果</p>
   </div>
 </section>
 
