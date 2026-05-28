@@ -1313,7 +1313,7 @@
       </div>
       <div class="header-meta">
         <div class="access-bar">
-          <div class="access-status" id="access-status" onclick="openAccessModal()">免費版 · 每日 10 問</div>
+          <div class="access-status" id="access-status" onclick="openAccessModal()">免費版 · 每日 5 問</div>
           <a href="pricing-and-booking.html" class="upgrade-btn" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">方案預約</a>
           <a href="upgrade.html" class="upgrade-btn" id="upgrade-btn">升 級</a>
         </div>
@@ -1350,7 +1350,7 @@
 
     <!-- 手機版登入提示列（桌機隱藏） -->
     <div class="mobile-login-bar" id="mobile-login-bar">
-      <div class="mobile-login-hint" id="mobile-login-hint">尚未登入，每日限 10 問</div>
+      <div class="mobile-login-hint" id="mobile-login-hint">尚未登入，每日限 5 問</div>
       <button class="mobile-login-btn" id="mobile-login-btn" onclick="openAccessModal()">🔑 登 入</button>
     </div>
 
@@ -1487,7 +1487,7 @@
         upgradeBtn.style.display = 'none';
       } else {
         statusEl.classList.remove('pro');
-        statusEl.textContent = '免費版 · 每日 10 問';
+        statusEl.textContent = '免費版 · 每日 5 問';
         upgradeBtn.style.display = 'inline-block';
       }
     }
@@ -2003,7 +2003,7 @@
           mobileBtn.onclick = openAccessModal;
         } else {
           mobileBar.classList.remove('is-pro');
-          mobileHint.textContent = '尚未登入 · 免費版每日限 10 問';
+          mobileHint.textContent = '尚未登入 · 免費版每日限 5 問';
           mobileBtn.textContent = '🔑 登 入';
           mobileBtn.onclick = openAccessModal;
         }
