@@ -661,7 +661,7 @@ body {
       <input type="radio" name="plan" value="basic_monthly">
       <div class="check-circle"></div>
       <div class="name">基礎版</div>
-      <div class="desc">彈性月付，隨時取消</div>
+      <div class="desc">彈性月付，到期不續即止</div>
       <div class="price">
         <span class="currency">NT$</span>
         <span class="amount">499</span>
@@ -727,7 +727,7 @@ body {
       <label class="checkbox-row">
         <input type="checkbox" id="agree-terms" required>
         <span>
-          我已閱讀並同意 <a href="terms.html" target="_blank">服務條款</a> 與 <a href="privacy.html" target="_blank">隱私政策</a>，了解此為訂閱服務、自動續扣，可隨時取消。
+          我已閱讀並同意 <a href="terms.html" target="_blank">服務條款</a> 與 <a href="privacy.html" target="_blank">隱私政策</a>，了解此為手動續約服務，到期前將收到提醒信，再次購買即可續約。
         </span>
       </label>
 
@@ -739,7 +739,7 @@ body {
         </div>
         <div class="summary-row">
           <span class="label">計費方式</span>
-          <span class="value" id="sm-billing">每年自動續扣</span>
+          <span class="value" id="sm-billing">到期提醒，手動續約</span>
         </div>
         <div class="summary-row">
           <span class="label">本次扣款</span>
@@ -794,8 +794,8 @@ body {
   const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 
   const PLAN_INFO = {
-    basic_monthly: { label: '基礎版', billing: '每月自動續扣', amount: 499 },
-    basic_yearly:  { label: '整年優惠版', billing: '每年自動續扣', amount: 4788 },
+    basic_monthly: { label: '基礎版', billing: '到期提醒，手動續約', amount: 499 },
+    basic_yearly:  { label: '整年優惠版', billing: '到期提醒，手動續約', amount: 4788 },
   };
 
   // 方案選擇互動
