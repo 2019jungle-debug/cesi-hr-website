@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -87,6 +87,16 @@
   .badge.expired { background: rgba(233,93,77,0.18); color: var(--hot); }
   .badge.cancelled { background: rgba(154,160,170,0.2); color: var(--ink-faded); }
   .badge.pending { background: rgba(212,160,64,0.18); color: var(--warn); }
+  .badge.paid { background: rgba(123,168,58,0.18); color: var(--success); }
+  .badge.voided { background: rgba(233,93,77,0.18); color: var(--hot); }
+  .badge.invoiced { background: rgba(90,159,200,0.18); color: var(--info); }
+
+  td button.btn-invoice { padding: 4px 9px; background: transparent; color: var(--info);
+    border: 1px solid var(--info); cursor: pointer; font-size: 11px; transition: all 0.2s; margin-right: 4px; }
+  td button.btn-invoice:hover { background: var(--info); color: var(--bg); }
+  td button.btn-void { padding: 4px 9px; background: transparent; color: var(--hot);
+    border: 1px solid var(--hot); cursor: pointer; font-size: 11px; transition: all 0.2s; }
+  td button.btn-void:hover { background: var(--hot); color: var(--bg); }
 
   td button { padding: 4px 10px; background: transparent; color: var(--accent);
     border: 1px solid var(--accent); cursor: pointer; font-size: 11px; transition: all 0.2s; }
@@ -177,8 +187,6 @@
       <button class="tab" onclick="switchTab('members')">會員</button>
       <button class="tab" onclick="switchTab('orders')">訂單</button>
       <button class="tab" onclick="switchTab('cancellations')">取消申請</button>
-      <button class="tab" onclick="switchTab('leads')">潛在客戶</button>
-      <button class="tab" onclick="switchTab('knowledge')">知識庫</button>
       <button class="tab" onclick="switchTab('system')">系統</button>
     </div>
 
@@ -267,205 +275,6 @@
       </div>
     </div>
 
-    <!-- 潛在客戶 -->
-    <div class="panel" id="panel-leads">
-      <div class="section">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
-          <h2>潛在客戶資料庫 <span class="meta">Risk Assessment Leads</span></h2>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-            <select id="leads-filter-risk" onchange="filterLeads()" style="padding:7px 12px;background:var(--bg-elev);border:1px solid var(--line);color:var(--ink);font-size:12px;border-radius:4px;">
-              <option value="">全部風險等級</option>
-              <option value="高風險">高風險</option>
-              <option value="中風險">中風險</option>
-              <option value="低風險">低風險</option>
-            </select>
-            <input id="leads-search" type="text" placeholder="搜尋公司 / 姓名 / 信箱…" oninput="filterLeads()"
-              style="padding:7px 12px;background:var(--bg-elev);border:1px solid var(--line);color:var(--ink);font-size:12px;border-radius:4px;width:220px;">
-            <button onclick="downloadLeadsCsv()" style="padding:7px 16px;background:var(--success);color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px;">⬇ 下載 CSV</button>
-            <button onclick="loadLeads()" style="padding:7px 16px;background:var(--bg-elev);color:var(--ink-soft);border:1px solid var(--line);border-radius:4px;cursor:pointer;font-size:12px;">🔄 重新載入</button>
-          </div>
-        </div>
-
-        <!-- 統計卡片 -->
-        <div id="leads-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;"></div>
-
-        <!-- 表格 -->
-        <div style="overflow-x:auto;">
-          <table id="leads-table" style="width:100%;border-collapse:collapse;font-size:12.5px;">
-            <thead>
-              <tr style="background:var(--bg-elev);text-align:left;">
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap;">評估日期</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">公司名稱</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">姓名</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">職稱</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">電話</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">電子信箱</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">郵寄地址</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">產業</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">人數</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap;">風險評級</th>
-                <th style="padding:10px 12px;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);">風險指數</th>
-              </tr>
-            </thead>
-            <tbody id="leads-tbody">
-              <tr><td colspan="11" style="text-align:center;padding:40px;color:var(--ink-faded);">點選「重新載入」讀取資料</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p id="leads-count" style="font-size:12px;color:var(--ink-faded);margin-top:10px;text-align:right;"></p>
-      </div>
-    </div>
-
-    <!-- 知識庫 -->
-    <div class="panel" id="panel-knowledge">
-
-      <div class="section">
-        <h2>同步最新法規 <span class="meta">Sync Laws</span></h2>
-        <div style="padding: 22px; display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;">
-          <div style="font-size:13px; color:var(--ink-soft); flex:1; min-width:200px;">
-            從<b>全國法規資料庫</b>自動下載最新版本，同步以下法規至知識庫：<br>
-            <span style="color:var(--ink); line-height:2;">
-              勞動基準法 · 性別平等工作法 · 勞工退休金條例 · 勞資爭議處理法 · 職業安全衛生法 · 就業服務法
-            </span><br>
-            <span style="font-size:11px;">⚠️ 同步約需 15-30 秒，請勿關閉頁面</span>
-          </div>
-          <button class="btn primary" onclick="syncLaws()" id="sync-laws-btn" style="background:var(--ink); color:#fff; min-width:160px;">⚡ 同步最新法規</button>
-        </div>
-        <div id="sync-laws-result" style="padding: 0 22px 16px; font-size:12px; display:none;"></div>
-      </div>
-
-      <div class="section">
-        <h2>快取同步 <span class="meta">Cache Sync</span></h2>
-        <div style="padding: 22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-          <div style="font-size:13px; color:var(--ink-soft); flex:1; min-width:200px;">
-            AI HR 每 30 分鐘自動從 GitHub 讀取最新知識。<br>
-            點「立即同步」可強制清除快取，讓新增內容即時生效。
-          </div>
-          <button class="btn primary" onclick="syncKnowledge()" id="sync-btn">↻ 立即同步知識庫</button>
-        </div>
-        <div id="sync-result" style="padding: 0 22px 16px; font-size:12px; color:var(--ink-soft); display:none;"></div>
-      </div>
-
-      <div class="section">
-        <h2>上傳檔案 <span class="meta">Upload File</span></h2>
-        <div style="padding: 22px;">
-          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:20px;">
-            支援格式：<b>.txt · .md · .pdf · .docx</b>（最大 10MB）<br>
-            上傳後內容會自動追加到對應分類的知識庫，並立即生效。
-          </div>
-          <div style="display:grid; gap:14px; max-width:480px;">
-            <div>
-              <label style="font-size:11px; letter-spacing:2px; color:var(--accent); display:block; margin-bottom:6px;">— 選擇分類</label>
-              <select id="kb-category" style="width:100%; padding:9px 12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-family:inherit; font-size:13px;">
-                <option value="">請選擇分類...</option>
-                <option value="labour">勞動法規</option>
-                <option value="recruitment">招募面試</option>
-                <option value="training">教育訓練</option>
-                <option value="performance">績效考核</option>
-                <option value="safety">職業安全</option>
-                <option value="general">綜合人資（所有分類共用）</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px; letter-spacing:2px; color:var(--accent); display:block; margin-bottom:6px;">— 選擇檔案</label>
-              <input type="file" id="kb-file" accept=".txt,.md,.pdf,.docx" multiple
-                style="width:100%; padding:9px 12px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font-size:13px; cursor:pointer;">
-              <div style="font-size:11px; color:var(--ink-faded); margin-top:5px;">可按住 Ctrl（Windows）或 ⌘（Mac）同時選取多個檔案</div>
-            </div>
-            <div>
-              <button class="btn primary" onclick="uploadKnowledge()" id="upload-btn" style="width:100%;">↑ 上傳至知識庫</button>
-            </div>
-          </div>
-          <div id="upload-result" style="margin-top:14px; font-size:13px; display:none; padding:12px 16px; border:1px solid var(--line);"></div>
-        </div>
-      </div>
-
-      <!-- ===== HR 表單知識庫上傳 ===== -->
-      <div class="section">
-        <h2>HR 表單知識庫 <span class="meta">Form Documents</span></h2>
-        <div style="padding: 22px;">
-          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:20px; line-height:1.7;">
-            上傳 HR 表單文件後，系統會自動抽取內容並加入知識庫。<br>
-            <b style="color:var(--ink);">AI HR 顧問</b>將學習每份表單的用途，並在回答相關問題時自動推薦給客戶（含免責聲明）。
-          </div>
-
-          <!-- 狀態卡片：依生命週期分組 -->
-          <div id="form-doc-status" style="margin-bottom:20px;">
-            <div style="color:var(--ink-faded); font-size:12px;">載入中...</div>
-          </div>
-
-          <!-- 上傳表單 -->
-          <div style="background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:18px; max-width:640px;">
-            <div style="font-size:13px; font-weight:600; color:var(--ink); margin-bottom:6px;">上傳表單文件至知識庫</div>
-            <div style="font-size:12px; color:var(--ink-faded); margin-bottom:14px; line-height:1.6;">
-              支援批次上傳 · 自動辨識檔名（如 <code style="background:rgba(255,255,255,0.1); padding:1px 5px; border-radius:3px;">01_勞動契約書.docx</code>）<br>
-              也可手動指定表單後單獨上傳
-            </div>
-
-            <div style="display:grid; gap:12px;">
-              <!-- 拖放 / 多選檔案區 -->
-              <div>
-                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 選擇檔案（可多選，DOCX / PDF）</label>
-                <label id="form-doc-dropzone" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; margin-top:8px; padding:20px; border:2px dashed var(--line); border-radius:8px; cursor:pointer; transition:border-color 0.2s; min-height:80px; text-align:center;">
-                  <span style="font-size:22px;">📂</span>
-                  <span style="font-size:13px; color:var(--ink-soft);">點此選擇或將檔案拖曳至此</span>
-                  <span style="font-size:11px; color:var(--ink-faded);">可一次選取全部 12 份表單，系統自動辨識對應關係</span>
-                  <input id="form-doc-file" type="file" accept=".docx,.pdf" multiple style="display:none;" onchange="previewFormFiles(this.files)">
-                </label>
-              </div>
-
-              <!-- 檔案預覽 / 對應結果 -->
-              <div id="form-doc-preview" style="display:none;">
-                <label style="font-size:11px; letter-spacing:1px; color:var(--accent); font-family:'Cormorant Garamond',serif;">— 上傳清單</label>
-                <div id="form-doc-preview-list" style="margin-top:8px; display:grid; gap:6px; max-height:300px; overflow-y:auto;"></div>
-              </div>
-
-              <button class="btn primary" onclick="uploadFormDocBatch()" id="form-doc-btn" style="width:100%; display:none;">
-                📤 開始批次上傳
-              </button>
-            </div>
-
-            <!-- 進度與結果 -->
-            <div id="form-doc-result" style="margin-top:12px; font-size:13px; display:none;"></div>
-          </div>
-
-          <!-- GitHub 直連編輯表單知識庫（8 類） -->
-          <div style="margin-top:16px; font-size:12px; color:var(--ink-faded);">
-            或直接在 GitHub 編輯各分類表單知識庫：
-            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-recruitment.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🔍 招募甄選</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-hiring.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">📝 任用簽約</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-onboarding.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🏁 到職報到</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-compliance.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">⚖️ 法規合規</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-performance.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">📊 績效考核</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-coaching.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🎯 績效輔導</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-relations.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🤝 員工關係</a>
-              <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/forms-separation.md" target="_blank" style="color:var(--accent); text-decoration:none; padding:4px 10px; border:1px solid var(--accent); border-radius:4px; font-size:11px;">🚪 離職資遣</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- ===== HR 表單知識庫上傳 END ===== -->
-
-      <div class="section">
-        <h2>直接編輯 GitHub <span class="meta">Edit on GitHub</span></h2>
-        <div style="padding: 22px;">
-          <div style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">
-            點選分類直接在 GitHub 上編輯對應的知識庫文件（可貼入文字、法條、整篇文章）。
-          </div>
-          <div style="display:flex; flex-wrap:wrap; gap:10px;">
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/labour-law.md" target="_blank" class="btn">⚖ 勞動法規</a>
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/recruitment.md" target="_blank" class="btn">👥 招募面試</a>
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/training.md" target="_blank" class="btn">📚 教育訓練</a>
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/performance.md" target="_blank" class="btn">📊 績效考核</a>
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/safety.md" target="_blank" class="btn">🦺 職業安全</a>
-            <a href="https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/general.md" target="_blank" class="btn">📋 綜合人資</a>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
     <!-- 系統 -->
     <div class="panel" id="panel-system">
       <div class="section">
@@ -543,11 +352,71 @@
   </div>
 </div>
 
+<!-- 開立發票 modal -->
+<div class="modal-bg" id="invoice-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>開立電子發票</h3>
+      <span class="close" onclick="closeInvoiceModal()">×</span>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;padding:14px;background:var(--bg);border:1px solid var(--line);font-size:12px;color:var(--ink-soft);">
+        <div><div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">訂單編號</div><div class="mono" id="inv-order-id" style="color:var(--ink);"></div></div>
+        <div><div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">金額</div><div id="inv-amount" style="color:var(--ink);"></div></div>
+        <div><div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">姓名</div><div id="inv-name" style="color:var(--ink);"></div></div>
+        <div><div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">Email</div><div id="inv-email" style="color:var(--ink);word-break:break-all;"></div></div>
+        <div><div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">方案</div><div id="inv-plan" style="color:var(--ink);"></div></div>
+        <div><div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:4px;">統編</div><div id="inv-taxid" style="color:var(--ink);"></div></div>
+      </div>
+      <div class="field" id="inv-addr-field" style="display:none;">
+        <label>公司地址（B2B 開立必填）</label>
+        <input type="text" id="inv-addr" placeholder="例：台北市信義區...">
+      </div>
+      <div style="font-size:11px;color:var(--ink-faded);line-height:1.7;">
+        <b style="color:var(--warn);">注意：</b>發票開立後無法撤銷，請確認資訊無誤再送出。<br>
+        B2C（無統編）：系統開立雲端發票，寄送 email 通知。<br>
+        B2B（有統編）：開立三聯式發票，需填入正確地址。
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeInvoiceModal()">取消</button>
+      <button class="btn primary" onclick="confirmIssueInvoice()">確認開立發票</button>
+    </div>
+  </div>
+</div>
+
+<!-- 訂單作廢 confirm modal -->
+<div class="modal-bg" id="void-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>訂單作廢確認</h3>
+      <span class="close" onclick="closeVoidModal()">×</span>
+    </div>
+    <div class="modal-body">
+      <div style="padding:14px;background:var(--bg);border:1px solid var(--line);margin-bottom:16px;font-size:12px;">
+        <div style="font-size:10px;color:var(--accent);letter-spacing:2px;margin-bottom:6px;">訂單編號</div>
+        <div class="mono" id="void-order-id" style="color:var(--ink);font-size:14px;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--hot);line-height:1.75;border:1px solid rgba(233,93,77,0.3);padding:12px;background:rgba(233,93,77,0.07);">
+        <b>此操作將：</b><br>
+        ① 將訂單狀態更新為「作廢」<br>
+        ② 將該 Access Code 停用<br>
+        ③ 嘗試向綠界發起退款（信用卡付款才有效）<br><br>
+        <b>無法撤銷，請謹慎操作。</b>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeVoidModal()">取消</button>
+      <button class="btn danger" onclick="confirmVoidOrder()">確認作廢</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
   // ⚙️ 部署前請改為您的 Vercel 後端網址
-  const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+  const BACKEND_URL = 'https://your-backend.vercel.app';
   let password = sessionStorage.getItem('admin_pwd') || '';
 
   function showToast(msg, type = '') {
@@ -588,479 +457,6 @@
     }
   }
 
-  async function syncLaws() {
-    const btn = document.getElementById('sync-laws-btn');
-    const result = document.getElementById('sync-laws-result');
-    btn.disabled = true;
-    btn.textContent = '⏳ 下載法規中（約 15-30 秒）...';
-    result.style.display = 'none';
-    try {
-      const res = await fetch(BACKEND_URL + '/api/sync-laws', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || '同步失敗');
-      result.style.display = 'block';
-      result.style.color = 'green';
-      result.innerHTML = `✅ ${data.message}<br>更新檔案：${(data.updatedFiles||[]).join('、')}<br>同步日期：${data.syncDate}`;
-    } catch (e) {
-      result.style.display = 'block';
-      result.style.color = 'red';
-      result.textContent = '❌ ' + e.message;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '⚡ 同步最新法規';
-    }
-  }
-
-  async function syncKnowledge() {
-    const btn = document.getElementById('sync-btn');
-    const result = document.getElementById('sync-result');
-    btn.disabled = true;
-    btn.textContent = '同步中...';
-    result.style.display = 'none';
-    try {
-      const res = await fetch(BACKEND_URL + '/api/sync-knowledge', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: sessionStorage.getItem('admin_pwd') || '' }),
-      });
-      const data = await res.json();
-      result.style.display = 'block';
-      result.style.color = res.ok ? 'var(--ink-soft)' : 'var(--hot)';
-      result.textContent = res.ok ? '✅ ' + data.message : '❌ ' + (data.error || '同步失敗');
-    } catch (e) {
-      result.style.display = 'block';
-      result.style.color = 'var(--hot)';
-      result.textContent = '❌ 同步失敗：' + e.message;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '↻ 立即同步知識庫';
-    }
-  }
-
-  // ─── HR 表單知識庫上傳 ────────────────────────────────────────
-  const FORM_NAMES_ADMIN = {
-    labor_contract:       '勞動契約書',
-    interview_sheet:      '面試評分表',
-    job_description:      '職務說明書',
-    onboarding:           '新人報到檢核表',
-    nda:                  '保密協議書',
-    privacy_consent:      '個資蒐集同意書',
-    performance:          '績效考核表',
-    pip:                  'PIP 績效改善計畫',
-    handover:             '離職交接清單',
-    layoff_notice:        '資遣通知書',
-    unemployment_cert:    '非自願離職證明書',
-    complaint:            '員工申訴表',
-    employment_cert:      '在職證明書',
-    resignation:          '離職申請單',
-    separation_interview: '離職面談紀錄表',
-    service_cert:         '服務證明書',
-    other:                '其他表單',
-  };
-
-  // 員工生命週期 8 類定義
-  const LIFECYCLE_GROUPS = [
-    {
-      key: 'recruitment', label: '招募甄選', ghFile: 'forms-recruitment.md', emoji: '🔍',
-      hint: '職務說明書、面試評分表｜未來：錄取通知書、薪資談判記錄',
-      forms: ['interview_sheet', 'job_description'],
-    },
-    {
-      key: 'hiring', label: '任用簽約', ghFile: 'forms-hiring.md', emoji: '📝',
-      hint: '勞動契約書｜未來：試用期評估表、工作規則簽收單',
-      forms: ['labor_contract'],
-    },
-    {
-      key: 'onboarding', label: '到職報到', ghFile: 'forms-onboarding.md', emoji: '🏁',
-      hint: '新人報到檢核表｜未來：設備領用單、職前訓練計畫',
-      forms: ['onboarding'],
-    },
-    {
-      key: 'compliance', label: '法規合規', ghFile: 'forms-compliance.md', emoji: '⚖️',
-      hint: '保密協議書、個資蒐集同意書｜未來：競業禁止協議、智財歸屬說明',
-      forms: ['nda', 'privacy_consent'],
-    },
-    {
-      key: 'performance', label: '績效考核', ghFile: 'forms-performance.md', emoji: '📊',
-      hint: '績效考核表｜未來：360度評估表、OKR 目標設定表',
-      forms: ['performance'],
-    },
-    {
-      key: 'coaching', label: '績效輔導', ghFile: 'forms-coaching.md', emoji: '🎯',
-      hint: 'PIP 績效改善計畫｜未來：口頭警告記錄、書面懲戒通知',
-      forms: ['pip'],
-    },
-    {
-      key: 'relations', label: '員工關係', ghFile: 'forms-relations.md', emoji: '🤝',
-      hint: '員工申訴表、在職證明書｜未來：獎懲記錄、勞資會議記錄、職場調查表',
-      forms: ['complaint', 'employment_cert'],
-    },
-    {
-      key: 'separation', label: '離職資遣', ghFile: 'forms-separation.md', emoji: '🚪',
-      hint: '離職申請單、離職交接清單、離職面談紀錄表、資遣通知書、非自願離職證明書、服務證明書',
-      forms: ['resignation', 'handover', 'separation_interview', 'layoff_notice', 'unemployment_cert', 'service_cert'],
-    },
-    {
-      key: 'other', label: '其他表單', ghFile: 'forms-other.md', emoji: '🗂',
-      hint: '無法分類的表單依原始檔名命名，多份共存、不互相覆蓋',
-      forms: [], isOther: true,
-    },
-  ];
-
-  async function loadFormDocStatus() {
-    const el = document.getElementById('form-doc-status');
-    if (!el) return;
-    try {
-      const res = await fetch(BACKEND_URL + '/api/admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: sessionStorage.getItem('admin_pwd') || '', action: 'list_form_meta' }),
-      });
-      const data = await res.json();
-      const metas = data.metas || {};
-
-      const GH_BASE = 'https://github.com/2019jungle-debug/cesi-hr-knowledge/edit/main/';
-
-      const html = LIFECYCLE_GROUPS.map(group => {
-        // 「其他表單」特殊顯示：不需要固定卡片，只顯示說明與 GitHub 連結
-        if (group.isOther) {
-          return `<div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:10px;">
-            <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--line);">
-              <span style="font-size:16px;">${group.emoji}</span>
-              <div style="flex:1; min-width:0;">
-                <div style="font-weight:600; font-size:13px; color:var(--ink);">${group.label}</div>
-                <div style="font-size:11px; color:var(--ink-faded); margin-top:1px;">${group.hint}</div>
-              </div>
-              <a href="${GH_BASE}${group.ghFile}" target="_blank" style="font-size:11px; color:var(--accent); text-decoration:none; padding:3px 8px; border:1px solid var(--accent); border-radius:4px; white-space:nowrap;">📝 編輯</a>
-            </div>
-            <div style="padding:10px 14px; font-size:12px; color:var(--ink-faded);">
-              上傳時無法自動辨識的檔案，會依原始檔名存入此區域，可點「編輯」在 GitHub 查閱全部內容。
-            </div>
-          </div>`;
-        }
-
-        const cards = group.forms.map(id => {
-          const meta = metas[id];
-          const hasDoc = !!meta;
-          const date = meta?.updatedAt ? new Date(meta.updatedAt).toLocaleDateString('zh-TW') : '';
-          return `<div style="display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:6px; border:1px solid var(--line); background:var(--bg); font-size:12px;">
-            <span style="font-size:13px;">${hasDoc ? '✅' : '⬜'}</span>
-            <span style="flex:1; color:var(--ink);">${FORM_NAMES_ADMIN[id]}</span>
-            <span style="color:var(--ink-faded); font-size:11px;">${hasDoc ? date : '未上傳'}</span>
-          </div>`;
-        }).join('');
-
-        const uploadedCount = group.forms.filter(id => !!metas[id]).length;
-        const allDone = group.forms.length > 0 && uploadedCount === group.forms.length;
-
-        return `<div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; margin-bottom:10px;">
-          <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg-card); border-bottom:1px solid var(--line);">
-            <span style="font-size:16px;">${group.emoji}</span>
-            <div style="flex:1; min-width:0;">
-              <div style="font-weight:600; font-size:13px; color:var(--ink);">${group.label}</div>
-              <div style="font-size:11px; color:var(--ink-faded); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${group.hint}</div>
-            </div>
-            <span style="font-size:11px; color:${allDone ? '#6b8e23' : 'var(--warn)'}; font-weight:600; white-space:nowrap;">${uploadedCount}/${group.forms.length}</span>
-            <a href="${GH_BASE}${group.ghFile}" target="_blank" style="font-size:11px; color:var(--accent); text-decoration:none; padding:3px 8px; border:1px solid var(--accent); border-radius:4px; white-space:nowrap;">📝 編輯</a>
-          </div>
-          <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:6px; padding:10px;">
-            ${cards}
-          </div>
-        </div>`;
-      }).join('');
-
-      el.innerHTML = html;
-    } catch (e) {
-      el.innerHTML = `<div style="color:var(--ink-faded); font-size:12px;">無法載入狀態：${e.message}</div>`;
-    }
-  }
-
-  // 檔名前綴 → formId 對照（可持續新增）
-  const FILENAME_TO_FORM_ID = {
-    '01': 'labor_contract',
-    '02': 'interview_sheet',
-    '03': 'job_description',
-    '04': 'onboarding',
-    '05': 'nda',
-    '06': 'privacy_consent',
-    '07': 'performance',
-    '08': 'pip',
-    '09': 'handover',
-    '10': 'layoff_notice',
-    '11': 'unemployment_cert',
-    '12': 'complaint',
-    '13': 'employment_cert',
-    '14': 'resignation',
-    '15': 'handover',           // 離職交接清單（重新編號）
-    '16': 'separation_interview',
-    '17': 'service_cert',
-  };
-
-  // 檔名關鍵字 → formId（前綴對不上時的備援）
-  const KEYWORD_TO_FORM_ID = [
-    { kw: '非自願離職',  id: 'unemployment_cert' },
-    { kw: '資遣通知',    id: 'layoff_notice' },
-    { kw: '離職交接',    id: 'handover' },
-    { kw: '離職面談',    id: 'separation_interview' },
-    { kw: '離職申請',    id: 'resignation' },
-    { kw: '服務證明',    id: 'service_cert' },
-    { kw: '在職證明',    id: 'employment_cert' },
-    { kw: '在職說明',    id: 'employment_cert' },
-    { kw: '個資蒐集',    id: 'privacy_consent' },
-    { kw: '個人資料',    id: 'privacy_consent' },
-    { kw: '保密協議',    id: 'nda' },
-    { kw: '新人報到',    id: 'onboarding' },
-    { kw: '績效改善',    id: 'pip' },
-    { kw: 'PIP',         id: 'pip' },
-    { kw: '績效考核',    id: 'performance' },
-    { kw: '員工申訴',    id: 'complaint' },
-    { kw: '職務說明',    id: 'job_description' },
-    { kw: '面試評分',    id: 'interview_sheet' },
-    { kw: '勞動契約',    id: 'labor_contract' },
-  ];
-
-  function detectFormId(filename) {
-    // 1. 先嘗試數字前綴（01~17）
-    const m = filename.match(/^(\d{2})[_\-\s]/);
-    if (m && FILENAME_TO_FORM_ID[m[1]]) return FILENAME_TO_FORM_ID[m[1]];
-    // 2. 嘗試單位數字前綴（1-9）
-    const m1 = filename.match(/^(\d)[_\-\s]/);
-    if (m1 && FILENAME_TO_FORM_ID['0' + m1[1]]) return FILENAME_TO_FORM_ID['0' + m1[1]];
-    // 3. 關鍵字比對（無前綴或前綴不認識時）
-    const base = filename.replace(/\.[^.]+$/, ''); // 去掉副檔名
-    for (const { kw, id } of KEYWORD_TO_FORM_ID) {
-      if (base.includes(kw)) return id;
-    }
-    return null;
-  }
-
-  // 選擇檔案後預覽對應關係
-  function previewFormFiles(files) {
-    const previewDiv = document.getElementById('form-doc-preview');
-    const listDiv = document.getElementById('form-doc-preview-list');
-    const btn = document.getElementById('form-doc-btn');
-    const dropzone = document.getElementById('form-doc-dropzone');
-
-    if (!files || files.length === 0) {
-      previewDiv.style.display = 'none';
-      btn.style.display = 'none';
-      return;
-    }
-
-    dropzone.querySelector('span:nth-child(2)').textContent = `已選 ${files.length} 個檔案`;
-
-    const items = Array.from(files).map(file => {
-      const detected = detectFormId(file.name) || 'other';
-      const name = detected === 'other'
-        ? `其他表單（${file.name.replace(/\.[^.]+$/, '').replace(/^\d+[-_\s]*/, '').trim() || file.name}）`
-        : FORM_NAMES_ADMIN[detected];
-      return { file, formId: detected, formName: name, isOther: detected === 'other' };
-    });
-
-    listDiv.innerHTML = items.map((item, i) => `
-      <div id="fdp-${i}" style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:6px; border:1px solid var(--line); background:var(--bg-card); font-size:12px;">
-        <span style="font-size:16px;">📄</span>
-        <div style="flex:1; min-width:0;">
-          <div style="color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.file.name}</div>
-          ${item.isOther
-            ? `<div style="color:var(--info); font-size:11px;">🗂 ${item.formName}
-                &nbsp;<select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
-                  <option value="other" selected>🗂 其他（依檔名命名）</option>
-                  ${LIFECYCLE_GROUPS.filter(g => !g.isOther).map(g =>
-                    `<optgroup label="${g.emoji} ${g.label}">${
-                      g.forms.map(id => `<option value="${id}">${FORM_NAMES_ADMIN[id] || id}</option>`).join('')
-                    }</optgroup>`
-                  ).join('')}
-                </select>
-              </div>`
-            : `<div style="color:#6b8e23; font-size:11px;">✅ 自動辨識：${item.formName}
-                &nbsp;<select onchange="manualFormId[${i}]=this.value" style="font-size:11px; padding:2px 4px; background:var(--bg); border:1px solid var(--line); color:var(--ink); border-radius:3px;">
-                  <option value="${item.formId}" selected>${item.formName}</option>
-                  <option value="other">🗂 其他（依檔名命名）</option>
-                  ${LIFECYCLE_GROUPS.filter(g => !g.isOther).map(g =>
-                    `<optgroup label="${g.emoji} ${g.label}">${
-                      g.forms.filter(id => id !== item.formId).map(id => `<option value="${id}">${FORM_NAMES_ADMIN[id] || id}</option>`).join('')
-                    }</optgroup>`
-                  ).join('')}
-                </select>
-              </div>`
-          }
-        </div>
-        <span style="color:var(--ink-faded); white-space:nowrap;">${(item.file.size/1024).toFixed(0)} KB</span>
-      </div>`).join('');
-
-    previewDiv.style.display = 'block';
-    btn.style.display = 'block';
-    btn.textContent = `📤 開始批次上傳（${files.length} 個檔案）`;
-  }
-
-  // 手動覆蓋 formId 的暫存
-  const manualFormId = {};
-
-  // 拖曳支援
-  document.addEventListener('DOMContentLoaded', () => {
-    const dz = document.getElementById('form-doc-dropzone');
-    if (!dz) return;
-    dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor = 'var(--accent)'; });
-    dz.addEventListener('dragleave', () => { dz.style.borderColor = 'var(--line)'; });
-    dz.addEventListener('drop', e => {
-      e.preventDefault();
-      dz.style.borderColor = 'var(--line)';
-      const fi = document.getElementById('form-doc-file');
-      // 建立 DataTransfer 同步到 input
-      const dt = new DataTransfer();
-      Array.from(e.dataTransfer.files).forEach(f => dt.items.add(f));
-      fi.files = dt.files;
-      previewFormFiles(fi.files);
-    });
-  });
-
-  // 批次上傳
-  async function uploadFormDocBatch() {
-    const fileInput = document.getElementById('form-doc-file');
-    const files = Array.from(fileInput.files);
-    const resultEl = document.getElementById('form-doc-result');
-    const btn = document.getElementById('form-doc-btn');
-    if (!files.length) { alert('請先選擇檔案'); return; }
-
-    btn.disabled = true;
-    resultEl.style.display = 'block';
-    resultEl.innerHTML = '';
-
-    let successCount = 0;
-    let failCount = 0;
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      // 優先用手動選擇，否則自動辨識，最後 fallback 到 other
-      const formId = manualFormId[i] || detectFormId(file.name) || 'other';
-      const rowEl = document.getElementById(`fdp-${i}`);
-
-      // 顯示進行中
-      const displayName = formId === 'other'
-        ? `其他（${file.name.replace(/\.[^.]+$/, '')}）`
-        : (FORM_NAMES_ADMIN[formId] || formId);
-      btn.textContent = `上傳中 ${i+1}/${files.length}：${displayName}...`;
-      if (rowEl) {
-        rowEl.style.borderColor = 'var(--accent)';
-        rowEl.querySelector('span:first-child').textContent = '⏳';
-      }
-
-      const fd = new FormData();
-      fd.append('password', sessionStorage.getItem('admin_pwd') || '');
-      fd.append('formId', formId);
-      fd.append('file', file);
-
-      try {
-        const res = await fetch(BACKEND_URL + '/api/upload-form-doc', { method: 'POST', body: fd });
-        const data = await res.json();
-        const row = document.createElement('div');
-        row.style.cssText = 'padding:6px 10px; font-size:12px; border-radius:5px; margin-bottom:4px;';
-        const label = data.formName || displayName;
-        if (res.ok) {
-          row.style.color = '#6b8e23';
-          row.innerHTML = `✅ <b>${label}</b> — 已上傳（${data.extractedChars?.toLocaleString()} 字）`;
-          if (rowEl) { rowEl.style.borderColor = '#6b8e23'; rowEl.querySelector('span:first-child').textContent = '✅'; }
-          successCount++;
-        } else {
-          row.style.color = 'var(--hot)';
-          row.innerHTML = `❌ <b>${label}</b> — ${data.error || '失敗'}`;
-          if (rowEl) { rowEl.style.borderColor = 'var(--hot)'; rowEl.querySelector('span:first-child').textContent = '❌'; }
-          failCount++;
-        }
-        resultEl.appendChild(row);
-      } catch (e) {
-        const row = document.createElement('div');
-        row.style.cssText = 'padding:6px 10px; font-size:12px; color:var(--hot);';
-        row.textContent = `❌ ${file.name} — 連線失敗：${e.message}`;
-        resultEl.appendChild(row);
-        failCount++;
-      }
-    }
-
-    // 總結
-    const summary = document.createElement('div');
-    summary.style.cssText = 'margin-top:10px; padding:10px 14px; border-radius:6px; font-size:13px; font-weight:600; background:var(--bg-card); border:1px solid var(--line);';
-    summary.textContent = `完成：✅ ${successCount} 份成功　${failCount > 0 ? `❌ ${failCount} 份失敗` : ''}`;
-    resultEl.appendChild(summary);
-
-    btn.disabled = false;
-    btn.textContent = '📤 開始批次上傳';
-    fileInput.value = '';
-    if (successCount > 0) setTimeout(loadFormDocStatus, 1500);
-  }
-  // ─── HR 表單知識庫上傳 END ────────────────────────────────────
-
-  async function uploadKnowledge() {
-    const category = document.getElementById('kb-category').value;
-    const fileInput = document.getElementById('kb-file');
-    const files = Array.from(fileInput.files);
-    const resultEl = document.getElementById('upload-result');
-    const btn = document.getElementById('upload-btn');
-
-    resultEl.style.display = 'none';
-    if (!category) { alert('請選擇分類'); return; }
-    if (!files.length) { alert('請選擇要上傳的檔案'); return; }
-
-    btn.disabled = true;
-    resultEl.style.display = 'block';
-    resultEl.style.background = 'transparent';
-    resultEl.style.borderColor = 'var(--line)';
-    resultEl.style.color = 'var(--ink-soft)';
-    resultEl.innerHTML = `上傳中，共 ${files.length} 個檔案...<br>`;
-
-    const results = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      btn.textContent = `上傳中 ${i + 1} / ${files.length}...`;
-      resultEl.innerHTML += `⏳ ${file.name}...<br>`;
-      resultEl.scrollTop = resultEl.scrollHeight;
-
-      try {
-        const formData = new FormData();
-        formData.append('password', sessionStorage.getItem('admin_pwd') || '');
-        formData.append('category', category);
-        formData.append('file', file);
-
-        const res = await fetch(BACKEND_URL + '/api/upload-knowledge', {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await res.json();
-
-        if (res.ok) {
-          results.push({ ok: true, name: file.name, msg: `${data.chars?.toLocaleString()} 字元` });
-        } else {
-          results.push({ ok: false, name: file.name, msg: data.error || '上傳失敗' });
-        }
-      } catch (e) {
-        results.push({ ok: false, name: file.name, msg: e.message });
-      }
-    }
-
-    // 顯示結果摘要
-    const ok = results.filter(r => r.ok).length;
-    const fail = results.length - ok;
-    let html = `<b>完成：${ok} 成功 / ${fail} 失敗</b><br><br>`;
-    results.forEach(r => {
-      html += r.ok
-        ? `✅ ${r.name}（${r.msg}）<br>`
-        : `❌ ${r.name}：${r.msg}<br>`;
-    });
-    resultEl.innerHTML = html;
-    resultEl.style.background = ok > 0 ? 'rgba(100,180,100,0.06)' : 'rgba(196,69,54,0.06)';
-    resultEl.style.borderColor = ok > 0 ? 'rgba(100,180,100,0.3)' : 'rgba(196,69,54,0.3)';
-    resultEl.style.color = 'var(--ink)';
-
-    if (ok > 0) fileInput.value = '';
-    btn.disabled = false;
-    btn.textContent = '↑ 上傳至知識庫';
-  }
-
   function logout() {
     sessionStorage.removeItem('admin_pwd');
     location.reload();
@@ -1077,130 +473,6 @@
     if (name === 'orders') loadOrders();
     if (name === 'cancellations') loadCancellations();
     if (name === 'system') loadSystem();
-    if (name === 'knowledge') loadFormDocStatus();
-    if (name === 'leads') loadLeads();
-  }
-
-  // ── 潛在客戶 (Leads) ────────────────────────────────────────────
-  let allLeads = [];
-
-  async function loadLeads() {
-    const tbody = document.getElementById('leads-tbody');
-    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--ink-faded);">載入中…</td></tr>`;
-    try {
-      const data = await callAdmin('list_risk_leads');
-      allLeads = (data.leads || []).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-      renderLeads(allLeads);
-      renderLeadStats(allLeads);
-    } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--hot);">載入失敗：${e.message}</td></tr>`;
-    }
-  }
-
-  function riskColor(level) {
-    if (!level) return 'var(--ink-faded)';
-    return level.includes('高') ? 'var(--hot)' : level.includes('中') ? 'var(--warn)' : 'var(--success)';
-  }
-
-  function renderLeads(leads) {
-    const tbody = document.getElementById('leads-tbody');
-    document.getElementById('leads-count').textContent = `共 ${leads.length} 筆`;
-    if (!leads.length) {
-      tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--ink-faded);">尚無資料</td></tr>`;
-      return;
-    }
-    tbody.innerHTML = leads.map((l, i) => {
-      const date = l.createdAt ? l.createdAt.slice(0, 10) : '—';
-      const bg = i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)';
-      const riskC = riskColor(l.riskLevel);
-      return `<tr style="background:${bg};" onmouseover="this.style.background='rgba(212,168,87,0.05)'" onmouseout="this.style.background='${bg}'">
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-faded);white-space:nowrap;">${date}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);font-weight:600;">${l.company || '—'}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">${l.name || '—'}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);">${l.jobTitle || '—'}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">
-          ${l.phone ? `<a href="tel:${l.phone}" style="color:var(--accent);text-decoration:none;">${l.phone}</a>` : '—'}
-        </td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">
-          ${l.email ? `<a href="mailto:${l.email}" style="color:var(--accent);text-decoration:none;">${l.email}</a>` : '—'}
-        </td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${l.address || ''}">${l.address || '—'}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);">${l.industry || '—'}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);">${l.size || '—'}</td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);">
-          <span style="color:${riskC};font-weight:700;">${l.riskLevel || '—'}</span>
-        </td>
-        <td style="padding:9px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:600;color:${riskC};">${l.riskScore ?? '—'}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  function renderLeadStats(leads) {
-    const high   = leads.filter(l => l.riskLevel?.includes('高')).length;
-    const mid    = leads.filter(l => l.riskLevel?.includes('中')).length;
-    const low    = leads.filter(l => l.riskLevel?.includes('低')).length;
-    const hasEmail = leads.filter(l => l.email).length;
-    const stats = [
-      { label: '總筆數',      val: leads.length,  color: 'var(--accent)' },
-      { label: '高風險',      val: high,           color: 'var(--hot)' },
-      { label: '中風險',      val: mid,            color: 'var(--warn)' },
-      { label: '低風險',      val: low,            color: 'var(--success)' },
-      { label: '已留信箱',    val: hasEmail,       color: 'var(--info)' },
-    ];
-    document.getElementById('leads-stats').innerHTML = stats.map(s => `
-      <div style="background:var(--bg-elev);border:1px solid var(--line);border-radius:6px;padding:14px 18px;text-align:center;">
-        <div style="font-size:26px;font-weight:700;color:${s.color};">${s.val}</div>
-        <div style="font-size:11px;color:var(--ink-soft);margin-top:4px;letter-spacing:1px;">${s.label}</div>
-      </div>`).join('');
-  }
-
-  function filterLeads() {
-    const risk   = document.getElementById('leads-filter-risk').value;
-    const search = document.getElementById('leads-search').value.toLowerCase();
-    const filtered = allLeads.filter(l => {
-      const matchRisk = !risk || (l.riskLevel || '').includes(risk);
-      const matchSearch = !search ||
-        (l.company || '').toLowerCase().includes(search) ||
-        (l.name    || '').toLowerCase().includes(search) ||
-        (l.email   || '').toLowerCase().includes(search) ||
-        (l.phone   || '').toLowerCase().includes(search);
-      return matchRisk && matchSearch;
-    });
-    renderLeads(filtered);
-  }
-
-  function downloadLeadsCsv() {
-    if (!allLeads.length) { showToast('尚無資料可下載'); return; }
-    const risk   = document.getElementById('leads-filter-risk').value;
-    const search = document.getElementById('leads-search').value.toLowerCase();
-    const data   = allLeads.filter(l => {
-      const matchRisk = !risk || (l.riskLevel || '').includes(risk);
-      const matchSearch = !search ||
-        (l.company || '').toLowerCase().includes(search) ||
-        (l.name    || '').toLowerCase().includes(search) ||
-        (l.email   || '').toLowerCase().includes(search);
-      return matchRisk && matchSearch;
-    });
-
-    const headers = ['評估日期','公司名稱','姓名','職稱','電話','電子信箱','郵寄地址','產業','員工人數','風險評級','風險指數'];
-    const rows = data.map(l => [
-      l.createdAt?.slice(0,10) || '',
-      l.company  || '', l.name    || '', l.jobTitle || '',
-      l.phone    || '', l.email   || '', l.address  || '',
-      l.industry || '', l.size    || '',
-      l.riskLevel|| '', l.riskScore ?? '',
-    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(','));
-
-    const bom = '﻿'; // BOM for Excel 中文
-    const csv = bom + [headers.join(','), ...rows].join('\r\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `潛在客戶_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast(`已下載 ${data.length} 筆資料`);
   }
 
   async function refresh() {
@@ -1321,26 +593,157 @@
         return;
       }
 
+      // Store for modal use
+      window._ordersCache = {};
+      orders.forEach(o => { if (o.orderId) window._ordersCache[o.orderId] = o; });
+
       let html = `<table>
         <thead><tr>
-          <th>時間</th><th>訂單編號</th><th>姓名</th><th>Email</th><th>方案</th><th>金額</th><th>付款</th><th>統編</th>
+          <th>時間</th><th>訂單編號</th><th>姓名</th><th>Email</th><th>方案</th><th>金額</th><th>付款</th><th>統編</th><th>狀態</th><th>發票</th><th>操作</th>
         </tr></thead><tbody>`;
       orders.forEach(o => {
+        const statusBadge = renderOrderStatusBadge(o.status);
+        const invoiceBadge = o.invoiceNo
+          ? `<span class="badge invoiced" title="${escapeHtml(o.invoiceDate || '')}">${escapeHtml(o.invoiceNo)}</span>`
+          : '—';
+        const emailMasked = o.email
+          ? o.email.replace(/(.{2}).*(@.*)/, '$1***$2')
+          : '—';
+        const isPaid = o.status === 'paid';
+        const isVoided = o.status === 'voided';
+        const hasInvoice = !!o.invoiceNo;
+
+        const invBtn = isPaid && !hasInvoice && !isVoided
+          ? `<button class="btn-invoice" onclick="openInvoiceModal('${escapeHtml(o.orderId)}')">開立發票</button>`
+          : '';
+        const voidBtn = !isVoided
+          ? `<button class="btn-void" onclick="openVoidModal('${escapeHtml(o.orderId)}')">訂單作廢</button>`
+          : '';
+
         html += `<tr>
           <td class="mono">${(o.createdAt || '').slice(0, 16).replace('T', ' ')}</td>
-          <td class="mono">${escapeHtml(o.orderId || '—')}</td>
+          <td class="mono" style="font-size:11px;">${escapeHtml(o.orderId || '—')}</td>
           <td>${escapeHtml(o.name || '—')}</td>
-          <td>${escapeHtml(o.emailMasked || '—')}</td>
+          <td style="font-size:12px;">${escapeHtml(emailMasked)}</td>
           <td>${escapeHtml(o.plan || '—')}</td>
-          <td>NT$ ${(o.amount || 0).toLocaleString()}</td>
-          <td>${escapeHtml(o.paymentType || '—')}</td>
-          <td class="mono">${o.taxId || '—'}</td>
+          <td>NT$ ${Number(o.amount || 0).toLocaleString()}</td>
+          <td style="font-size:11px;">${escapeHtml(o.paymentType || '—')}</td>
+          <td class="mono">${escapeHtml(o.taxId || '—')}</td>
+          <td>${statusBadge}</td>
+          <td style="font-size:11px;">${invoiceBadge}</td>
+          <td style="white-space:nowrap;">${invBtn}${voidBtn}</td>
         </tr>`;
       });
       html += '</tbody></table>';
       document.getElementById('orders-table').innerHTML = html;
     } catch (e) {
       showToast(e.message, 'error');
+    }
+  }
+
+  function renderOrderStatusBadge(status) {
+    const map = {
+      paid: ['paid', '已付款'],
+      pending: ['pending', '待付款'],
+      voided: ['voided', '已作廢'],
+      cancelled: ['cancelled', '已取消'],
+    };
+    const [cls, label] = map[status] || ['pending', status || '—'];
+    return `<span class="badge ${cls}">${label}</span>`;
+  }
+
+  // ── 開立發票 ──────────────────────────────────────────────────────────────
+  let _invoiceOrderId = null;
+
+  function openInvoiceModal(orderId) {
+    const o = window._ordersCache?.[orderId];
+    if (!o) return showToast('找不到訂單資料', 'error');
+    _invoiceOrderId = orderId;
+
+    document.getElementById('inv-order-id').textContent = orderId;
+    document.getElementById('inv-amount').textContent = `NT$ ${Number(o.amount || 0).toLocaleString()}`;
+    document.getElementById('inv-name').textContent = o.name || '—';
+    document.getElementById('inv-email').textContent = o.email || '—';
+    document.getElementById('inv-plan').textContent = o.planLabel || o.plan || '—';
+    document.getElementById('inv-taxid').textContent = o.taxId || '（個人，無統編）';
+    document.getElementById('inv-addr').value = '';
+
+    const isBusiness = !!(o.taxId && o.taxId.trim() && o.taxId.length === 8);
+    document.getElementById('inv-addr-field').style.display = isBusiness ? 'block' : 'none';
+
+    document.getElementById('invoice-modal').classList.add('show');
+  }
+
+  function closeInvoiceModal() {
+    document.getElementById('invoice-modal').classList.remove('show');
+    _invoiceOrderId = null;
+  }
+
+  async function confirmIssueInvoice() {
+    if (!_invoiceOrderId) return;
+    const o = window._ordersCache?.[_invoiceOrderId];
+    const isBusiness = !!(o?.taxId && o.taxId.trim() && o.taxId.length === 8);
+    const customerAddr = document.getElementById('inv-addr').value.trim();
+
+    if (isBusiness && !customerAddr) {
+      return showToast('請填入公司地址（B2B 必填）', 'error');
+    }
+
+    const btn = document.querySelector('#invoice-modal .btn.primary');
+    btn.textContent = '開立中...';
+    btn.disabled = true;
+
+    try {
+      const result = await callAdmin('issue_invoice', {
+        orderId: _invoiceOrderId,
+        customerAddr,
+      });
+      closeInvoiceModal();
+      showToast(`✓ 發票開立成功：${result.invoiceNo}`, 'success');
+      loadOrders();
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      btn.textContent = '確認開立發票';
+      btn.disabled = false;
+    }
+  }
+
+  // ── 訂單作廢 ──────────────────────────────────────────────────────────────
+  let _voidOrderId = null;
+
+  function openVoidModal(orderId) {
+    _voidOrderId = orderId;
+    document.getElementById('void-order-id').textContent = orderId;
+    document.getElementById('void-modal').classList.add('show');
+  }
+
+  function closeVoidModal() {
+    document.getElementById('void-modal').classList.remove('show');
+    _voidOrderId = null;
+  }
+
+  async function confirmVoidOrder() {
+    if (!_voidOrderId) return;
+    const btn = document.querySelector('#void-modal .btn.danger');
+    btn.textContent = '作廢中...';
+    btn.disabled = true;
+
+    try {
+      const result = await callAdmin('void_order', { orderId: _voidOrderId });
+      closeVoidModal();
+      if (result.warning) {
+        showToast(`⚠ ${result.warning}`, '');
+        setTimeout(() => alert(`注意：${result.warning}`), 300);
+      } else {
+        showToast('訂單已作廢', 'success');
+      }
+      loadOrders();
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      btn.textContent = '確認作廢';
+      btn.disabled = false;
     }
   }
 
