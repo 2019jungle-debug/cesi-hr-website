@@ -922,23 +922,53 @@
     font-weight: 600;
   }
 
+  /* AI bubble：關閉 pre-wrap，改由 JS 渲染 Markdown 結構 */
+  .msg.ai .msg-bubble { white-space: normal; }
+
   /* === Structured Output Headers === */
   .section-tag {
-    display: inline-block;
+    display: block;
     font-family: 'Noto Serif TC', serif;
     font-weight: 600;
     color: var(--ink);
     background: rgba(176,134,66,0.16);
-    padding: 3px 10px;
-    margin: 16px 0 8px;
+    padding: 5px 12px;
+    margin: 18px 0 8px;
     letter-spacing: 0.5px;
-    border-left: 2px solid var(--accent);
+    border-left: 3px solid var(--accent);
     font-size: 14px;
   }
+  .msg.ai .msg-bubble .section-tag:first-child { margin-top: 4px; }
 
-  .msg.ai .msg-bubble .section-tag:first-child {
-    margin-top: 0;
+  /* === Markdown 渲染元素樣式 === */
+  .ai-h3 { font-size: 15px; font-weight: 700; color: var(--ink); margin: 14px 0 6px; }
+  .ai-h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin: 12px 0 4px; }
+  .ai-p  { margin: 0 0 10px; line-height: 1.8; }
+  .ai-p:last-child { margin-bottom: 0; }
+  .ai-ul, .ai-ol { margin: 6px 0 10px 18px; padding: 0; }
+  .ai-ul li, .ai-ol li { margin-bottom: 3px; line-height: 1.75; }
+  .ai-quote {
+    border-left: 3px solid var(--accent); padding: 6px 14px;
+    background: rgba(176,134,66,0.08); color: var(--ink-soft);
+    margin: 8px 0; font-size: 13.5px; line-height: 1.7; border-radius: 0 4px 4px 0;
   }
+  .ai-hr { border: none; border-top: 1px solid var(--line); margin: 14px 0; }
+  .ai-code {
+    font-family: 'Courier New', monospace; font-size: 12.5px;
+    background: rgba(0,0,0,0.07); padding: 1px 5px; border-radius: 3px;
+  }
+  .ai-table-wrap { overflow-x: auto; margin: 10px 0; border-radius: 6px; }
+  .ai-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ai-table th {
+    background: rgba(176,134,66,0.18); color: var(--ink);
+    padding: 7px 12px; text-align: left; font-weight: 600;
+    border: 1px solid rgba(176,134,66,0.28); white-space: nowrap;
+  }
+  .ai-table td {
+    padding: 6px 12px; border: 1px solid rgba(176,134,66,0.15);
+    color: var(--ink); vertical-align: top; line-height: 1.65;
+  }
+  .ai-table tr:nth-child(even) td { background: rgba(176,134,66,0.05); }
 
   /* === Copy Button === */
   .copy-btn {
@@ -1603,12 +1633,116 @@
 
 語氣專業清楚，使用繁體中文。`;
 
+    // ── Inline Markdown → HTML（在已 escape 的文字上套用） ─────────────────
+    function inlineFmt(escaped) {
+      return escaped
+        .replace(/【([^】]+)】/g, '<span class="section-tag">【$1】</span>')
+        .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*([^*\n]+)\*/g, '<em>$1</em>')
+        .replace(/`([^`\n]+)`/g, '<code class="ai-code">$1</code>');
+    }
+
+    function esc(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ── 主渲染函式：逐行解析 Block 元素 ──────────────────────────────────
     function formatStructuredText(text) {
-      const esc = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-      return esc.replace(/【([^】]+)】/g, '<span class="section-tag">【$1】</span>');
+      const lines = text.split('\n');
+      let html = '';
+      let i = 0;
+
+      while (i < lines.length) {
+        const raw = lines[i];
+        const line = raw.trim();
+
+        // 表格：連續以 | 開頭的行
+        if (line.startsWith('|')) {
+          const tableLines = [];
+          while (i < lines.length && lines[i].trim().startsWith('|')) {
+            tableLines.push(lines[i].trim());
+            i++;
+          }
+          // 過濾分隔行（|---|---| 之類）
+          const dataRows = tableLines.filter(l => !/^\|[-|: ]+\|$/.test(l));
+          if (dataRows.length) {
+            const rows = dataRows.map(l =>
+              l.split('|').slice(1, -1).map(c => c.trim())
+            );
+            html += '<div class="ai-table-wrap"><table class="ai-table">';
+            html += '<thead><tr>' + rows[0].map(h => `<th>${inlineFmt(esc(h))}</th>`).join('') + '</tr></thead>';
+            if (rows.length > 1) {
+              html += '<tbody>' + rows.slice(1).map(row =>
+                '<tr>' + row.map(c => `<td>${inlineFmt(esc(c))}</td>`).join('') + '</tr>'
+              ).join('') + '</tbody>';
+            }
+            html += '</table></div>';
+          }
+          continue;
+        }
+
+        // 無序清單
+        if (/^[-*•] /.test(line)) {
+          const items = [];
+          while (i < lines.length && /^[-*•] /.test(lines[i].trim())) {
+            items.push(lines[i].trim().replace(/^[-*•] /, ''));
+            i++;
+          }
+          html += '<ul class="ai-ul">' + items.map(t => `<li>${inlineFmt(esc(t))}</li>`).join('') + '</ul>';
+          continue;
+        }
+
+        // 有序清單
+        if (/^\d+[.)]\s/.test(line)) {
+          const items = [];
+          while (i < lines.length && /^\d+[.)]\s/.test(lines[i].trim())) {
+            items.push(lines[i].trim().replace(/^\d+[.)]\s/, ''));
+            i++;
+          }
+          html += '<ol class="ai-ol">' + items.map(t => `<li>${inlineFmt(esc(t))}</li>`).join('') + '</ol>';
+          continue;
+        }
+
+        // ### H3
+        if (line.startsWith('### ')) {
+          html += `<div class="ai-h4">${inlineFmt(esc(line.slice(4)))}</div>`;
+          i++; continue;
+        }
+        // ## H2
+        if (line.startsWith('## ')) {
+          html += `<div class="ai-h3">${inlineFmt(esc(line.slice(3)))}</div>`;
+          i++; continue;
+        }
+        // # H1
+        if (line.startsWith('# ')) {
+          html += `<div class="ai-h3">${inlineFmt(esc(line.slice(2)))}</div>`;
+          i++; continue;
+        }
+
+        // > Blockquote
+        if (line.startsWith('> ')) {
+          html += `<div class="ai-quote">${inlineFmt(esc(line.slice(2)))}</div>`;
+          i++; continue;
+        }
+
+        // --- 水平線
+        if (/^---+$/.test(line)) {
+          html += '<hr class="ai-hr">';
+          i++; continue;
+        }
+
+        // 空行
+        if (line === '') {
+          html += '<div style="height:8px"></div>';
+          i++; continue;
+        }
+
+        // 一般段落行
+        html += `<p class="ai-p">${inlineFmt(esc(raw))}</p>`;
+        i++;
+      }
+
+      return html;
     }
 
     const categories = [
