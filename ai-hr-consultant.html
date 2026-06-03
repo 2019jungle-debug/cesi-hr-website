@@ -2330,7 +2330,7 @@
       cat.docs.forEach(d => {
         const div = document.createElement('div');
         div.className = 'doc-item';
-        div.innerHTML = `<a href="#" onclick="event.preventDefault();alert('文件下載功能：實際部署時連結到您的文件庫');">${d.name}</a><span class="doc-tag">${d.tag}</span>`;
+        div.innerHTML = `<a href="forms.html" target="_blank">${d.name}</a><span class="doc-tag">${d.tag}</span>`;
         docs.appendChild(div);
       });
 
