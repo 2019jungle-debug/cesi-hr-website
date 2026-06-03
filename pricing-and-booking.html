@@ -117,8 +117,8 @@ body {
 }
 .page-hero h2 {
   font-family:'Cormorant Garamond',serif;
-  font-size: clamp(30px,5vw,58px);
-  font-weight:600; color:var(--ivory); line-height:1.3; margin-bottom:16px;
+  font-size: clamp(36px,5.5vw,68px);
+  font-weight:700; color:var(--ivory); line-height:1.25; margin-bottom:16px;
 }
 .page-hero p {
   font-size:16px; color:rgba(245,240,225,0.6); max-width:560px; margin:0 auto;
@@ -146,111 +146,112 @@ body {
 }
 @media(max-width:860px){ .plans-grid { grid-template-columns:1fr; max-width:520px; } }
 
-/* ── Plan card base ── */
+/* ── Plan card base（淺色系卡片）── */
 .plan-card {
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(212,175,110,0.2);
-  border-radius:16px;
-  padding:36px 28px 32px;
-  display:flex; flex-direction:column;
-  transition: transform 0.2s;
+  background: #f7f3e9;
+  border: 1px solid rgba(169,133,72,0.25);
+  border-radius: 16px;
+  padding: 36px 28px 32px;
+  display: flex; flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: var(--ink);
 }
-.plan-card:hover { transform: translateY(-4px); }
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+}
 
-/* ── Featured (主推) ── */
+/* ── Featured (主推）── */
 .plan-card.featured {
-  background: linear-gradient(160deg, rgba(60,44,112,0.55) 0%, rgba(20,33,80,0.8) 100%);
-  border:2px solid var(--gold);
-  box-shadow: 0 0 48px rgba(212,175,110,0.22), 0 12px 48px rgba(0,0,0,0.35);
-  position:relative;
+  background: #fffaf0;
+  border: 2px solid var(--gold);
+  box-shadow: 0 8px 40px rgba(212,175,110,0.28), 0 2px 12px rgba(0,0,0,0.10);
+  position: relative;
   padding-top: 52px;
 }
 .badge-popular {
-  position:absolute; top:-1px; left:50%; transform:translateX(-50%);
-  background:var(--gold); color:var(--ink); font-size:12px; font-weight:700;
-  letter-spacing:2px; padding:6px 22px; border-radius:0 0 10px 10px;
-  white-space:nowrap;
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: #fff;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 2px; padding: 6px 22px; border-radius: 0 0 10px 10px;
+  white-space: nowrap;
 }
 
-/* ── Anchor (旗艦) ── */
+/* ── Anchor (旗艦）── */
 .plan-card.anchor {
-  background:rgba(39,26,77,0.4);
-  border-color:rgba(212,175,110,0.3);
+  background: #f3efe6;
+  border-color: rgba(169,133,72,0.3);
 }
 
 /* ── Member ── */
 .plan-card.member {
-  background:rgba(255,255,255,0.04);
-  border-color:rgba(212,175,110,0.18);
+  background: #f7f3e9;
+  border-color: rgba(169,133,72,0.22);
 }
 
 .plan-tag {
-  font-size:11px; letter-spacing:3px; color:var(--gold); opacity:.75;
-  margin-bottom:10px; text-transform:uppercase;
+  font-size: 11px; letter-spacing: 3px; color: #8a6830;
+  opacity: 1; margin-bottom: 10px; text-transform: uppercase; font-weight: 600;
 }
 .plan-name {
-  font-family:'Cormorant Garamond',serif;
-  font-size:22px; font-weight:600; color:var(--gold-bright);
-  margin-bottom:6px; line-height:1.3;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-weight: 700; color: #1a2855;
+  margin-bottom: 6px; line-height: 1.25;
 }
-.featured .plan-name { font-size:26px; }
+.featured .plan-name { font-size: 30px; color: #1a2855; }
 
 .plan-price {
-  font-size:28px; font-weight:700; color:var(--ivory);
-  margin:14px 0 4px; font-family:'Cormorant Garamond',serif;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700; color: #1a2855;
+  margin: 14px 0 4px;
 }
-.featured .plan-price { font-size:36px; color:var(--gold-bright); }
-.plan-price-sub { font-size:13px; color:rgba(245,240,225,0.45); margin-bottom:20px; }
+.featured .plan-price { color: #8a6830; }
+.plan-price-sub { font-size: 13px; color: #7a8499; margin-bottom: 20px; }
 
-.plan-divider { height:1px; background:var(--gold-line); opacity:.35; margin:18px 0; }
+.plan-divider { height: 1px; background: rgba(26,40,85,0.12); margin: 18px 0; }
 
 .plan-for-label {
-  font-size:11px; letter-spacing:2px; color:var(--gold); opacity:.7;
-  margin-bottom:10px; text-transform:uppercase;
+  font-size: 11px; letter-spacing: 2px; color: #8a6830;
+  margin-bottom: 10px; text-transform: uppercase; font-weight: 600;
 }
-.plan-for-list {
-  list-style:none; margin-bottom:18px;
-}
+.plan-for-list { list-style: none; margin-bottom: 18px; }
 .plan-for-list li {
-  font-size:13.5px; color:rgba(245,240,225,0.65);
-  padding:3px 0; padding-left:14px; position:relative;
+  font-size: 13.5px; color: #3a4a6a;
+  padding: 3px 0; padding-left: 14px; position: relative;
 }
-.plan-for-list li::before { content:'·'; position:absolute; left:0; color:var(--gold); }
+.plan-for-list li::before { content: '·'; position: absolute; left: 0; color: #a98548; font-weight: 700; }
 
 .plan-content-label {
-  font-size:11px; letter-spacing:2px; color:var(--gold); opacity:.7;
-  margin-bottom:10px; text-transform:uppercase;
+  font-size: 11px; letter-spacing: 2px; color: #8a6830;
+  margin-bottom: 10px; text-transform: uppercase; font-weight: 600;
 }
-.plan-content-list {
-  list-style:none; margin-bottom:18px;
-}
+.plan-content-list { list-style: none; margin-bottom: 18px; }
 .plan-content-list li {
-  font-size:13px; color:rgba(245,240,225,0.6);
-  padding:3px 0; padding-left:14px; position:relative;
+  font-size: 13px; color: #4a5878;
+  padding: 3px 0; padding-left: 14px; position: relative;
 }
-.plan-content-list li::before { content:'—'; position:absolute; left:0; color:var(--gold-deep); font-size:10px; }
+.plan-content-list li::before { content: '—'; position: absolute; left: 0; color: #a98548; font-size: 10px; }
 
-.plan-benefits { margin-bottom:24px; }
+.plan-benefits { margin-bottom: 24px; }
 .plan-benefits li {
-  list-style:none; font-size:13px; color:rgba(245,240,225,0.7);
-  padding:3px 0;
+  list-style: none; font-size: 13px; color: #3a4a6a; padding: 3px 0;
 }
-.featured .plan-benefits li { font-size:14px; color:rgba(245,240,225,0.85); }
+.featured .plan-benefits li { font-size: 14px; color: #1a2855; font-weight: 500; }
 
 .plan-cta {
-  display:block; text-align:center; padding:13px 20px;
-  border-radius:6px; text-decoration:none; font-size:14px;
-  letter-spacing:1.5px; font-weight:700; margin-top:auto;
+  display: block; text-align: center; padding: 13px 20px;
+  border-radius: 8px; text-decoration: none; font-size: 14px;
+  letter-spacing: 1.5px; font-weight: 700; margin-top: auto;
   transition: all 0.2s;
 }
 .plan-cta.gold-btn {
-  background:var(--gold); color:var(--ink);
+  background: #b08642; color: #fff;
 }
-.plan-cta.gold-btn:hover { background:var(--gold-bright); }
+.plan-cta.gold-btn:hover { background: #c99a50; }
 .plan-cta.outline-btn {
-  background:transparent; border:1px solid var(--gold-line); color:var(--gold);
+  background: transparent; border: 1.5px solid #a98548; color: #8a6830;
 }
-.plan-cta.outline-btn:hover { background:var(--gold-soft); }
+.plan-cta.outline-btn:hover { background: rgba(169,133,72,0.1); }
 
 /* ── Sub-section content group ── */
 .content-group { margin-bottom:24px; }
@@ -276,49 +277,50 @@ body {
 }
 .entry-card {
   max-width:760px; margin:0 auto;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(212,175,110,0.2);
+  background: #f7f3e9;
+  border: 1px solid rgba(169,133,72,0.25);
   border-radius:16px;
   padding:40px 48px;
   display:grid; grid-template-columns:1fr 1fr;
   gap:40px;
+  color: var(--ink);
 }
 @media(max-width:640px){
   .entry-card { grid-template-columns:1fr; padding:28px 24px; gap:24px; }
 }
 .entry-left {}
-.entry-tag { font-size:11px; letter-spacing:3px; color:var(--gold); opacity:.7; margin-bottom:10px; }
+.entry-tag { font-size:11px; letter-spacing:3px; color:#8a6830; font-weight:600; margin-bottom:10px; text-transform:uppercase; }
 .entry-name {
   font-family:'Cormorant Garamond',serif;
-  font-size:26px; font-weight:600; color:var(--gold-bright); margin-bottom:12px;
+  font-size:28px; font-weight:700; color:#1a2855; margin-bottom:12px;
 }
 .entry-price {
-  font-size:38px; font-weight:700; font-family:'Cormorant Garamond',serif; color:var(--ivory);
+  font-size:38px; font-weight:700; font-family:'Cormorant Garamond',serif; color:#1a2855;
 }
-.entry-price-sub { font-size:13px; color:rgba(245,240,225,0.45); margin-bottom:20px; }
+.entry-price-sub { font-size:13px; color:#7a8499; margin-bottom:20px; }
 .entry-desc {
-  font-size:14px; color:rgba(245,240,225,0.6); line-height:1.8; margin-bottom:24px;
+  font-size:14px; color:#4a5878; line-height:1.8; margin-bottom:24px;
 }
 .entry-cta {
   display:inline-block; padding:12px 28px;
-  background:transparent; border:1px solid var(--gold-line);
-  color:var(--gold); text-decoration:none; border-radius:6px;
+  background:transparent; border:1.5px solid #a98548;
+  color:#8a6830; text-decoration:none; border-radius:6px;
   font-size:14px; letter-spacing:1.5px; font-weight:700;
   transition:all 0.2s;
 }
-.entry-cta:hover { background:var(--gold-soft); }
+.entry-cta:hover { background:rgba(169,133,72,0.1); }
 .entry-right {}
-.entry-section-label { font-size:11px; letter-spacing:2px; color:var(--gold); opacity:.65; margin:0 0 8px; }
+.entry-section-label { font-size:11px; letter-spacing:2px; color:#8a6830; font-weight:600; margin:0 0 8px; text-transform:uppercase; }
 .entry-list {
   list-style:none; margin-bottom:20px;
 }
 .entry-list li {
-  font-size:13.5px; color:rgba(245,240,225,0.65);
+  font-size:13.5px; color:#3a4a6a;
   padding:3px 0 3px 14px; position:relative;
 }
-.entry-list li::before { content:'—'; position:absolute; left:0; color:var(--gold-deep); font-size:10px; }
+.entry-list li::before { content:'—'; position:absolute; left:0; color:#a98548; font-size:10px; }
 .entry-benefits li {
-  list-style:none; font-size:13px; color:rgba(245,240,225,0.7); padding:2px 0;
+  list-style:none; font-size:13px; color:#3a4a6a; padding:2px 0;
 }
 
 /* ── CTA Section ── */
