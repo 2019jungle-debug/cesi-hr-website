@@ -2633,5 +2633,325 @@
     });
   </script>
 
+<!-- ========== TUTORIAL OVERLAY ========== -->
+<div id="tutorial-overlay" style="display:none;" aria-modal="true" role="dialog" aria-label="操作說明">
+  <!-- 4 dark panels that form a spotlight cutout -->
+  <div id="t-panel-top"    class="t-panel"></div>
+  <div id="t-panel-middle" class="t-panel-middle">
+    <div id="t-panel-left"  class="t-panel"></div>
+    <div id="t-spotlight"   class="t-spotlight"></div>
+    <div id="t-panel-right" class="t-panel"></div>
+  </div>
+  <div id="t-panel-bottom" class="t-panel"></div>
+  <!-- Tooltip card -->
+  <div id="t-tooltip" class="t-tooltip">
+    <div class="t-step-badge" id="t-step-badge">STEP 1 / 4</div>
+    <div class="t-dots" id="t-dots"></div>
+    <div class="t-title" id="t-title"></div>
+    <div class="t-desc"  id="t-desc"></div>
+    <div class="t-actions">
+      <button class="t-btn-skip" id="t-btn-skip">跳過說明</button>
+      <button class="t-btn-next" id="t-btn-next">下一步 →</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ===== Tutorial Overlay ===== */
+#tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+}
+.t-panel {
+  background: rgba(7, 20, 47, 0.78);
+  pointer-events: all;
+}
+.t-panel-middle {
+  display: flex;
+  flex-direction: row;
+  pointer-events: none;
+}
+.t-spotlight {
+  box-sizing: border-box;
+  border: 2px solid rgba(226, 191, 121, 0.85);
+  border-radius: 4px;
+  box-shadow: 0 0 0 4px rgba(226, 191, 121, 0.18), 0 0 32px rgba(226, 191, 121, 0.22);
+  flex-shrink: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+/* Tooltip card */
+.t-tooltip {
+  position: fixed;
+  width: min(340px, 90vw);
+  background: #07142f;
+  border: 1px solid rgba(226,191,121,0.35);
+  border-radius: 8px;
+  padding: 22px 24px 18px;
+  box-shadow: 0 24px 72px rgba(0,0,0,0.5);
+  pointer-events: all;
+  transition: top 0.35s cubic-bezier(0.4,0,0.2,1), left 0.35s cubic-bezier(0.4,0,0.2,1);
+  z-index: 9001;
+}
+.t-tooltip::before {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  background: #07142f;
+  border: 1px solid rgba(226,191,121,0.35);
+  transform: rotate(45deg);
+}
+.t-tooltip.arrow-top::before    { top: -6px; left: 28px; border-right: none; border-bottom: none; }
+.t-tooltip.arrow-bottom::before { bottom: -6px; left: 28px; border-left: none; border-top: none; }
+.t-tooltip.arrow-left::before   { left: -6px; top: 24px; border-right: none; border-top: none; }
+.t-tooltip.arrow-right::before  { right: -6px; top: 24px; border-left: none; border-bottom: none; }
+
+.t-step-badge {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 11px;
+  color: rgba(226,191,121,0.7);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+}
+.t-dots {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.t-dots span {
+  width: 20px; height: 3px;
+  background: rgba(226,191,121,0.25);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+.t-dots span.active { background: rgba(226,191,121,0.9); }
+.t-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fbf8ef;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.t-desc {
+  font-size: 13.5px;
+  color: rgba(251,248,239,0.72);
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+.t-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.t-btn-skip {
+  background: none;
+  border: none;
+  color: rgba(251,248,239,0.4);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 1px;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+.t-btn-skip:hover { color: rgba(251,248,239,0.7); }
+.t-btn-next {
+  background: linear-gradient(135deg, #c9a15d, #e2bf79);
+  border: none;
+  color: #07142f;
+  font-size: 13px;
+  font-weight: 800;
+  font-family: 'Noto Serif TC', serif;
+  padding: 10px 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+.t-btn-next:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(0,0,0,0.3); }
+
+/* Mobile: always show tooltip at bottom center */
+@media (max-width: 600px) {
+  .t-tooltip {
+    width: calc(100vw - 32px);
+    left: 16px !important;
+    right: 16px;
+  }
+}
+</style>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'cesi_tutorial_seen_v1';
+  if (localStorage.getItem(STORAGE_KEY)) return; // already seen
+
+  const steps = [
+    {
+      targetId: 'categories',
+      title: '選擇諮詢主題',
+      desc: '共有 6 大人資主題。點選任一分類，AI 將聚焦在該領域，提供精準回答與法規依據。',
+      tooltipPos: 'bottom'
+    },
+    {
+      targetId: 'suggested-questions',
+      title: '快速選題或自行提問',
+      desc: '可從右側「常見提問」直接點選預設問題，也可以在下方輸入框輸入您的任何 HR 問題。',
+      tooltipPos: 'left'
+    },
+    {
+      targetId: 'messages',
+      title: '查看 AI 回覆',
+      desc: 'AI 顧問在這裡回答問題，並附上法源依據與風險提醒。您可持續追問，進行多輪深度對話。',
+      tooltipPos: 'right'
+    },
+    {
+      targetId: 'consult-cta',
+      title: '需要更深入的協助？',
+      desc: '遇到複雜個案或勞資爭議，點此預約策識永續資深顧問進行一對一諮詢，提供最完整的解決方案。',
+      tooltipPos: 'left'
+    }
+  ];
+
+  let current = 0;
+  const overlay   = document.getElementById('tutorial-overlay');
+  const panelTop  = document.getElementById('t-panel-top');
+  const panelMid  = document.getElementById('t-panel-middle');
+  const panelLeft = document.getElementById('t-panel-left');
+  const panelRight= document.getElementById('t-panel-right');
+  const panelBot  = document.getElementById('t-panel-bottom');
+  const spotlight = document.getElementById('t-spotlight');
+  const tooltip   = document.getElementById('t-tooltip');
+  const stepBadge = document.getElementById('t-step-badge');
+  const dotsEl    = document.getElementById('t-dots');
+  const titleEl   = document.getElementById('t-title');
+  const descEl    = document.getElementById('t-desc');
+  const btnNext   = document.getElementById('t-btn-next');
+  const btnSkip   = document.getElementById('t-btn-skip');
+
+  const PAD = 8; // spotlight padding around target
+
+  function renderDots(idx) {
+    dotsEl.innerHTML = steps.map((_, i) =>
+      `<span class="${i <= idx ? 'active' : ''}"></span>`
+    ).join('');
+  }
+
+  function positionSpotlight(rect) {
+    const top    = rect.top    - PAD;
+    const left   = rect.left   - PAD;
+    const width  = rect.width  + PAD * 2;
+    const height = rect.height + PAD * 2;
+
+    panelTop.style.cssText  = `height:${top}px; width:100%;`;
+    panelMid.style.cssText  = `height:${height}px; width:100%; display:flex;`;
+    panelLeft.style.cssText = `width:${left}px; height:${height}px;`;
+    spotlight.style.cssText = `width:${width}px; height:${height}px;`;
+    panelRight.style.cssText= `flex:1; height:${height}px;`;
+    panelBot.style.cssText  = `flex:1; width:100%;`;
+  }
+
+  function positionTooltip(rect, pos) {
+    const TW = Math.min(340, window.innerWidth * 0.9);
+    const TH_EST = 200;
+    const MARGIN = 16;
+    const isMobile = window.innerWidth <= 600;
+
+    // reset arrow class
+    tooltip.className = 't-tooltip';
+    let top, left;
+
+    if (isMobile) {
+      // always stick to bottom of screen on mobile
+      top  = window.innerHeight - TH_EST - 80;
+      left = MARGIN;
+      tooltip.classList.add('arrow-top');
+    } else if (pos === 'bottom') {
+      top  = rect.bottom + PAD + MARGIN;
+      left = Math.max(MARGIN, Math.min(rect.left, window.innerWidth - TW - MARGIN));
+      tooltip.classList.add('arrow-top');
+    } else if (pos === 'top') {
+      top  = rect.top - PAD - TH_EST - MARGIN;
+      left = Math.max(MARGIN, Math.min(rect.left, window.innerWidth - TW - MARGIN));
+      tooltip.classList.add('arrow-bottom');
+    } else if (pos === 'left') {
+      top  = Math.max(MARGIN, rect.top);
+      left = rect.left - TW - PAD - MARGIN;
+      if (left < MARGIN) { left = rect.right + PAD + MARGIN; tooltip.classList.add('arrow-left'); }
+      else { tooltip.classList.add('arrow-right'); }
+    } else { // right
+      top  = Math.max(MARGIN, rect.top);
+      left = rect.right + PAD + MARGIN;
+      if (left + TW > window.innerWidth - MARGIN) { left = rect.left - TW - PAD - MARGIN; tooltip.classList.add('arrow-right'); }
+      else { tooltip.classList.add('arrow-left'); }
+    }
+
+    // clamp
+    top  = Math.max(MARGIN, Math.min(top,  window.innerHeight - TH_EST - MARGIN));
+    left = Math.max(MARGIN, Math.min(left, window.innerWidth  - TW      - MARGIN));
+
+    tooltip.style.top  = top  + 'px';
+    tooltip.style.left = left + 'px';
+  }
+
+  function showStep(idx) {
+    const step   = steps[idx];
+    const target = document.getElementById(step.targetId);
+    if (!target) { idx < steps.length - 1 ? showStep(idx + 1) : closeTutorial(); return; }
+
+    // scroll target into view
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    setTimeout(() => {
+      const rect = target.getBoundingClientRect();
+      positionSpotlight(rect);
+      positionTooltip(rect, step.tooltipPos);
+
+      stepBadge.textContent = `STEP ${idx + 1} / ${steps.length}`;
+      renderDots(idx);
+      titleEl.textContent = step.title;
+      descEl.textContent  = step.desc;
+      btnNext.textContent = idx === steps.length - 1 ? '開始使用 ✓' : '下一步 →';
+    }, 350); // wait for scroll
+  }
+
+  function closeTutorial() {
+    overlay.style.display = 'none';
+    localStorage.setItem(STORAGE_KEY, '1');
+  }
+
+  function start() {
+    overlay.style.display = 'block';
+    showStep(0);
+  }
+
+  btnNext.addEventListener('click', () => {
+    if (current < steps.length - 1) {
+      current++;
+      showStep(current);
+    } else {
+      closeTutorial();
+    }
+  });
+
+  btnSkip.addEventListener('click', closeTutorial);
+
+  // also close if clicking dark panels
+  [panelTop, panelLeft, panelRight, panelBot].forEach(p =>
+    p.addEventListener('click', closeTutorial)
+  );
+
+  // Start after page is fully loaded
+  window.addEventListener('load', () => setTimeout(start, 800));
+
+  // expose for manual re-trigger
+  window.showTutorial = () => { current = 0; start(); };
+})();
+</script>
+
 </body>
 </html>
