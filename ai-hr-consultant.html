@@ -2793,25 +2793,31 @@
   const steps = [
     {
       targetId: 'categories',
-      title: '選擇諮詢主題',
+      title: 'STEP 1　選擇諮詢主題',
       desc: '共有 6 大人資主題。點選任一分類，AI 將聚焦在該領域，提供精準回答與法規依據。',
       tooltipPos: 'bottom'
     },
     {
+      targetId: 'hr-functions',
+      title: 'STEP 2　人資功能分類引導（進階）',
+      desc: '這裡是進階功能區。點擊標題列可展開 8 大人資功能模組，每個模組內含常見子問題與相關表單。\n訂閱會員可解鎖全部功能；免費用戶可點選開放項目快速發問。',
+      tooltipPos: 'bottom'
+    },
+    {
       targetId: 'suggested-questions',
-      title: '快速選題或自行提問',
+      title: 'STEP 3　快速選題或自行提問',
       desc: '可從右側「常見提問」直接點選預設問題，也可以在下方輸入框輸入您的任何 HR 問題。',
       tooltipPos: 'left'
     },
     {
       targetId: 'messages',
-      title: '查看 AI 回覆',
+      title: 'STEP 4　查看 AI 回覆',
       desc: 'AI 顧問在這裡回答問題，並附上法源依據與風險提醒。您可持續追問，進行多輪深度對話。',
       tooltipPos: 'right'
     },
     {
       targetId: 'consult-cta',
-      title: '需要更深入的協助？',
+      title: 'STEP 5　需要更深入的協助？',
       desc: '遇到複雜個案或勞資爭議，點此預約策識永續資深顧問進行一對一諮詢，提供最完整的解決方案。',
       tooltipPos: 'left'
     }
@@ -2911,10 +2917,10 @@
       positionSpotlight(rect);
       positionTooltip(rect, step.tooltipPos);
 
-      stepBadge.textContent = `STEP ${idx + 1} / ${steps.length}`;
+      stepBadge.textContent = `— HR CONSULTANT GUIDE —`;
       renderDots(idx);
       titleEl.textContent = step.title;
-      descEl.textContent  = step.desc;
+      descEl.innerHTML    = step.desc.split('\n').map(l => `<span>${l}</span>`).join('<br>');
       btnNext.textContent = idx === steps.length - 1 ? '開始使用 ✓' : '下一步 →';
     }, 350); // wait for scroll
   }
