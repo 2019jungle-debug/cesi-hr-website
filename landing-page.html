@@ -42,7 +42,7 @@ nav { background: rgba(255,255,255,0.92); backdrop-filter: blur(18px); border-bo
 .hamburger span { display: block; width: 100%; height: 2px; background: var(--navy); border-radius: 2px; }
 .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; opacity: 0; transition: opacity 0.3s; }
 .drawer-overlay.open { display: block; opacity: 1; }
-.side-drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background: linear-gradient(160deg, #10244c, #07142f); border-left: 1px solid rgba(226,191,121,0.2); z-index: 300; transition: right 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; }
+.side-drawer { position: fixed; top: 0; right: -280px; width: 260px; height: 100%; background-color: #0d1c3d; background: linear-gradient(160deg, #10244c 0%, #07142f 100%); border-left: 1px solid rgba(226,191,121,0.2); z-index: 300; transition: right 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; -webkit-overflow-scrolling: touch; }
 .side-drawer.open { right: 0; }
 .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 16px; border-bottom: 1px solid rgba(226,191,121,0.15); }
 .drawer-logo { font-family: 'Noto Serif TC', serif; font-size: 13px; color: var(--gold-bright); letter-spacing: 1px; }
