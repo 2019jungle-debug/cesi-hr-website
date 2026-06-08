@@ -1318,6 +1318,30 @@
     30% { transform: translateY(-7px); opacity: 1; }
   }
 
+  /* 手機版「選擇主題」按鈕 */
+  .mobile-scroll-btn {
+    display: none;
+  }
+  @media (max-width: 900px) {
+    .mobile-scroll-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 28px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 14px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      animation: pulse-btn 2s infinite;
+    }
+    @keyframes pulse-btn {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+  }
+
   /* === Responsive === */
   @media (max-width: 600px) {
     .container { padding: 24px 16px 40px; }
@@ -1401,6 +1425,7 @@
             <h3>歡迎使用 AI 人資諮詢</h3>
             <p>請從上方選擇您想諮詢的主題，或從「綜合諮詢」開始全方位對談</p>
             <div class="arrow">↑ Begin Above</div>
+            <button class="mobile-scroll-btn" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth', block:'start'})">↑ 點此選擇諮詢主題</button>
           </div>
         </div>
         <div class="input-area">
