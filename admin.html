@@ -788,6 +788,12 @@
       } else {
         detail.innerHTML = `<span style="color: var(--hot);">✗ KV 未啟用</span> · 請至 Vercel Storage 設定 KV，或使用環境變數 VALID_ACCESS_CODES 手動管理`;
       }
+      // 顯示 ECPAY 模式
+      const ecpayEl = document.getElementById('ecpay-mode');
+      if (ecpayEl) {
+        const mode = status.ecpayMode;
+        ecpayEl.textContent = mode === 'production' ? '🟢 production' : mode === 'sandbox' ? '🟡 sandbox' : '—';
+      }
     } catch (e) {
       showToast(e.message, 'error');
     }
