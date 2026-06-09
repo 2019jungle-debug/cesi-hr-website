@@ -515,12 +515,21 @@
   }
 
   function switchTab(name) {
+    // 隱藏所有 panel（同時用 class 和 style 雙重確保）
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => {
+      p.classList.remove('active');
+      p.style.display = 'none';
+    });
+    // 啟用目標 tab 按鈕
     const tabBtn = document.querySelector(`.tab[data-tab="${name}"]`);
     if (tabBtn) tabBtn.classList.add('active');
+    // 顯示目標 panel
     const panel = document.getElementById('panel-' + name);
-    if (panel) panel.classList.add('active');
+    if (panel) {
+      panel.classList.add('active');
+      panel.style.display = 'block';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Lazy load
