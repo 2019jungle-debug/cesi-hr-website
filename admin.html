@@ -814,7 +814,7 @@
           <td>${escapeHtml(c.name || '—')}</td>
           <td>${escapeHtml(c.email || '—')}</td>
           <td class="mono">${escapeHtml(c.accessCode || '—')}</td>
-          <td>${escapeHtml((c.reasons || []).join('、'))}</td>
+          <td>${escapeHtml(Array.isArray(c.reasons) ? c.reasons.join('、') : (c.reasons || ''))}</td>
           <td style="max-width: 300px; font-size: 12px; color: var(--ink-soft);">${escapeHtml(c.feedback || '')}</td>
         </tr>`;
       });
