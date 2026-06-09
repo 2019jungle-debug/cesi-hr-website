@@ -188,12 +188,12 @@
 
   <div class="container">
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('overview')">總覽</button>
-      <button class="tab" onclick="switchTab('members')">會員</button>
-      <button class="tab" onclick="switchTab('orders')">訂單</button>
-      <button class="tab" onclick="switchTab('cancellations')">取消申請</button>
-      <button class="tab" onclick="switchTab('system')">系統</button>
-      <button class="tab" onclick="switchTab('knowledge')">知識庫</button>
+      <button class="tab active" data-tab="overview" onclick="switchTab('overview')">總覽</button>
+      <button class="tab" data-tab="members" onclick="switchTab('members')">會員</button>
+      <button class="tab" data-tab="orders" onclick="switchTab('orders')">訂單</button>
+      <button class="tab" data-tab="cancellations" onclick="switchTab('cancellations')">取消申請</button>
+      <button class="tab" data-tab="system" onclick="switchTab('system')">系統</button>
+      <button class="tab" data-tab="knowledge" onclick="switchTab('knowledge')">知識庫</button>
     </div>
 
     <!-- 總覽 -->
@@ -517,8 +517,11 @@
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelector(`.tab[onclick*="${name}"]`).classList.add('active');
-    document.getElementById('panel-' + name).classList.add('active');
+    const tabBtn = document.querySelector(`.tab[data-tab="${name}"]`);
+    if (tabBtn) tabBtn.classList.add('active');
+    const panel = document.getElementById('panel-' + name);
+    if (panel) panel.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Lazy load
     if (name === 'members') loadMembers();
