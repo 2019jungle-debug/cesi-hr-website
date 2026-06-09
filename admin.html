@@ -61,10 +61,15 @@
   /* Cards */
   .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
   @media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
-  .stat-card { background: var(--bg-card); border: 1px solid var(--line); padding: 18px 22px; }
+  .stat-card { background: var(--bg-card); border: 1px solid var(--line); padding: 18px 22px; position: relative; transition: border-color .18s, background .18s; }
+  .stat-card.clickable { cursor: pointer; }
+  .stat-card.clickable:hover { border-color: var(--accent); background: rgba(196,160,100,0.06); }
+  .stat-card.clickable:hover .num { color: var(--accent); }
+  .stat-card.clickable::after { content: '→'; position: absolute; bottom: 14px; right: 16px; font-size: 13px; color: var(--accent); opacity: 0; transition: opacity .18s; }
+  .stat-card.clickable:hover::after { opacity: 1; }
   .stat-card .label { font-family: 'Cormorant Garamond', serif; font-size: 10px;
     letter-spacing: 3px; color: var(--accent); text-transform: uppercase; font-weight: 600; }
-  .stat-card .num { font-family: 'Noto Serif TC', serif; font-size: 30px; font-weight: 600; margin: 6px 0; }
+  .stat-card .num { font-family: 'Noto Serif TC', serif; font-size: 30px; font-weight: 600; margin: 6px 0; transition: color .18s; }
   .stat-card .sub { font-size: 11px; color: var(--ink-soft); }
 
   /* Section */
@@ -194,17 +199,17 @@
     <!-- 總覽 -->
     <div class="panel active" id="panel-overview">
       <div class="stat-grid">
-        <div class="stat-card">
+        <div class="stat-card clickable" onclick="switchTab('orders')" title="查看訂單">
           <div class="label">— Today Orders</div>
           <div class="num" id="s-today-orders">—</div>
           <div class="sub">今日訂單數</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card clickable" onclick="switchTab('orders')" title="查看訂單">
           <div class="label">— Today Revenue</div>
           <div class="num" id="s-today-revenue">—</div>
           <div class="sub">今日營收 (NT$)</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card clickable" onclick="switchTab('members')" title="查看會員">
           <div class="label">— Active Members</div>
           <div class="num" id="s-active">—</div>
           <div class="sub">活躍會員數</div>
@@ -217,12 +222,12 @@
       </div>
 
       <div class="stat-grid">
-        <div class="stat-card">
+        <div class="stat-card clickable" onclick="switchTab('orders')" title="查看訂單">
           <div class="label">— 7-Day Orders</div>
           <div class="num" id="s-7d-orders">—</div>
           <div class="sub">7 日訂單數</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card clickable" onclick="switchTab('orders')" title="查看訂單">
           <div class="label">— 7-Day Revenue</div>
           <div class="num" id="s-7d-revenue">—</div>
           <div class="sub">7 日營收</div>
@@ -232,7 +237,7 @@
           <div class="num" id="s-7d-chats">—</div>
           <div class="sub">7 日對話次數</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card clickable" onclick="switchTab('cancellations')" title="查看取消申請">
           <div class="label">— Pending Cancel</div>
           <div class="num" id="s-pending">—</div>
           <div class="sub">待處理取消</div>
