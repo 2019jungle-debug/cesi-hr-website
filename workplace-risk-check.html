@@ -4,16 +4,17 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 勞資風險自評 · 策識永續</title>
-<meta name="description" content="20 題快速自評，立即了解您的企業勞資法令合規風險，AI 即時分析並提供改善建議。">
+<title>職場不法侵害風險自評 · 策識永續</title>
+<meta name="description" content="20 題快速自評，立即了解您的企業職場不法侵害（霸凌、騷擾、暴力）防治合規狀況，AI 即時分析並提供改善建議。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #1c2541;
-    --navy-deep: #0d1b2a;
-    --gold: #d4af6e;
-    --gold-bright: #e8c97a;
+    --navy-deep: #0d1420;
+    --purple: #8b5cf6;
+    --purple-bright: #a78bfa;
+    --purple-soft: #c4b5fd;
     --ivory: #f5f0e1;
     --cream: #faf6ed;
     --ink: #2c2c2c;
@@ -31,14 +32,13 @@
     min-height: 100vh;
   }
 
-  /* === Header === */
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 18px 32px;
-    background: rgba(13,27,42,0.95);
-    border-bottom: 1px solid rgba(212,175,110,0.2);
+    background: rgba(13,20,32,0.95);
+    border-bottom: 1px solid rgba(139,92,246,0.25);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -47,7 +47,7 @@
     font-family: 'Microsoft JhengHei', sans-serif;
     font-weight: 700;
     font-size: 16px;
-    color: var(--gold-bright);
+    color: var(--purple-bright);
     text-decoration: none;
   }
   .header-back {
@@ -59,9 +59,8 @@
     gap: 6px;
     transition: color 0.2s;
   }
-  .header-back:hover { color: var(--gold); }
+  .header-back:hover { color: var(--purple); }
 
-  /* === Hero === */
   .hero {
     text-align: center;
     padding: 60px 24px 48px;
@@ -70,9 +69,9 @@
   }
   .hero-badge {
     display: inline-block;
-    background: rgba(212,175,110,0.15);
-    border: 1px solid rgba(212,175,110,0.35);
-    color: var(--gold-bright);
+    background: rgba(139,92,246,0.15);
+    border: 1px solid rgba(139,92,246,0.35);
+    color: var(--purple-bright);
     font-size: 12px;
     letter-spacing: 2px;
     padding: 5px 16px;
@@ -81,12 +80,12 @@
   }
   .hero h1 {
     font-family: 'Microsoft JhengHei', sans-serif;
-    font-size: clamp(28px, 5vw, 44px);
+    font-size: clamp(26px, 5vw, 42px);
     font-weight: 700;
     line-height: 1.4;
     margin-bottom: 16px;
   }
-  .hero h1 span { color: var(--gold-bright); }
+  .hero h1 span { color: var(--purple-bright); }
   .hero p {
     font-size: 16px;
     line-height: 1.9;
@@ -98,8 +97,17 @@
     color: rgba(245,240,225,0.5);
     margin-top: 8px;
   }
+  .law-note {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 12px;
+    color: rgba(167,139,250,0.7);
+    background: rgba(139,92,246,0.1);
+    border: 1px solid rgba(139,92,246,0.2);
+    padding: 6px 16px;
+    border-radius: 6px;
+  }
 
-  /* === Progress Bar === */
   .progress-wrap {
     max-width: 720px;
     margin: 0 auto 32px;
@@ -120,13 +128,12 @@
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    background: linear-gradient(90deg, var(--purple), var(--purple-bright));
     border-radius: 4px;
     transition: width 0.4s ease;
     width: 0%;
   }
 
-  /* === Company Info Form === */
   .company-form {
     max-width: 720px;
     margin: 0 auto 40px;
@@ -141,7 +148,7 @@
   .company-input {
     padding: 11px 16px;
     background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(212,175,110,0.25);
+    border: 1px solid rgba(139,92,246,0.25);
     border-radius: 8px;
     color: var(--ivory);
     font-size: 14px;
@@ -150,45 +157,40 @@
     transition: border-color 0.2s;
   }
   .company-input::placeholder { color: rgba(245,240,225,0.35); }
-  .company-input:focus { border-color: var(--gold); }
-  .company-input option {
-    background: #1a2640;
-    color: var(--ivory);
-  }
+  .company-input:focus { border-color: var(--purple); }
+  .company-input option { background: #1a1433; color: var(--ivory); }
 
-  /* === Question Cards === */
   .questions-wrap {
     max-width: 720px;
     margin: 0 auto;
     padding: 0 24px;
   }
-
   .question-cat-header {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 3px;
-    color: var(--gold);
+    color: var(--purple-bright);
     text-transform: uppercase;
     padding: 18px 4px 8px;
     margin-top: 8px;
-    border-bottom: 1px solid rgba(212,175,110,0.25);
+    border-bottom: 1px solid rgba(139,92,246,0.25);
     margin-bottom: 14px;
   }
   .question-cat-header:first-child { margin-top: 0; }
 
   .question-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(212,175,110,0.18);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(139,92,246,0.18);
     border-radius: 12px;
     padding: 22px 24px;
     margin-bottom: 14px;
     transition: border-color 0.2s, background 0.2s;
   }
-  .question-card.answered { border-color: rgba(212,175,110,0.4); }
+  .question-card.answered { border-color: rgba(139,92,246,0.4); }
 
   .question-num {
     font-size: 11px;
-    color: var(--gold);
+    color: var(--purple-bright);
     letter-spacing: 2px;
     margin-bottom: 8px;
   }
@@ -198,7 +200,6 @@
     color: rgba(245,240,225,0.92);
     margin-bottom: 14px;
   }
-
   .options {
     display: flex;
     gap: 10px;
@@ -215,7 +216,7 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .option-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .option-btn:hover { border-color: var(--purple); color: var(--purple-bright); }
   .option-btn.selected-yes {
     background: rgba(107,142,35,0.25);
     border-color: #6b8e23;
@@ -235,18 +236,17 @@
     font-weight: 700;
   }
 
-  /* === Submit === */
   .submit-wrap {
     max-width: 720px;
     margin: 32px auto 64px;
     padding: 0 24px;
     text-align: center;
   }
-  .btn-gold {
+  .btn-purple {
     display: inline-block;
     padding: 18px 52px;
-    background: linear-gradient(135deg, var(--gold), #b8933c);
-    color: var(--navy-deep);
+    background: linear-gradient(135deg, var(--purple), #6d28d9);
+    color: #fff;
     font-family: 'Microsoft JhengHei', sans-serif;
     font-weight: 700;
     font-size: 16px;
@@ -257,8 +257,8 @@
     text-decoration: none;
     transition: all 0.3s;
   }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,175,110,0.4); }
-  .btn-gold:disabled {
+  .btn-purple:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,0.4); }
+  .btn-purple:disabled {
     opacity: 1;
     background: #3a4050;
     color: rgba(245,240,225,0.35);
@@ -266,10 +266,10 @@
     transform: none;
     box-shadow: none;
   }
-  .btn-gold:not(:disabled) { animation: pulse-ready 2s infinite; }
+  .btn-purple:not(:disabled) { animation: pulse-ready 2s infinite; }
   @keyframes pulse-ready {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,110,0); }
-    50% { box-shadow: 0 0 0 8px rgba(212,175,110,0.2); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
+    50% { box-shadow: 0 0 0 8px rgba(139,92,246,0.2); }
   }
   .submit-note {
     font-size: 12px;
@@ -277,7 +277,6 @@
     margin-top: 12px;
   }
 
-  /* === Loading === */
   .loading-wrap {
     display: none;
     text-align: center;
@@ -286,8 +285,8 @@
   .loading-spinner {
     width: 52px;
     height: 52px;
-    border: 3px solid rgba(212,175,110,0.2);
-    border-top-color: var(--gold);
+    border: 3px solid rgba(139,92,246,0.2);
+    border-top-color: var(--purple);
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
     margin: 0 auto 20px;
@@ -295,14 +294,12 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { font-size: 16px; color: rgba(245,240,225,0.7); }
 
-  /* === Result === */
   .result-wrap {
     display: none;
     max-width: 760px;
     margin: 0 auto;
     padding: 0 24px 80px;
   }
-
   .risk-banner {
     border-radius: 14px;
     padding: 32px;
@@ -312,323 +309,134 @@
   .risk-banner.high { background: rgba(192,57,43,0.2); border: 2px solid rgba(192,57,43,0.5); }
   .risk-banner.mid  { background: rgba(212,160,23,0.15); border: 2px solid rgba(212,160,23,0.4); }
   .risk-banner.low  { background: rgba(107,142,35,0.15); border: 2px solid rgba(107,142,35,0.4); }
-
-  .risk-level-label {
-    font-size: 13px;
-    letter-spacing: 3px;
-    margin-bottom: 8px;
-    opacity: 0.8;
-  }
-  .risk-level-text {
-    font-family: 'Microsoft JhengHei', sans-serif;
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
+  .risk-level-label { font-size: 13px; letter-spacing: 3px; margin-bottom: 8px; opacity: 0.8; }
+  .risk-level-text { font-family: 'Microsoft JhengHei', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 8px; }
   .risk-banner.high .risk-level-text { color: #e07070; }
   .risk-banner.mid  .risk-level-text { color: #e8c060; }
   .risk-banner.low  .risk-level-text { color: #9ab85a; }
+  .risk-score { font-size: 14px; opacity: 0.7; margin-bottom: 14px; }
+  .risk-summary { font-size: 15px; line-height: 1.8; color: rgba(245,240,225,0.85); }
 
-  .risk-score {
-    font-size: 14px;
-    opacity: 0.7;
-    margin-bottom: 14px;
-  }
-  .risk-summary {
-    font-size: 15px;
-    line-height: 1.8;
-    color: rgba(245,240,225,0.85);
-  }
-
-  /* ── 罰鍰統計區塊 ── */
-  .fine-summary-section { border-color: rgba(180,80,80,0.35); }
-  .fine-note {
-    font-size: 15px; line-height: 1.75;
-    color: rgba(245,240,225,0.82); margin-bottom: 18px;
-  }
-  .fine-note strong { color: #f4c842; }
+  .fine-summary-section { border-color: rgba(139,92,246,0.35); }
+  .fine-note { font-size: 15px; line-height: 1.75; color: rgba(245,240,225,0.82); margin-bottom: 18px; }
+  .fine-note strong { color: var(--purple-soft); }
   .fine-max { color: #ff7070 !important; }
-
   .fine-total-bar {
     display: flex; align-items: center; justify-content: space-between;
-    background: rgba(180,60,60,0.18); border: 1px solid rgba(180,60,60,0.35);
+    background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.3);
     border-radius: 8px; padding: 14px 20px; margin-bottom: 20px;
   }
-  .fine-range-label {
-    font-size: 12px; letter-spacing: 2px; color: rgba(245,240,225,0.5);
-    text-transform: uppercase;
-  }
+  .fine-range-label { font-size: 12px; letter-spacing: 2px; color: rgba(245,240,225,0.5); text-transform: uppercase; }
   .fine-range-value { display: flex; align-items: center; gap: 12px; }
-  .fine-min-val { font-size: 18px; font-weight: 700; color: #f4c842; }
+  .fine-min-val { font-size: 18px; font-weight: 700; color: var(--purple-soft); }
   .fine-arrow { color: rgba(245,240,225,0.4); font-size: 16px; }
   .fine-max-val { font-size: 22px; font-weight: 700; color: #ff7070; }
-
-  .fine-table {
-    width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px;
-  }
-  .fine-table thead tr {
-    background: rgba(180,60,60,0.25);
-  }
-  .fine-table th {
-    padding: 10px 12px; text-align: left; font-size: 11px;
-    letter-spacing: 1.5px; color: rgba(245,240,225,0.6);
-    border-bottom: 1px solid rgba(180,60,60,0.3);
-  }
-  .fine-table td {
-    padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);
-    color: rgba(245,240,225,0.8); line-height: 1.5;
-  }
+  .fine-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .fine-table thead tr { background: rgba(139,92,246,0.2); }
+  .fine-table th { padding: 10px 12px; text-align: left; font-size: 11px; letter-spacing: 1.5px; color: rgba(245,240,225,0.6); border-bottom: 1px solid rgba(139,92,246,0.3); }
+  .fine-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: rgba(245,240,225,0.8); line-height: 1.5; }
   .fine-table tr:last-child td { border-bottom: none; }
   .fine-table tr:hover td { background: rgba(255,255,255,0.04); }
-  .fine-cat-tag {
-    display: inline-block; font-size: 10px; padding: 2px 8px;
-    background: rgba(212,175,110,0.15); color: var(--gold);
-    border-radius: 3px; letter-spacing: 1px; white-space: nowrap;
-  }
-  .fine-cell-amount {
-    font-weight: 700; color: #ff9090; white-space: nowrap;
-  }
-  .fine-disclaimer {
-    font-size: 12px; color: rgba(245,240,225,0.4);
-    line-height: 1.6; margin-top: 4px;
-  }
+  .fine-cat-tag { display: inline-block; font-size: 10px; padding: 2px 8px; background: rgba(139,92,246,0.15); color: var(--purple-bright); border-radius: 3px; letter-spacing: 1px; white-space: nowrap; }
+  .fine-cell-amount { font-weight: 700; color: #ff9090; white-space: nowrap; }
+  .fine-disclaimer { font-size: 12px; color: rgba(245,240,225,0.4); line-height: 1.6; margin-top: 4px; }
 
   .result-section {
     background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(212,175,110,0.2);
+    border: 1px solid rgba(139,92,246,0.2);
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 20px;
   }
   .result-section h3 {
     font-family: 'Microsoft JhengHei', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--gold-bright);
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(212,175,110,0.2);
+    font-size: 16px; font-weight: 700;
+    color: var(--purple-bright);
+    margin-bottom: 16px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(139,92,246,0.2);
   }
-
-  .risk-item {
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
+  .risk-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
   .risk-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .risk-item-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-  .urgency-tag {
-    font-size: 11px;
-    padding: 2px 10px;
-    border-radius: 4px;
-    font-weight: 700;
-    white-space: nowrap;
-  }
+  .risk-item-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .urgency-tag { font-size: 11px; padding: 2px 10px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
   .urgency-now  { background: rgba(192,57,43,0.3); color: #e07070; border: 1px solid rgba(192,57,43,0.4); }
   .urgency-soon { background: rgba(212,160,23,0.2); color: #e8c060; border: 1px solid rgba(212,160,23,0.35); }
   .urgency-suggest { background: rgba(107,142,35,0.2); color: #9ab85a; border: 1px solid rgba(107,142,35,0.35); }
+  .risk-item-title { font-family: 'Microsoft JhengHei', sans-serif; font-size: 14.5px; font-weight: 700; color: rgba(245,240,225,0.92); }
+  .risk-item-desc { font-size: 13.5px; line-height: 1.75; color: rgba(245,240,225,0.68); margin-top: 4px; }
 
-  .risk-item-title {
-    font-family: 'Microsoft JhengHei', sans-serif;
-    font-size: 14.5px;
-    font-weight: 700;
-    color: rgba(245,240,225,0.92);
-  }
-  .risk-item-desc {
-    font-size: 13.5px;
-    line-height: 1.75;
-    color: rgba(245,240,225,0.68);
-    margin-top: 4px;
-  }
+  .suggestion-list { list-style: none; padding: 0; }
+  .suggestion-list li { font-size: 14px; line-height: 1.75; color: rgba(245,240,225,0.82); padding: 6px 0; padding-left: 20px; position: relative; }
+  .suggestion-list li::before { content: '→'; position: absolute; left: 0; color: var(--purple-bright); }
 
-  .suggestion-list {
-    list-style: none;
-    padding: 0;
-  }
-  .suggestion-list li {
-    font-size: 14px;
-    line-height: 1.75;
-    color: rgba(245,240,225,0.82);
-    padding: 6px 0;
-    padding-left: 20px;
-    position: relative;
-  }
-  .suggestion-list li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--gold);
-  }
-
-  /* === CTA Result === */
   .result-cta {
-    background: linear-gradient(135deg, rgba(212,175,110,0.12), rgba(212,175,110,0.05));
-    border: 1px solid rgba(212,175,110,0.3);
-    border-radius: 14px;
-    padding: 32px;
-    text-align: center;
-    margin-top: 28px;
+    background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(139,92,246,0.05));
+    border: 1px solid rgba(139,92,246,0.3);
+    border-radius: 14px; padding: 32px; text-align: center; margin-top: 28px;
   }
-  .result-cta h3 {
-    font-family: 'Microsoft JhengHei', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--gold-bright);
-    margin-bottom: 10px;
-  }
-  .result-cta p {
-    font-size: 14px;
-    color: rgba(245,240,225,0.75);
-    margin-bottom: 22px;
-    line-height: 1.8;
-  }
-  .cta-buttons {
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+  .result-cta h3 { font-family: 'Microsoft JhengHei', sans-serif; font-size: 20px; font-weight: 700; color: var(--purple-bright); margin-bottom: 10px; }
+  .result-cta p { font-size: 14px; color: rgba(245,240,225,0.75); margin-bottom: 22px; line-height: 1.8; }
+  .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
   .btn-outline {
-    display: inline-block;
-    padding: 14px 32px;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    font-family: 'Microsoft JhengHei', sans-serif;
-    font-size: 14px;
-    letter-spacing: 2px;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.2s;
+    display: inline-block; padding: 14px 32px;
+    border: 1px solid var(--purple); color: var(--purple-bright);
+    font-family: 'Microsoft JhengHei', sans-serif; font-size: 14px; letter-spacing: 2px;
+    text-decoration: none; border-radius: 4px; transition: all 0.2s;
   }
-  .btn-outline:hover { background: rgba(212,175,110,0.1); }
+  .btn-outline:hover { background: rgba(139,92,246,0.12); }
+  .btn-gold-link {
+    display: inline-block; padding: 14px 32px;
+    background: linear-gradient(135deg, #d4af6e, #b8933c); color: #1a1a2e;
+    font-family: 'Microsoft JhengHei', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 2px;
+    text-decoration: none; border-radius: 4px; transition: all 0.2s;
+  }
+  .btn-gold-link:hover { transform: translateY(-2px); }
 
-  .disclaimer {
-    font-size: 11px;
-    color: rgba(245,240,225,0.35);
-    text-align: center;
-    margin-top: 24px;
-    line-height: 1.7;
-  }
+  .disclaimer { font-size: 11px; color: rgba(245,240,225,0.35); text-align: center; margin-top: 24px; line-height: 1.7; }
 
-  /* === Contact Gate === */
-  .contact-gate {
-    max-width: 680px; margin: 0 auto 40px; padding: 0 24px;
-    display: none;
-  }
+  .contact-gate { max-width: 680px; margin: 0 auto 40px; padding: 0 24px; display: none; }
   .gate-card {
     background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(212,175,110,0.45);
+    border: 1px solid rgba(139,92,246,0.45);
     border-radius: 16px; padding: 40px 36px;
     position: relative; overflow: hidden;
   }
   .gate-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--gold), #e8d5a0, var(--gold));
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--purple-soft), var(--purple));
   }
-  .gate-badge {
-    display: inline-block; font-size: 11px; letter-spacing: 3px;
-    color: var(--gold); border: 1px solid rgba(212,175,110,0.4);
-    padding: 4px 14px; border-radius: 20px; margin-bottom: 18px;
-  }
-  .gate-title {
-    font-family: 'Noto Serif TC', serif;
-    font-size: 22px; font-weight: 700;
-    color: var(--ivory); margin-bottom: 10px; line-height: 1.4;
-  }
-  .gate-title span { color: var(--gold); }
-  .gate-sub {
-    font-size: 14px; line-height: 1.75;
-    color: rgba(245,240,225,0.65); margin-bottom: 28px;
-  }
-  .gate-form-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-    margin-bottom: 20px;
-  }
+  .gate-badge { display: inline-block; font-size: 11px; letter-spacing: 3px; color: var(--purple-bright); border: 1px solid rgba(139,92,246,0.4); padding: 4px 14px; border-radius: 20px; margin-bottom: 18px; }
+  .gate-title { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 700; color: var(--ivory); margin-bottom: 10px; line-height: 1.4; }
+  .gate-title span { color: var(--purple-bright); }
+  .gate-sub { font-size: 14px; line-height: 1.75; color: rgba(245,240,225,0.65); margin-bottom: 28px; }
+  .gate-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
   .gate-form-grid .full-width { grid-column: 1 / -1; }
-  .gate-field label {
-    display: block; font-size: 11px; letter-spacing: 1.5px;
-    color: rgba(245,240,225,0.5); margin-bottom: 6px; text-transform: uppercase;
-  }
-  .gate-field label .req { color: var(--gold); margin-left: 2px; }
-  .gate-field input {
-    width: 100%; padding: 11px 14px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(212,175,110,0.25);
-    border-radius: 6px; color: var(--ivory);
-    font-size: 14px; font-family: 'Microsoft JhengHei', sans-serif;
-    outline: none; transition: border 0.2s;
-  }
-  .gate-field input:focus { border-color: rgba(212,175,110,0.6); }
+  .gate-field label { display: block; font-size: 11px; letter-spacing: 1.5px; color: rgba(245,240,225,0.5); margin-bottom: 6px; text-transform: uppercase; }
+  .gate-field label .req { color: var(--purple-bright); margin-left: 2px; }
+  .gate-field input { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(139,92,246,0.25); border-radius: 6px; color: var(--ivory); font-size: 14px; font-family: 'Microsoft JhengHei', sans-serif; outline: none; transition: border 0.2s; }
+  .gate-field input:focus { border-color: rgba(139,92,246,0.6); }
   .gate-field input::placeholder { color: rgba(245,240,225,0.3); }
-  .gate-submit-btn {
-    width: 100%; padding: 16px;
-    background: linear-gradient(135deg, var(--gold), #c9973a);
-    color: #1a1a2e; border: none; border-radius: 8px; cursor: pointer;
-    font-family: 'Noto Serif TC', serif;
-    font-size: 17px; font-weight: 700; letter-spacing: 2px;
-    margin-bottom: 20px; transition: opacity 0.2s;
-  }
+  .gate-submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--purple), #6d28d9); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-family: 'Noto Serif TC', serif; font-size: 17px; font-weight: 700; letter-spacing: 2px; margin-bottom: 20px; transition: opacity 0.2s; }
   .gate-submit-btn:hover { opacity: 0.88; }
   .gate-submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .gate-divider {
-    text-align: center; font-size: 12px;
-    color: rgba(245,240,225,0.3); letter-spacing: 2px; margin-bottom: 16px;
-    position: relative;
-  }
-  .gate-divider::before, .gate-divider::after {
-    content: ''; position: absolute; top: 50%;
-    width: calc(50% - 30px); height: 1px;
-    background: rgba(212,175,110,0.2);
-  }
+  .gate-divider { text-align: center; font-size: 12px; color: rgba(245,240,225,0.3); letter-spacing: 2px; margin-bottom: 16px; position: relative; }
+  .gate-divider::before, .gate-divider::after { content: ''; position: absolute; top: 50%; width: calc(50% - 30px); height: 1px; background: rgba(139,92,246,0.2); }
   .gate-divider::before { left: 0; }
   .gate-divider::after { right: 0; }
-  .gate-contact-alt {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 10px; padding: 18px 22px; text-align: center;
-  }
-  .gate-contact-alt p {
-    font-size: 13px; color: rgba(245,240,225,0.55); margin-bottom: 12px;
-  }
-  .gate-contact-links {
-    display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
-  }
-  .gate-contact-link {
-    font-size: 14px; color: var(--gold); text-decoration: none;
-    letter-spacing: 0.5px; padding: 8px 18px;
-    border: 1px solid rgba(212,175,110,0.3); border-radius: 6px;
-    transition: all 0.2s;
-  }
-  .gate-contact-link:hover { background: rgba(212,175,110,0.12); }
-  .gate-privacy {
-    font-size: 11px; color: rgba(245,240,225,0.3);
-    text-align: center; margin-top: 18px; line-height: 1.6;
-  }
+  .gate-contact-alt { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 18px 22px; text-align: center; }
+  .gate-contact-alt p { font-size: 13px; color: rgba(245,240,225,0.55); margin-bottom: 12px; }
+  .gate-contact-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .gate-contact-link { font-size: 14px; color: var(--purple-bright); text-decoration: none; letter-spacing: 0.5px; padding: 8px 18px; border: 1px solid rgba(139,92,246,0.3); border-radius: 6px; transition: all 0.2s; }
+  .gate-contact-link:hover { background: rgba(139,92,246,0.12); }
+  .gate-privacy { font-size: 11px; color: rgba(245,240,225,0.3); text-align: center; margin-top: 18px; line-height: 1.6; }
   @media (max-width: 580px) {
     .gate-card { padding: 28px 20px; }
     .gate-form-grid { grid-template-columns: 1fr; }
     .gate-form-grid .full-width { grid-column: 1; }
   }
 
-  /* === Retry === */
-  .retry-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(245,240,225,0.6);
-    padding: 10px 24px;
-    border-radius: 6px;
-    font-size: 13px;
-    cursor: pointer;
-    margin-top: 14px;
-    font-family: 'Microsoft JhengHei', sans-serif;
-    transition: all 0.2s;
-  }
-  .retry-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .retry-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(245,240,225,0.6); padding: 10px 24px; border-radius: 6px; font-size: 13px; cursor: pointer; margin-top: 14px; font-family: 'Microsoft JhengHei', sans-serif; transition: all 0.2s; }
+  .retry-btn:hover { border-color: var(--purple); color: var(--purple-bright); }
 
   @media (max-width: 480px) {
     .header { padding: 14px 16px; }
@@ -642,10 +450,10 @@
 
 <!-- Header -->
 <div class="header">
-  <a href="landing-page.html" class="header-logo" style="display:flex;align-items:center;gap:12px;">
+  <a href="landing-page.html" class="header-logo" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
     <img src="assets/logo.png" alt="策識永續" style="height:44px;width:auto;display:block;">
     <div style="text-align:left;">
-      <div style="font-size:15px;font-weight:700;color:var(--gold-bright);">策識永續人才管理顧問有限公司</div>
+      <div style="font-size:15px;font-weight:700;color:var(--purple-bright);">策識永續人才管理顧問有限公司</div>
       <div style="font-size:11px;color:rgba(245,240,225,0.45);letter-spacing:1px;">AI HR × 管理顧問 × 人才永續</div>
     </div>
   </a>
@@ -654,16 +462,16 @@
 
 <!-- Hero -->
 <div class="hero">
-  <div class="hero-badge">AI POWERED · 免費評估</div>
-  <h1>企業勞資風險<span>快速自評</span></h1>
-  <p>20 題自評，AI 即時分析您的企業<br>在台灣勞動法令下的合規風險與潛在缺失</p>
+  <div class="hero-badge">🛡️ AI POWERED · 免費評估</div>
+  <h1>職場不法侵害<span>風險自評</span></h1>
+  <p>20 題自評，AI 即時分析企業在<br>霸凌、騷擾、暴力防治方面的合規缺口與改善方向</p>
   <p class="hero-meta">⏱ 約 5 分鐘完成 · 免費 · 不需要登入</p>
+  <span class="law-note">依據：職業安全衛生法 §6② · 性別平等工作法 §13 · 職場暴力預防指引</span>
 </div>
 
 <!-- Form -->
 <div id="assessment-form">
 
-  <!-- 進度條 -->
   <div class="progress-wrap">
     <div class="progress-header">
       <span id="progress-text">0 / 20 題已完成</span>
@@ -672,37 +480,25 @@
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
   </div>
 
-  <!-- 公司基本資料 -->
   <div class="company-form">
     <input type="text" id="cf-company" class="company-input" placeholder="公司名稱（選填）">
     <select id="cf-industry" class="company-input">
       <option value="">產業別（選填）</option>
-      <option>餐飲業</option>
-      <option>製造業</option>
-      <option>零售業</option>
-      <option>服務業</option>
-      <option>科技業</option>
-      <option>建築營造</option>
-      <option>醫療照護</option>
-      <option>教育訓練</option>
-      <option>其他</option>
+      <option>餐飲業</option><option>製造業</option><option>零售業</option>
+      <option>服務業</option><option>科技業</option><option>建築營造</option>
+      <option>醫療照護</option><option>教育訓練</option><option>其他</option>
     </select>
     <select id="cf-size" class="company-input">
       <option value="">員工人數（選填）</option>
-      <option>1-9 人</option>
-      <option>10-29 人</option>
-      <option>30-99 人</option>
-      <option>100-299 人</option>
-      <option>300 人以上</option>
+      <option>1-9 人</option><option>10-29 人</option><option>30-99 人</option>
+      <option>100-299 人</option><option>300 人以上</option>
     </select>
   </div>
 
-  <!-- 題目 -->
   <div class="questions-wrap" id="questions-wrap"></div>
 
-  <!-- 送出 -->
   <div class="submit-wrap">
-    <button class="btn-gold" id="submit-btn" onclick="submitAssessment()" disabled>
+    <button class="btn-purple" id="submit-btn" onclick="submitAssessment()" disabled>
       開始 AI 分析（還差 20 題）
     </button>
     <p class="submit-note">請完成所有 20 題後送出 · 本評估結果僅供參考</p>
@@ -714,9 +510,8 @@
 <div class="contact-gate" id="contact-gate">
   <div class="gate-card">
     <div class="gate-badge">✅ 評估完成</div>
-    <h2 class="gate-title">領取您的<span>專屬風險報告</span></h2>
-    <p class="gate-sub">AI 已完成分析，請填寫以下資料以接收完整風險報告及改善建議，<br>報告將寄送至您填寫的電子信箱。</p>
-
+    <h2 class="gate-title">領取您的<span>職場不法侵害防治報告</span></h2>
+    <p class="gate-sub">AI 已完成分析，請填寫以下資料以接收完整評估報告及改善建議，<br>報告將寄送至您填寫的電子信箱。</p>
     <div class="gate-form-grid">
       <div class="gate-field">
         <label>公司名稱 <span class="req">*</span></label>
@@ -743,22 +538,17 @@
         <input type="text" id="g-address" placeholder="例：台北市信義區松仁路…">
       </div>
     </div>
-
     <button class="gate-submit-btn" id="gate-submit-btn" onclick="submitWithContact()">
       送出資料並取得完整報告 →
     </button>
-
     <div class="gate-divider">或</div>
-
     <div class="gate-contact-alt">
       <p>不想填表？直接聯繫策識永續顧問索取報告</p>
       <div class="gate-contact-links">
         <a href="mailto:info@cctmcoach.com" class="gate-contact-link">✉ 寄 Email 索取</a>
-        <a href="https://lin.ee/策識永續" class="gate-contact-link" target="_blank">💬 LINE 諮詢</a>
         <a href="pricing-and-booking.html" class="gate-contact-link">📅 預約顧問</a>
       </div>
     </div>
-
     <p class="gate-privacy">🔒 您的資料受到保護，僅用於寄送評估報告與後續顧問諮詢聯繫，不會轉售第三方。</p>
   </div>
 </div>
@@ -766,7 +556,7 @@
 <!-- Loading -->
 <div class="loading-wrap" id="loading-wrap">
   <div class="loading-spinner"></div>
-  <p class="loading-text">AI 正在分析您的勞資風險…</p>
+  <p class="loading-text">AI 正在分析職場不法侵害風險…</p>
   <p style="font-size:13px;color:rgba(245,240,225,0.45);margin-top:8px;">約需 5-10 秒</p>
 </div>
 
@@ -777,38 +567,37 @@
   const BACKEND_URL = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 
   const QUESTIONS = [
-    // ── 人事文件 ──
-    { id: 'q1',  cat: '人事文件', text: '每位員工都有建立基本人事資料（姓名、薪資、到離職日期），並隨時保持更新',                                                                                                    fine: { min: 2,  max: 30,  label: '2～30 萬元',   law: '勞基法 §7' } },
-    { id: 'q2',  cat: '人事文件', text: '每位員工都簽了書面勞動契約（雙方各留一份）；長期工作使用不定期合約，沒有用短期合約來規避資遣費',                                                                        fine: { min: 2,  max: 30,  label: '2～30 萬元',   law: '勞基法 §9' } },
-    // ── 薪資管理 ──
-    { id: 'q3',  cat: '薪資管理', text: '所有人員（含兼職、外籍員工）薪資都達到最低工資標準；沒有把固定津貼從薪資中拆出來壓低底薪',                                                                              fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §21' } },
-    { id: 'q4',  cat: '薪資管理', text: '薪水都完整發給員工，從未無故扣薪或預扣薪資當作違約金或損失賠償',                                                                                                          fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §22、§26' } },
-    { id: 'q5',  cat: '薪資管理', text: '薪資條有完整列出底薪、加班費、各項津貼及扣款明細，員工有簽收，並保存至少 5 年',                                                                                          fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §23' } },
-    { id: 'q6',  cat: '薪資管理', text: '加班費有照法律正確計算：平日加班給加成、休息日出勤給加成、例假日及國定假日出勤給雙倍薪',                                                                                  fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §24、§39' } },
-    // ── 工時管理 ──
-    { id: 'q7',  cat: '工時管理', text: '出勤紀錄精確記錄到分鐘並保存 5 年，員工要調閱自己的紀錄時可以立即提供',                                                                                                  fine: { min: 9,  max: 100, label: '9～100 萬元',  law: '勞基法 §30' } },
-    { id: 'q8',  cat: '工時管理', text: '員工每天工作不超過 8 小時、每週不超過 40 小時；有採彈性工時的話已開過勞資會議並留有紀錄',                                                                              fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §30' } },
-    { id: 'q9',  cat: '工時管理', text: '每月加班不超過 46 小時（勞資會議同意最多 54 小時）；含加班在內，每天工作總時數不超過 12 小時',                                                                          fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §32' } },
-    { id: 'q10', cat: '工時管理', text: '加班可讓員工自選領加班費或換補休，選補休的話最晚在特休結算時一併補發，不拖欠',                                                                                          fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §32-1' } },
-    // ── 休假管理 ──
-    { id: 'q11', cat: '休假管理', text: '每週有例假和休息日各一天；不強制員工在例假日上班；休息日出勤有依法給加成薪資',                                                                                          fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §36' } },
-    { id: 'q12', cat: '休假管理', text: '國定假日要員工出勤有給雙倍薪；若改補假，有事先取得員工同意，且補假確實有安排落實',                                                                                      fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §37、§39' } },
-    { id: 'q13', cat: '休假管理', text: '特休天數有按年資正確給足，讓員工自己決定何時休，沒有強制要求年底前清完',                                                                                                  fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §38' } },
-    { id: 'q14', cat: '休假管理', text: '年終或離職時，沒休完的特休有折算成薪水發給員工，沒有叫員工簽字放棄這筆錢',                                                                                              fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §38④' } },
-    { id: 'q15', cat: '休假管理', text: '員工申請事假、病假或家庭照顧假時，不會以找不到人代班為由拒絕；全勤獎金有按比例調整，沒有違法全額扣除',                                                              fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞基法 §43' } },
-    // ── 勞動條件 ──
-    { id: 'q16', cat: '勞動條件', text: '公司有訂定工作規則並向勞工局申報核備（30人以上必備）；工作規則內容載明服勤、薪資、假期等重要事項，已公開揭示，修訂時也依法重新申報',                               fine: { min: 2,  max: 30,  label: '2～30 萬元',   law: '勞基法 §70、§71' } },
-    { id: 'q17', cat: '勞動條件', text: '所有員工（含兼職、試用期員工）均已依法加入勞保與健保；投保薪資與實際薪資相符，未有低報情形；員工離職後已立即辦理退保手續',                                           fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞保條例 §72、全民健保法 §84' } },
-    // ── 退休資遣 ──
-    { id: 'q18', cat: '退休資遣', text: '每月有按時幫每位員工提撥至少 6% 的勞退金；新人 30 天內就辦好提繳，投保薪資沒有低報',                                                                                  fine: { min: 2,  max: 100, label: '2～100 萬元',  law: '勞退條例 §49-1' } },
-    { id: 'q19', cat: '退休資遣', text: '裁員時有給法定預告期（或代替預告工資），資遣費依年資算清並在 30 天內發放；大規模裁員已通報主管機關',                                                                  fine: { min: 2,  max: 150, label: '2～150 萬元',  law: '勞基法 §11、§16' } },
-    // ── 職災保險 ──
-    { id: 'q20', cat: '職災保險', text: '公司有依法為員工安排到職前及在職定期健康檢查，並保存紀錄；新進員工有接受職業安全衛生教育訓練，工作場所備有緊急應變措施',                                         fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §20、§32' } },
+    // ── 預防計畫 ──
+    { id: 'q1',  cat: '預防計畫', text: '公司已依職業安全衛生法第6條第2項，訂定「執行職務遭受不法侵害預防計畫」並公告周知（30人以上必備；未滿30人可採書面聲明替代）',                                                     fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q2',  cat: '預防計畫', text: '預防計畫有明確記載：危害辨識及風險評估、危害預防措施、事件調查及後續處理、教育訓練、績效考核等必要項目',                                                                           fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q3',  cat: '預防計畫', text: '預防計畫每年至少全面檢討更新一次，有保留修訂紀錄，並在修訂後重新公告全體員工',                                                                                                    fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    // ── 申訴機制 ──
+    { id: 'q4',  cat: '申訴機制', text: '公司建立明確的不法侵害申訴管道（如書面申訴、電子信箱或專屬申訴信箱），並以公告、通知等方式讓全體員工知悉',                                                                       fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q5',  cat: '申訴機制', text: '公司明確保障申訴人不會因提出申訴而遭受解僱、調職、降薪或其他不利對待；相關保護承諾已載明於政策或工作規則中',                                                                       fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q6',  cat: '申訴機制', text: '員工提出申訴後，公司會在合理期限內（建議 30 日內）啟動調查，並定期將調查進度及最終結果通知申訴人',                                                                                  fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    // ── 調查程序 ──
+    { id: 'q7',  cat: '調查程序', text: '公司有明文規定的申訴調查程序；負責調查的人員已接受相關訓練，能保持客觀中立，且與申訴雙方無利益衝突',                                                                              fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q8',  cat: '調查程序', text: '調查過程依個資法保護當事人隱私，所有參與調查人員均需簽署保密承諾書；非必要人員不得接觸調查資料',                                                                                    fine: { min: 2,  max: 200, label: '2～200 萬元',  law: '個資法 §41' } },
+    { id: 'q9',  cat: '調查程序', text: '所有不法侵害申訴案件的調查過程、結果及後續處置措施，均有完整書面紀錄，並妥善保存至少 5 年以備查驗',                                                                                  fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    // ── 職場霸凌 ──
+    { id: 'q10', cat: '職場霸凌預防', text: '公司工作規則或政策中已明確定義並禁止職場霸凌行為，涵蓋言語攻擊、肢體暴力、孤立排擠、過度苛責及濫用職權等各種形式',                                                            fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q11', cat: '職場霸凌預防', text: '主管人員已接受職場霸凌辨識與預防教育訓練，清楚了解合理管理與霸凌行為的界線，以及自身的法律責任',                                                                                fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q12', cat: '職場霸凌預防', text: '公司對主管以恐嚇、威脅或持續施壓等方式驅動績效的管理行為，有明確的稽查機制，並在確認後給予適當的懲處',                                                                         fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    // ── 性騷擾防治 ──
+    { id: 'q13', cat: '性騷擾防治', text: '公司已訂定性騷擾防治措施、申訴及懲戒辦法（10 人以上必備），並公告張貼在工作場所顯眼處，確保全體員工知悉申訴管道',                                                               fine: { min: 10, max: 100, label: '10～100 萬元', law: '性平法 §13' } },
+    { id: 'q14', cat: '性騷擾防治', text: '性騷擾申訴由獨立委員會負責調查，委員會成員中女性比例超過二分之一，並包含外部法律或勞工關係專家，調查全程保持公正立場',                                                         fine: { min: 30, max: 150, label: '30～150 萬元', law: '性平法 §38-1' } },
+    { id: 'q15', cat: '性騷擾防治', text: '公司每年至少舉辦一次性別平等及性騷擾防治教育訓練，全體員工（含主管及新進人員）均需參加，並留存訓練紀錄',                                                                        fine: { min: 10, max: 100, label: '10～100 萬元', law: '性平法 §38-1' } },
+    // ── 員工保護與心理支持 ──
+    { id: 'q16', cat: '員工保護與支持', text: '員工若遭受外部人員（如客戶、廠商、民眾）不法侵害，公司有明確的即時保護措施（如協助報警、協調換班、提供陪同）及事後支援機制',                                              fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q17', cat: '員工保護與支持', text: '公司為受害員工提供具體的心理健康支持資源，如員工協助方案（EAP）、心理諮商轉介或外部心理健康諮詢服務',                                                                      fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q18', cat: '員工保護與支持', text: '針對遭受不法侵害的員工，公司主動安排復職輔導計畫，確保工作環境安全後才讓受害者復工，並全程提供必要的支持與追蹤',                                                             fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    // ── 懲戒與教育訓練 ──
+    { id: 'q19', cat: '懲戒與追蹤', text: '調查確認不法侵害屬實後，公司依預防計畫對施害者執行適當懲戒（警告、調職、降薪或解僱），並有後續追蹤機制確認問題已改善',                                                          fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
+    { id: 'q20', cat: '懲戒與追蹤', text: '公司每年至少舉辦一次「職場不法侵害預防」全員教育訓練（含新進人員），訓練紀錄妥善保存，主管層級亦需參與並帶頭示範',                                                                fine: { min: 3,  max: 30,  label: '3～30 萬元',   law: '職安法 §45' } },
   ];
 
   const answers = {};
-
-  const TOTAL = QUESTIONS.length; // 20
+  const TOTAL = QUESTIONS.length;
 
   function renderQuestions() {
     const wrap = document.getElementById('questions-wrap');
@@ -834,7 +623,6 @@
 
   function selectAnswer(qid, value, btn) {
     answers[qid] = value;
-    // 更新按鈕樣式
     const card = document.getElementById('card-' + qid);
     card.querySelectorAll('.option-btn').forEach(b => {
       b.classList.remove('selected-yes','selected-no','selected-unsure');
@@ -856,7 +644,6 @@
     btn.textContent = done ? '✅ 全部完成，開始 AI 分析 →' : `開始 AI 分析（還差 ${TOTAL - count} 題）`;
   }
 
-  // 計算罰鍰（共用）
   function calcFines() {
     const fineItems = QUESTIONS
       .filter(q => answers[q.id] === 'no' || answers[q.id] === 'unsure')
@@ -866,27 +653,21 @@
     return { fineItems, totalMin, totalMax };
   }
 
-  // Step 1：點「開始 AI 分析」→ 顯示聯絡閘門
   function submitAssessment() {
     try {
-      // 預填公司名稱
       const cfCompany = document.getElementById('cf-company');
       if (cfCompany && cfCompany.value.trim()) {
         document.getElementById('g-company').value = cfCompany.value.trim();
       }
-      // 隱藏答題區，顯示聯絡閘門
       document.getElementById('assessment-form').style.display = 'none';
       const gate = document.getElementById('contact-gate');
       gate.style.display = 'block';
-      // 滾到聯絡閘門（不要滾到頁頂）
       gate.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (e) {
-      console.error('submitAssessment error:', e);
       alert('發生錯誤，請重新整理頁面後再試。錯誤：' + e.message);
     }
   }
 
-  // Step 2：填好聯絡資料 → 實際呼叫 API
   async function submitWithContact() {
     const company  = document.getElementById('g-company').value.trim();
     const jobTitle = document.getElementById('g-title').value.trim();
@@ -895,7 +676,6 @@
     const email    = document.getElementById('g-email').value.trim();
     const address  = document.getElementById('g-address').value.trim();
 
-    // 必填驗證
     if (!company || !jobTitle || !name || !phone || !email) {
       alert('請填寫標示 * 的必填欄位（公司名稱、職稱、姓名、電話、電子信箱）');
       return;
@@ -918,10 +698,11 @@
       industry: document.getElementById('cf-industry')?.value || '',
       size:     document.getElementById('cf-size')?.value || '',
       contact: { company, jobTitle, name, phone, email, address },
+      assessmentType: 'workplace-unlawful-infringement',
     };
 
     try {
-      const res = await fetch(BACKEND_URL + '/api/risk-check', {
+      const res = await fetch(BACKEND_URL + '/api/workplace-risk-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -954,15 +735,14 @@
             <div class="risk-item-desc">${item.description}</div>
           </div>
         `).join('')
-      : '<p style="color:rgba(245,240,225,0.6);font-size:14px;">🎉 未發現明顯風險項目，請繼續保持！</p>';
+      : '<p style="color:rgba(245,240,225,0.6);font-size:14px;">🎉 未發現明顯缺失，請繼續保持並定期複查！</p>';
 
     const suggestionsHtml = (r.suggestions || []).map(s => `<li>${s}</li>`).join('');
-
     const companyLabel = payload.company ? `${payload.company} · ` : '';
 
     const resultHtml = `
       <div style="text-align:center;margin-bottom:28px;">
-        <p style="font-size:13px;color:rgba(245,240,225,0.5);">${companyLabel}勞資風險評估報告</p>
+        <p style="font-size:13px;color:rgba(245,240,225,0.5);">${companyLabel}職場不法侵害風險評估報告</p>
       </div>
 
       <div class="risk-banner ${levelClass}">
@@ -974,7 +754,7 @@
 
       ${r.risks && r.risks.length > 0 ? `
       <div class="result-section">
-        <h3>⚠️ 發現的風險項目（${r.risks.length} 項）</h3>
+        <h3>⚠️ 發現的缺失項目（${r.risks.length} 項）</h3>
         ${risksHtml}
       </div>` : `
       <div class="result-section">
@@ -991,7 +771,7 @@
       ${fineData.fineItems && fineData.fineItems.length > 0 ? `
       <div class="result-section fine-summary-section">
         <h3>💰 潛在罰鍰試算</h3>
-        <p class="fine-note">依自評結果，以下 ${fineData.fineItems.length} 個違規項目若遭勞檢開罰，最低合計罰鍰約 <strong>${fineData.totalMin} 萬元</strong>，最高可達 <strong class="fine-max">${fineData.totalMax} 萬元</strong>。</p>
+        <p class="fine-note">依自評結果，以下 ${fineData.fineItems.length} 個未符合項目若遭勞檢開罰，最低合計罰鍰約 <strong>${fineData.totalMin} 萬元</strong>，最高可達 <strong class="fine-max">${fineData.totalMax} 萬元</strong>。</p>
         <div class="fine-total-bar">
           <div class="fine-range-label">罰鍰區間</div>
           <div class="fine-range-value">
@@ -1023,16 +803,16 @@
       </div>` : ''}
 
       <div class="result-cta">
-        <h3>需要專業顧問協助改善？</h3>
-        <p>策識永續提供 <strong>AI 即時顧問</strong> 解答法令疑問，<br>
-           或由真人顧問到場協助建立合規制度，<strong>讓您不再擔心勞檢風險</strong>。</p>
+        <h3>需要專業顧問協助建立防治制度？</h3>
+        <p>策識永續提供 <strong>職場不法侵害預防計畫制定</strong>、<br>
+           教育訓練規劃及申訴制度建置，<strong>協助企業全面合規並降低訴訟風險</strong>。</p>
         <div class="cta-buttons">
-          <a href="ai-hr-consultant.html" class="btn-gold">立即諮詢 AI 顧問</a>
+          <a href="ai-hr-consultant.html" class="btn-gold-link">立即諮詢 AI 顧問</a>
           <a href="pricing-and-booking.html" class="btn-outline">預約真人顧問</a>
         </div>
       </div>
 
-      <p class="disclaimer">${r.disclaimer || '本評估結果僅供參考，不構成法律建議。實際勞動法令適用請諮詢專業顧問或勞工局。'}</p>
+      <p class="disclaimer">${r.disclaimer || '本評估結果僅供參考，不構成法律建議。實際法令適用請諮詢專業顧問或勞工局。'}</p>
 
       <div style="text-align:center;margin-top:20px;">
         <button class="retry-btn" onclick="location.reload()">重新評估</button>
@@ -1048,10 +828,8 @@
   function renderError(msg) {
     document.getElementById('result-wrap').innerHTML = `
       <div style="text-align:center;padding:60px 24px;">
-        <p style="font-size:40px;margin-bottom:16px;">😕</p>
-        <p style="font-size:18px;margin-bottom:8px;">分析時發生錯誤</p>
-        <p style="font-size:13px;color:rgba(245,240,225,0.5);margin-bottom:24px;">${msg}</p>
-        <button class="retry-btn" onclick="location.reload()">重新整理</button>
+        <p style="color:#e07070;font-size:16px;margin-bottom:12px;">⚠️ 分析失敗：${msg}</p>
+        <button class="retry-btn" onclick="location.reload()">重新嘗試</button>
       </div>
     `;
     document.getElementById('result-wrap').style.display = 'block';
