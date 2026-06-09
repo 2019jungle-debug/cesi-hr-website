@@ -188,6 +188,7 @@
       <button class="tab" onclick="switchTab('orders')">訂單</button>
       <button class="tab" onclick="switchTab('cancellations')">取消申請</button>
       <button class="tab" onclick="switchTab('system')">系統</button>
+      <button class="tab" onclick="switchTab('knowledge')">知識庫</button>
     </div>
 
     <!-- 總覽 -->
@@ -302,6 +303,52 @@
           <p style="margin-bottom: 10px;"><b style="color: var(--ink);">取消訂閱處理：</b>客戶申請取消後會出現在「取消申請」分頁。處理流程：(1) 到綠界後台停止扣款；(2) 在「會員」中將該 access code 狀態改為 cancelled。</p>
           <p style="margin-bottom: 10px;"><b style="color: var(--ink);">系統異常：</b>若 KV 未啟用，會員資料無法即時更新，需手動編輯 Vercel 環境變數 VALID_ACCESS_CODES。</p>
           <p><b style="color: var(--ink);">資料備份：</b>建議每月匯出一次 KV 資料備份（手動：到「會員」分頁 → 下方匯出 CSV 按鈕）。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 知識庫 -->
+    <div class="panel" id="panel-knowledge">
+      <!-- 上傳檔案 -->
+      <div class="section">
+        <h2>上傳知識庫檔案 <span class="meta">Upload Knowledge</span></h2>
+        <div style="padding: 22px;">
+          <div class="field" style="margin-bottom: 14px;">
+            <label style="font-size: 11px; letter-spacing: 2px; color: var(--accent); font-family: 'Cormorant Garamond', serif;">— 類別 CATEGORY</label>
+            <select id="kb-category" style="width: 100%; padding: 8px 10px; margin-top: 6px; background: var(--bg); border: 1px solid var(--line); color: var(--ink); font-size: 13px; border-radius: 3px;">
+              <option value="labour">勞動基準 Labour</option>
+              <option value="recruitment">招募聘用 Recruitment</option>
+              <option value="training">教育訓練 Training</option>
+              <option value="performance">績效管理 Performance</option>
+              <option value="safety">職業安全 Safety</option>
+              <option value="general">一般通用 General</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom: 18px;">
+            <label style="font-size: 11px; letter-spacing: 2px; color: var(--accent); font-family: 'Cormorant Garamond', serif;">— 檔案 FILE（PDF / DOCX）</label>
+            <input type="file" id="kb-file" accept=".pdf,.docx" style="margin-top: 6px; font-size: 13px; color: var(--ink);">
+          </div>
+          <button class="btn primary" id="kb-upload-btn" onclick="uploadKnowledge()" style="min-width: 120px;">上傳檔案</button>
+          <div id="kb-upload-status" style="margin-top: 14px; font-size: 13px; min-height: 20px;"></div>
+        </div>
+      </div>
+
+      <!-- 法令同步 -->
+      <div class="section">
+        <h2>同步最新人資法令 <span class="meta">Sync Laws</span></h2>
+        <div style="padding: 22px;">
+          <div style="font-size: 12px; color: var(--ink-soft); line-height: 1.85; margin-bottom: 18px; padding: 14px; background: var(--bg); border: 1px solid var(--line);">
+            <div style="font-size: 10px; letter-spacing: 2px; color: var(--accent); margin-bottom: 8px;">— 同步來源 LAW.MOAJ.GOV.TW</div>
+            <div>① 勞動基準法</div>
+            <div>② 性別平等工作法</div>
+            <div>③ 勞工退休金條例</div>
+            <div>④ 勞資爭議處理法</div>
+            <div>⑤ 職業安全衛生法</div>
+            <div>⑥ 就業服務法</div>
+            <div style="margin-top: 10px; font-size: 11px; color: var(--ink-faded);">同步後自動更新至 GitHub 知識庫，建議每月執行一次。</div>
+          </div>
+          <button class="btn primary" id="sync-laws-btn" onclick="syncLaws()" style="min-width: 140px;">🔄 立即同步法令</button>
+          <div id="sync-laws-status" style="margin-top: 14px; font-size: 13px; min-height: 20px;"></div>
         </div>
       </div>
     </div>
@@ -473,6 +520,7 @@
     if (name === 'orders') loadOrders();
     if (name === 'cancellations') loadCancellations();
     if (name === 'system') loadSystem();
+    if (name === 'knowledge') resetKnowledgePanel();
   }
 
   async function refresh() {
@@ -836,6 +884,91 @@
       showToast('已更新', 'success');
     } catch (e) {
       showToast(e.message, 'error');
+    }
+  }
+
+  // ── 知識庫 ──────────────────────────────────────────────────────────────────
+  function resetKnowledgePanel() {
+    document.getElementById('kb-upload-status').textContent = '';
+    document.getElementById('sync-laws-status').textContent = '';
+    document.getElementById('kb-file').value = '';
+  }
+
+  async function uploadKnowledge() {
+    const file = document.getElementById('kb-file').files[0];
+    if (!file) return showToast('請先選擇 PDF 或 DOCX 檔案', 'error');
+
+    const category = document.getElementById('kb-category').value;
+    const btn = document.getElementById('kb-upload-btn');
+    const statusEl = document.getElementById('kb-upload-status');
+
+    btn.textContent = '上傳中...';
+    btn.disabled = true;
+    statusEl.textContent = '';
+
+    try {
+      const formData = new FormData();
+      formData.append('password', password);
+      formData.append('category', category);
+      formData.append('file', file);
+
+      const res = await fetch(BACKEND_URL + '/api/upload-knowledge', {
+        method: 'POST',
+        body: formData,
+      });
+      if (res.status === 401) throw new Error('密碼錯誤');
+      if (!res.ok) {
+        const e = await res.json().catch(() => ({}));
+        throw new Error(e.error || `HTTP ${res.status}`);
+      }
+      const json = await res.json();
+      statusEl.innerHTML = `<span style="color: var(--success);">✓ 上傳成功：${escapeHtml(json.filename || file.name)}</span>` +
+        (json.commitUrl ? ` · <a href="${json.commitUrl}" target="_blank" style="color: var(--accent);">GitHub</a>` : '');
+      document.getElementById('kb-file').value = '';
+      showToast('上傳成功', 'success');
+    } catch (e) {
+      statusEl.innerHTML = `<span style="color: var(--hot);">✗ 上傳失敗：${escapeHtml(e.message)}</span>`;
+      showToast(e.message, 'error');
+    } finally {
+      btn.textContent = '上傳檔案';
+      btn.disabled = false;
+    }
+  }
+
+  async function syncLaws() {
+    const btn = document.getElementById('sync-laws-btn');
+    const statusEl = document.getElementById('sync-laws-status');
+
+    btn.textContent = '同步中...';
+    btn.disabled = true;
+    statusEl.innerHTML = '<span style="color: var(--ink-soft);">正在從法務部法規資料庫抓取最新法令，請稍候...</span>';
+
+    try {
+      const res = await fetch(BACKEND_URL + '/api/sync-laws', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (res.status === 401) throw new Error('密碼錯誤');
+      if (!res.ok) {
+        const e = await res.json().catch(() => ({}));
+        throw new Error(e.error || `HTTP ${res.status}`);
+      }
+      const json = await res.json();
+      const laws = json.laws || json.synced || [];
+      const successList = Array.isArray(laws)
+        ? laws.map(l => `<div style="margin:2px 0;">✓ ${escapeHtml(typeof l === 'string' ? l : l.name || JSON.stringify(l))}</div>`).join('')
+        : '';
+      statusEl.innerHTML = `<span style="color: var(--success);">✓ 同步完成</span>` +
+        (json.commitUrl ? ` · <a href="${json.commitUrl}" target="_blank" style="color: var(--accent);">GitHub</a>` : '') +
+        (successList ? `<div style="margin-top:8px;font-size:12px;color:var(--ink-soft);">${successList}</div>` : '');
+      showToast('法令同步完成', 'success');
+    } catch (e) {
+      statusEl.innerHTML = `<span style="color: var(--hot);">✗ 同步失敗：${escapeHtml(e.message)}</span>`;
+      showToast(e.message, 'error');
+    } finally {
+      btn.textContent = '🔄 立即同步法令';
+      btn.disabled = false;
     }
   }
 
