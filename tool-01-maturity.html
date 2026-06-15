@@ -26,9 +26,34 @@ nav { background:rgba(255,255,255,0.95); border-bottom:1px solid var(--line); pa
 .tool-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(226,191,121,0.15); border:1px solid rgba(226,191,121,0.3); border-radius:999px; padding:5px 16px; font-size:12px; color:var(--gold-bright); font-weight:600; margin-bottom:16px; }
 .page-header h1 { font-family:'Noto Serif TC',serif; font-size:clamp(24px,3.5vw,40px); font-weight:900; color:white; margin-bottom:10px; }
 .page-header p { color:rgba(255,255,255,0.7); font-size:15px; max-width:540px; margin:0 auto; }
-.main { max-width:820px; margin:0 auto; padding:40px clamp(20px,4vw,40px) 80px; }
 
-/* Progress */
+/* ── SIZE SELECTOR ── */
+#size-section { max-width:820px; margin:0 auto; padding:40px clamp(20px,4vw,40px) 80px; }
+.size-intro { text-align:center; margin-bottom:32px; }
+.size-intro h2 { font-family:'Noto Serif TC',serif; font-size:22px; font-weight:900; color:var(--navy); margin-bottom:10px; }
+.size-intro p { color:var(--ink-soft); font-size:14px; line-height:1.8; }
+.size-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:14px; }
+.size-card { background:white; border:2px solid var(--line); border-radius:14px; padding:26px 18px; text-align:center; cursor:pointer; transition:all .25s; position:relative; }
+.size-card:hover { border-color:var(--navy); transform:translateY(-4px); box-shadow:0 10px 28px rgba(16,36,76,0.12); }
+.size-card.active { border-color:var(--navy); background:rgba(16,36,76,0.03); box-shadow:0 0 0 4px rgba(16,36,76,0.07); }
+.size-card.active::after { content:'✓'; position:absolute; top:12px; right:14px; font-size:13px; font-weight:900; color:var(--navy); }
+.size-icon { font-size:34px; margin-bottom:12px; }
+.size-label { font-size:17px; font-weight:900; color:var(--navy); margin-bottom:6px; }
+.size-range { font-size:13px; font-weight:700; color:var(--teal); margin-bottom:8px; }
+.size-sub { font-size:12px; color:var(--ink-soft); line-height:1.65; }
+.size-tags { display:flex; flex-wrap:wrap; gap:5px; justify-content:center; margin-top:12px; }
+.size-tag { font-size:11px; font-weight:600; color:var(--gold); background:rgba(201,161,93,0.1); padding:3px 9px; border-radius:999px; }
+.btn-start-wrap { text-align:center; margin-top:32px; }
+.btn-start { display:inline-block; min-width:220px; background:var(--navy); color:white; border:none; padding:14px 32px; border-radius:8px; font:inherit; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s; }
+.btn-start:hover:not(:disabled) { background:var(--teal); }
+.btn-start:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ── QUIZ ── */
+.main { max-width:820px; margin:0 auto; padding:40px clamp(20px,4vw,40px) 80px; }
+.size-badge-bar { background:white; border:1px solid var(--line); border-radius:8px; padding:10px 18px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
+.size-badge-bar span { font-size:13px; color:var(--ink-soft); }
+.size-badge-bar strong { font-size:13px; color:var(--navy); font-weight:700; }
+.btn-change-size { font-size:12px; color:var(--teal); background:none; border:none; cursor:pointer; font:inherit; font-weight:600; text-decoration:underline; }
 .progress-wrap { background:white; border:1px solid var(--line); border-radius:12px; padding:20px 24px; margin-bottom:24px; }
 .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
 .progress-label { font-size:13px; font-weight:700; color:var(--navy); }
@@ -40,8 +65,6 @@ nav { background:rgba(255,255,255,0.95); border-bottom:1px solid var(--line); pa
 .dim-active { background:var(--navy); color:white; }
 .dim-done { background:rgba(29,117,111,0.12); color:var(--teal); }
 .dim-pending { background:rgba(16,36,76,0.06); color:var(--ink-faded); }
-
-/* Question */
 .q-card { background:white; border:1px solid var(--line); border-radius:12px; padding:32px; margin-bottom:20px; }
 .q-dim { font-size:11px; font-weight:800; color:var(--teal); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
 .q-num { font-size:12px; color:var(--ink-faded); margin-bottom:12px; }
@@ -62,7 +85,7 @@ nav { background:rgba(255,255,255,0.95); border-bottom:1px solid var(--line); pa
 .btn-next:hover:not(:disabled) { background:var(--teal); }
 .btn-next:disabled { opacity:.4; cursor:not-allowed; }
 
-/* Result */
+/* ── RESULT ── */
 #result-section { display:none; }
 .result-header { background:linear-gradient(135deg,var(--navy-deep),var(--navy)); border-radius:16px; padding:36px; text-align:center; margin-bottom:24px; }
 .result-header h2 { font-family:'Noto Serif TC',serif; font-size:22px; font-weight:900; color:white; margin-bottom:16px; }
@@ -99,7 +122,8 @@ nav { background:rgba(255,255,255,0.95); border-bottom:1px solid var(--line); pa
 .btn-ghost { border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.85); padding:11px 20px; border-radius:8px; font-size:13px; }
 .btn-restart { display:block; margin:16px auto 0; background:white; border:2px solid var(--line); color:var(--ink); padding:10px 22px; border-radius:8px; font:inherit; font-weight:700; font-size:14px; cursor:pointer; }
 .limit-msg { background:#fff0f0; border:1px solid #f5c0c0; border-radius:8px; padding:14px 18px; color:#c34646; font-size:14px; line-height:1.7; text-align:center; }
-@media(max-width:560px){.dim-grid{grid-template-columns:1fr}}
+@media(max-width:560px){ .dim-grid{grid-template-columns:1fr} .size-grid{grid-template-columns:1fr 1fr} }
+@media(max-width:380px){ .size-grid{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -113,70 +137,194 @@ nav { background:rgba(255,255,255,0.95); border-bottom:1px solid var(--line); pa
 <div class="page-header">
   <div class="tool-badge">📊 No.01 · AI 人資成熟度健檢</div>
   <h1>企業人資健康報告書</h1>
-  <p>回答 20 題，AI 即時分析五大維度健全度，產出專屬報告</p>
+  <p>依企業規模量身設計，回答 20 題即獲專屬 AI 診斷報告</p>
 </div>
-<div class="main">
 
-  <!-- Quiz -->
-  <div id="quiz-section">
-    <div class="progress-wrap">
-      <div class="progress-top">
-        <span class="progress-label">健檢進度</span>
-        <span class="progress-count" id="prog-count">第 1 題，共 20 題</span>
+<!-- ── STEP 1: 規模選擇 ── -->
+<div id="size-section">
+  <div class="size-intro">
+    <h2>請先選擇貴公司的員工規模</h2>
+    <p>不同規模的企業，HR 的挑戰與法規要求截然不同<br>選擇符合的規模，讓題目與建議更貼近您的實際狀況</p>
+  </div>
+  <div class="size-grid">
+    <div class="size-card" onclick="pickSize('micro')">
+      <div class="size-icon">🌱</div>
+      <div class="size-label">微型企業</div>
+      <div class="size-range">10 人以下</div>
+      <div class="size-sub">老闆兼 HR，強調基礎勞法遵守、招募效率與人員穩定</div>
+      <div class="size-tags">
+        <span class="size-tag">基礎合規</span>
+        <span class="size-tag">人員穩定</span>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:5%"></div></div>
-      <div class="dim-pills" id="dim-pills"></div>
     </div>
-    <div class="q-card">
-      <div class="q-dim" id="q-dim"></div>
-      <div class="q-num" id="q-num"></div>
-      <div class="q-text" id="q-text"></div>
-      <div class="opts" id="q-opts"></div>
+    <div class="size-card" onclick="pickSize('small')">
+      <div class="size-icon">🏢</div>
+      <div class="size-label">小型企業</div>
+      <div class="size-range">10–30 人</div>
+      <div class="size-sub">開始需要 HR 制度化，招募量增加，留才壓力浮現</div>
+      <div class="size-tags">
+        <span class="size-tag">制度建立</span>
+        <span class="size-tag">留才管理</span>
+      </div>
     </div>
-    <div class="nav-btns">
-      <button class="btn-prev" id="btn-prev" onclick="prevQ()">← 上一題</button>
-      <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>下一題 →</button>
+    <div class="size-card" onclick="pickSize('mid')">
+      <div class="size-icon">🏭</div>
+      <div class="size-label">中小型企業</div>
+      <div class="size-range">30–100 人</div>
+      <div class="size-sub">工作規則法定義務，績效與職能管理開始重要</div>
+      <div class="size-tags">
+        <span class="size-tag">法定義務</span>
+        <span class="size-tag">績效管理</span>
+      </div>
+    </div>
+    <div class="size-card" onclick="pickSize('large')">
+      <div class="size-icon">🏙️</div>
+      <div class="size-label">中型企業</div>
+      <div class="size-range">100–500 人</div>
+      <div class="size-sub">全面 HR 體系要求，策略人才發展與數據分析能力</div>
+      <div class="size-tags">
+        <span class="size-tag">策略HR</span>
+        <span class="size-tag">人才分析</span>
+      </div>
     </div>
   </div>
-
-  <!-- Result -->
-  <div id="result-section">
-    <div class="result-header">
-      <h2>《企業人資健康報告書》</h2>
-      <div class="overall-score" id="overall-score">—</div>
-      <div class="overall-level" id="overall-level"></div>
-      <div class="overall-desc">人資成熟度總分（滿分 100）</div>
-    </div>
-    <div class="dim-grid" id="dim-grid"></div>
-    <div class="ai-box">
-      <div class="ai-box-head">
-        <div class="ai-box-icon">🤖</div>
-        <div>
-          <div class="ai-box-title">AI 人資顧問個人化分析報告</div>
-          <div class="ai-box-sub">基於作答結果，由 AI 生成</div>
-        </div>
-      </div>
-      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
-    </div>
-    <div class="cta-box">
-      <h3>想進一步改善人資體質？</h3>
-      <p>策識永續提供企業人資健檢到制度建置的完整顧問服務</p>
-      <div class="cta-row">
-        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
-        <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
-      </div>
-    </div>
-    <button class="btn-restart" onclick="restart()">重新健檢</button>
+  <div class="btn-start-wrap">
+    <button class="btn-start" id="btn-start" onclick="startQuiz()" disabled>選擇規模後開始健檢 →</button>
   </div>
+</div>
+
+<!-- ── STEP 2: 問卷 ── -->
+<div class="main" id="quiz-section" style="display:none">
+  <div class="size-badge-bar">
+    <span>目前版本：<strong id="size-label-bar"></strong></span>
+    <button class="btn-change-size" onclick="backToSize()">重新選擇規模</button>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">健檢進度</span>
+      <span class="progress-count" id="prog-count">第 1 題，共 20 題</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:5%"></div></div>
+    <div class="dim-pills" id="dim-pills"></div>
+  </div>
+  <div class="q-card">
+    <div class="q-dim" id="q-dim"></div>
+    <div class="q-num" id="q-num"></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="opts" id="q-opts"></div>
+  </div>
+  <div class="nav-btns">
+    <button class="btn-prev" id="btn-prev" onclick="prevQ()">← 上一題</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>下一題 →</button>
+  </div>
+</div>
+
+<!-- ── STEP 3: 報告 ── -->
+<div class="main" id="result-section" style="display:none">
+  <div class="result-header">
+    <h2>《企業人資健康報告書》</h2>
+    <div class="overall-score" id="overall-score">—</div>
+    <div class="overall-level" id="overall-level"></div>
+    <div class="overall-desc">人資成熟度總分（滿分 100）｜<span id="result-size-label"></span></div>
+  </div>
+  <div class="dim-grid" id="dim-grid"></div>
+  <div class="ai-box">
+    <div class="ai-box-head">
+      <div class="ai-box-icon">🤖</div>
+      <div>
+        <div class="ai-box-title">AI 人資顧問個人化分析報告</div>
+        <div class="ai-box-sub">基於企業規模與作答結果，由 AI 生成</div>
+      </div>
+    </div>
+    <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+  </div>
+  <div class="cta-box">
+    <h3>想進一步改善人資體質？</h3>
+    <p>策識永續提供企業人資健檢到制度建置的完整顧問服務</p>
+    <div class="cta-row">
+      <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+      <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
+    </div>
+  </div>
+  <button class="btn-restart" onclick="restart()">重新健檢</button>
 </div>
 
 <script>
 const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 const SESSION = 'hc1-' + Math.random().toString(36).slice(2);
-
 const DIMS = ['招募效能','留才與人才發展','職能與績效管理','HR數據分析力','法遵與組織健全'];
 
-const QS = [
+const SIZE_META = {
+  micro: { label:'微型企業（10人以下）', short:'微型企業 10人以下' },
+  small: { label:'小型企業（10–30人）',  short:'小型企業 10–30人' },
+  mid:   { label:'中小型企業（30–100人）', short:'中小型企業 30–100人' },
+  large: { label:'中型企業（100–500人）', short:'中型企業 100–500人' },
+};
+
+// ── 四套題庫 ──────────────────────────────────────────────────
+
+const QS_SETS = {
+
+/* ════════ 微型企業（10人以下）════════ */
+micro: [
+  // 招募效能
+  { dim:'招募效能', text:'招募新人時，從發出錄取通知到對方確認入職，成功率大約是多少？', opts:['低於 50%，常有人臨時拒絕 Offer','50–70%，偶有放棄','70–85%，大多數人接受','85% 以上，幾乎都會如期報到'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'從決定要招人到確認錄取，平均需要多少時間？', opts:['超過 2 個月，嚴重影響日常運作','1–2 個月，偶有人力空缺','2–4 週，尚可接受','2 週內即可找到合適人選'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'新進員工試用期（90天）結束後，留任率大約是多少？', opts:['低於 60%，試用期嚴重流失','60–75%，不少人適應不來','75–90%，大多數能留下','90% 以上，試用結束幾乎都留任'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'招募時是否有基本的職位說明（JD）和固定的評估方式（不靠純直覺）？', opts:['完全沒有，全靠感覺與緣分','有大致說明，但無固定評估標準','有基本 JD 但面試缺乏一致性','有書面 JD 且用固定問題一致評估'], sc:[1,2,3,4] },
+  // 留才與人才發展
+  { dim:'留才與人才發展', text:'貴公司年度員工離職率大約是多少？（微型企業建議控制在 25% 以內）', opts:['超過 40%，人員流動非常頻繁','25–40%，流動率偏高','15–25%，在可接受範圍','低於 15%，團隊非常穩定'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'員工平均在職年資大約多長？（超過 2 年代表具一定穩定性）', opts:['不到 1 年，流動非常高','1–2 年，流動偏高','2–4 年，組織相對穩定','超過 4 年，團隊根基紮實'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'員工對薪酬福利和工作環境的整體滿意度，您預估大約幾分？（5分制）', opts:['2分以下，員工明顯不滿','2–3分，有不少抱怨聲音','3–4分，尚可但有改善空間','4分以上，員工普遍正向'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'是否有主動了解員工的工作狀況與需求？（例如定期一對一面談、意見蒐集）', opts:['從未主動了解，靠員工自己開口','偶爾聊聊，無固定機制','有固定溝通但不夠系統化','定期一對一且有紀錄追蹤'], sc:[1,2,3,4] },
+  // 職能與績效管理
+  { dim:'職能與績效管理', text:'是否為每個職位定義清楚的工作職掌，讓員工知道自己「要做什麼、怎樣算好」？', opts:['完全沒有，員工全靠自己摸索','口頭說明，沒有書面記錄','有書面 JD，但績效期待模糊','有書面 JD 且績效目標清楚量化'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'是否定期（至少每半年）與員工進行正式的績效面談，給予明確回饋？', opts:['從未正式面談，出問題才討論','一年一次年終，流於形式','有定期面談但缺乏結構','有面談且有書面紀錄與追蹤'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'員工的薪酬調整是否有明確的依據，而非純憑老闆印象？', opts:['完全看老闆心情，標準不一','有大概想法，但標準不一致','有基本規則，但不夠透明','有清楚標準，且員工事先知道'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'是否有安排員工的教育訓練或技能提升？（不限形式，內訓或送外部皆可）', opts:['完全沒有任何訓練安排','偶爾一次，沒有計畫性','有基本安排但不固定','有年度計畫且定期執行'], sc:[1,2,3,4] },
+  // HR數據分析力
+  { dim:'HR數據分析力', text:'是否完整記錄人員基本資料（到職日、離職日、薪資、勞健保加退保）？', opts:['沒有系統記錄，難以查詢','有記錄但很分散，難以整理','有基本電子表格集中管理','完整且即時可查詢'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'每個月的人事成本（薪資＋勞健保＋其他）是否清楚掌握？', opts:['不清楚，只知道大概數字','約略知道，但誤差較大','清楚知道每月總額','清楚且能與營收對比分析'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'是否使用數位工具處理人事行政？（薪資軟體、線上打卡、雲端文件皆算）', opts:['完全手工，紙本或口頭記錄','只用 Excel，較難追蹤歷史','有部分數位化工具輔助','大部分人事事務已數位化'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'對於員工離職原因，是否有記錄或分析，以了解問題所在？', opts:['從不記錄，不清楚為何離職','偶爾問問，沒有書面紀錄','有離職面談，但未系統整理','有系統記錄且分析後改善'], sc:[1,2,3,4] },
+  // 法遵與組織健全
+  { dim:'法遵與組織健全', text:'是否清楚了解勞基法對貴公司的基本義務？（薪資給付時間、特休計算、加班規定等）', opts:['不了解，靠感覺或口耳相傳','略懂但有些地方不確定','大致了解，偶有疑問','清楚掌握且確實依規定執行'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'是否完整記錄員工出勤，並按規定計算與給付加班費？', opts:['沒有出勤紀錄，也未計算加班費','有打卡但加班費計算不確定','有紀錄且大致依法給付','完整紀錄且加班費計算正確'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'員工到職時是否簽訂正式勞動契約，清楚載明職稱、薪資、工時等條件？', opts:['沒有，口頭約定為主','有合約但內容不完整','有合約且主要條款完整','有完整合約且員工充分了解'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'近兩年是否曾因勞資問題被員工投訴，或發生勞資爭議？', opts:['有多次糾紛，問題持續','有過爭議，已調解或解決','曾有小問題，已改善','從未有勞資糾紛，溝通良好'], sc:[4,3,2,1] },
+],
+
+/* ════════ 小型企業（10–30人）════════ */
+small: [
+  // 招募效能
+  { dim:'招募效能', text:'「錄取通知到實際報到」的聘用成功率大約是多少？（建議 75% 以上）', opts:['低於 50%，許多人拒絕 Offer','50–65%，常有人臨時放棄','65–75%，尚可接受','75% 以上，Offer 接受率良好'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'一般職缺從開缺到確認錄取，平均需要多少天？（建議 45 天內）', opts:['超過 75 天，嚴重影響運營','46–75 天，偶爾造成人力缺口','20–45 天，尚在可接受範圍','20 天以內，招募速度快'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'新進員工滿 3 個月的留任率大約是多少？（建議 85% 以上）', opts:['低於 65%，新人大量流失','65–75%，流失率偏高','75–85%，有改善空間','85% 以上，新人留任狀況良好'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'是否有基本的職務說明書（JD）與結構化的面試評估方式？', opts:['兩者皆無，面試全憑感覺','有 JD 但無結構化面試','有面試評分但 JD 不完整','JD 完整且面試有一致評分標準'], sc:[1,2,3,4] },
+  // 留才與人才發展
+  { dim:'留才與人才發展', text:'貴公司年度自願離職率大約是多少？（建議低於 25%）', opts:['超過 35%，人才流失嚴重','25–35%，高於合理範圍','15–25%，尚在可接受範圍','低於 15%，留才狀況良好'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'員工平均在職年資大約是多少？（超過 2 年代表具穩定基礎）', opts:['低於 1 年，高度不穩定','1–2 年，流動率偏高','2–4 年，組織相對穩定','超過 4 年，團隊根基紮實'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'晉升或填補職缺時，是否傾向從內部培育，而非全部外招？', opts:['幾乎全部外招，缺乏內部培育','偶爾內部晉升，但無系統','有培育意識，機制不完整','有明確內部培育路徑與計畫'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'是否定期了解員工滿意度？（例如一對一面談、匿名問卷等）', opts:['從未主動了解','偶爾一對一，無固定機制','有定期溝通，但未量化記錄','有定期調查且追蹤改善行動'], sc:[1,2,3,4] },
+  // 職能與績效管理
+  { dim:'職能與績效管理', text:'是否有明確的工作職掌，讓員工清楚自己的職責範圍與績效期待？', opts:['完全沒有，全靠口頭說明','有 JD 但內容不夠清楚','有書面 JD 且職責清楚','有 JD 且績效目標量化清楚'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'是否有正式的績效評估，且結果連結至薪酬調整與晉升決策？', opts:['沒有正式制度，全憑感覺','有年終評估但流於形式','有制度但薪酬連結不明確','有制度且員工清楚對應規則'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'是否識別出公司的關鍵人才，並給予特別的培育或留才措施？', opts:['從未有意識識別關鍵人才','知道誰重要，但沒有具體行動','有關注但缺乏系統化計畫','有識別且有對應的留才計畫'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'是否有安排員工教育訓練，且設有一定的訓練預算？', opts:['幾乎沒有任何訓練預算','有訓練但非常零星，沒有計畫','有計畫但預算不足','有年度計畫且有固定預算'], sc:[1,2,3,4] },
+  // HR數據分析力
+  { dim:'HR數據分析力', text:'是否定期追蹤基本 HR 指標（如離職率、招募天數、人員在職率）？', opts:['從未追蹤任何量化指標','只知道大概人數，無具體數據','追蹤 2–3 項基本指標','有固定追蹤且定期檢視趨勢'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'人事成本（薪資＋勞健保＋福利）占年營收的比例是否清楚掌握？', opts:['完全不清楚比例','大概知道，但比例偏高（>40%）','知道大約比例，有待優化','清楚掌握且維持在合理範圍'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'是否使用數位工具管理人事？（薪資軟體、雲端打卡、HR 系統等）', opts:['完全沒有，全靠人工或紙本','只用 Excel 試算表','有部分數位工具輔助','多數人事工作已數位化'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'HR 相關資料（人事、薪資、出勤）是否集中管理，方便查詢？', opts:['分散各處，難以查詢整理','有但較凌亂，需費時整理','大致集中，可以查到','集中管理且快速可取用'], sc:[1,2,3,4] },
+  // 法遵與組織健全
+  { dim:'法遵與組織健全', text:'是否了解貴公司規模對應的勞基法義務（薪資、特休、加班等），並確實執行？', opts:['不太了解，靠感覺執行','有基本認知，但有些模糊','大致了解，偶有不確定之處','清楚掌握且確實依法執行'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'是否完整記錄員工出勤（含加班申請流程），並正確計算加班費？', opts:['沒有系統性記錄','有打卡但加班費計算不確定','有出勤紀錄且加班費大致正確','完整紀錄且加班費計算正確'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'員工到職時是否簽訂完整勞動契約，清楚載明薪資、職責與保密條款等？', opts:['沒有正式合約，口頭約定','有合約但內容不完整','有合約且主要條款完整','有完整合約且定期更新'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'近兩年是否發生勞資爭議，或在勞動檢查時被發現缺失？', opts:['有多次爭議且問題未妥善解決','有爭議但已調解或解決','曾被檢查有輕微缺失並已改善','從未有爭議，自主管理良好'], sc:[4,3,2,1] },
+],
+
+/* ════════ 中小型企業（30–100人）════════ */
+mid: [
   // 招募效能
   { dim:'招募效能', text:'貴公司「錄取通知到實際報到」的聘用成功率大約是多少？（業界建議 80% 以上）', opts:['低於 50%，許多人拒絕 Offer','50–70%，常有人臨時放棄','70–80%，尚可接受','80% 以上，接近業界理想值'], sc:[1,2,3,4] },
   { dim:'招募效能', text:'一般職缺從開缺到確認錄取，平均需要多少天？（業界建議 30 天內）', opts:['超過 60 天，嚴重影響運營','31–60 天，偶爾造成人力缺口','15–30 天，尚在可接受範圍','30 天以內，符合業界建議值'], sc:[1,2,3,4] },
@@ -198,14 +346,104 @@ const QS = [
   { dim:'HR數據分析力', text:'是否利用 AI 或數位工具輔助 HR 工作（如履歷篩選、自動排程、報告產出）？', opts:['完全沒有，全靠人工','只用 Excel 試算表','使用部分 HR 軟體或平台功能','有多種 AI 工具且持續優化工作流'], sc:[1,2,3,4] },
   { dim:'HR數據分析力', text:'HR 相關資料（人事、績效、出勤）是否數位化，且可快速查詢供管理決策使用？', opts:['仍以紙本或 Email 保存，難以查詢','有電子檔但分散難以彙整','有系統但功能有限，查詢費時','完整數位化，可即時查詢並產出分析報告'], sc:[1,2,3,4] },
   // 法遵與組織健全
-  { dim:'法遵與組織健全', text:'工作規則是否已送勞動局核備，並定期更新且確保員工充分知悉？', opts:['不確定或尚未核備','有核備但內容已過時','有核備且定期更新','有核備、更新，且員工均已知悉'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'工作規則是否已送勞動局核備（30人以上法定義務），並定期更新且員工知悉？', opts:['尚未核備，不確定是否有義務','有核備但內容已過時','有核備且定期更新','有核備、更新，且員工均已知悉'], sc:[1,2,3,4] },
   { dim:'法遵與組織健全', text:'是否完整記錄員工出勤（含加班申請核准），符合勞基法規定且可供查核？', opts:['沒有系統性記錄','有打卡但未管理加班申請','有出勤系統且加班需申請核准','完整記錄且隨時可提供主管機關查核'], sc:[1,2,3,4] },
   { dim:'法遵與組織健全', text:'是否已建立職場不法侵害（霸凌、性騷擾）預防計畫，並定期教育訓練？', opts:['完全沒有，不了解法規要求','知道需要但尚未建立','有計畫但員工普遍不知道','完整計畫且每年定期宣導演練'], sc:[1,2,3,4] },
-  { dim:'法遵與組織健全', text:'近兩年是否發生勞資爭議或接受勞動檢查時被發現缺失？', opts:['有多次爭議且問題未妥善解決','有爭議但已調解或解決','曾被檢查有輕微缺失並已改善','從未有爭議，自主管理良好'], sc:[4,3,2,1] },
-];
+  { dim:'法遵與組織健全', text:'近兩年是否發生勞資爭議，或接受勞動檢查時被發現缺失？', opts:['有多次爭議且問題未妥善解決','有爭議但已調解或解決','曾被檢查有輕微缺失並已改善','從未有爭議，自主管理良好'], sc:[4,3,2,1] },
+],
 
-let cur = 0, answers = new Array(20).fill(null);
+/* ════════ 中型企業（100–500人）════════ */
+large: [
+  // 招募效能
+  { dim:'招募效能', text:'「錄取通知到實際報到」的聘用成功率大約是多少？（業界標竿建議達 85% 以上）', opts:['低於 60%，Offer 大量流失','60–75%，高於業界合理損耗','75–85%，尚可接受','85% 以上，達業界高標'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'一般職缺從開缺到確認錄取，平均需要多少天？（建議 25 天內，高階職缺另計）', opts:['超過 60 天，嚴重影響業務','31–60 天，人力缺口明顯','15–30 天，尚可接受','25 天以內，達業界高效標準'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'新進員工滿 3 個月的留任率大約是多少？且是否有正式 Onboarding 計畫？', opts:['留任率低於 80%，且無 Onboarding','留任率 80–85%，Onboarding 流於形式','留任率 85–90%，有基本 Onboarding','90% 以上，有完整 Onboarding 追蹤'], sc:[1,2,3,4] },
+  { dim:'招募效能', text:'是否有結構化招募流程（職能面試、評鑑工具、雇主品牌策略），且定期評估成效？', opts:['無結構，完全靠面試官主觀','有面試評分，但缺乏雇主品牌','有結構化面試，但未追蹤招募 KPI','完整招募流程且持續優化雇主品牌'], sc:[1,2,3,4] },
+  // 留才與人才發展
+  { dim:'留才與人才發展', text:'年度自願離職率大約是多少？並能否區分高績效人才與一般人員的離職率？', opts:['離職率超過 20%，且無法分析原因','15–20%，但無法區分高潛力離職','10–15%，有基本分析但不夠深入','低於 10%，且能分析關鍵人才留任率'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'內部晉升補缺的比例是多少？（業界建議管理職超過 60% 從內部晉升）', opts:['幾乎全部外招，組織晉升空間不足','內部晉升不到 30%','30–60%，有培育但仍依賴外招','60% 以上，內部接班人才充足'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'是否有完整的員工滿意度（eNPS 或年度調查）且結果連結至管理改善行動？', opts:['從未進行系統性調查','有調查但結果束之高閣','有調查且高層有審視','有調查、改善計畫且追蹤成效'], sc:[1,2,3,4] },
+  { dim:'留才與人才發展', text:'是否建立接班人計畫（Succession Plan），識別關鍵職位的備位人才？', opts:['完全沒有，關鍵人才離職即陷危機','知道誰重要，但無正式計畫','有部分關鍵職位備位名單','有完整接班計畫且定期更新'], sc:[1,2,3,4] },
+  // 職能與績效管理
+  { dim:'職能與績效管理', text:'是否建立完整的職能架構（核心、管理、專業職能），並整合至招募、培訓與績效系統中？', opts:['無職能架構，制度間無法對齊','有職能定義，但系統未整合','有架構，部分整合至 HR 系統','完整職能架構且三位一體整合'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'績效評估制度（KPI/OKR）是否能有效區分高中低績效，且強制分布或有明確差異化獎懲？', opts:['無正式制度，考核流於人情','有制度但差異化程度極低','有差異化，但執行不一致','高中低績效清楚，且差異化兌現'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'是否有正式的高潛力人才（HiPo）計畫，並提供加速發展的專屬機會？', opts:['無 HiPo 識別機制','有初步識別但無差異化培育','有 HiPo 名單且有部分特別資源','有完整 HiPo 計畫、IDP 及快速晉升軌道'], sc:[1,2,3,4] },
+  { dim:'職能與績效管理', text:'訓練投資占年營收的比例，以及是否追蹤訓練 ROI？（建議達 1–3%，並追蹤成效）', opts:['低於 0.5%，幾乎沒有訓練投資','0.5–1%，有預算但未追蹤成效','1–2%，有部分追蹤','超過 2%，且有完整訓練 ROI 評估'], sc:[1,2,3,4] },
+  // HR數據分析力
+  { dim:'HR數據分析力', text:'是否有完整的 HR 儀表板，定期追蹤 10 項以上關鍵指標，並提供管理層決策參考？', opts:['從未有系統性 HR 指標追蹤','有 3–4 項基本指標','有 5–7 項指標，但報告不即時','有 10 項以上且每月管理報告'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'人事成本占年營收的比例是否清楚，且是否能細分至部門層級？（合理範圍 20–30%）', opts:['不清楚整體比例','知道總體，無法細分部門','能分部門，但無法即時更新','即時可查且每月部門對比分析'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'是否導入 HRIS 或 HCM 系統（如 SAP SuccessFactors、Workday、104 企業版等）？', opts:['無 HRIS，全靠 Excel 和手工','有基礎薪資系統，但功能有限','有 HRIS 但模組使用不完整','有完整 HCM 系統且持續優化應用'], sc:[1,2,3,4] },
+  { dim:'HR數據分析力', text:'是否利用人才數據（離職預測、績效分布、招募漏斗分析）做出人資決策建議？', opts:['完全無人才數據分析能力','有基本報表，但不用於決策','有分析能力，偶爾用於決策','有系統性人才分析，定期提供管理層建議'], sc:[1,2,3,4] },
+  // 法遵與組織健全
+  { dim:'法遵與組織健全', text:'工作規則是否已核備且持續更新，並確保所有員工（含新進）均充分知悉？', opts:['有核備但長期未更新','有更新，但員工知悉率低','有更新且多數員工知悉','有更新、教育訓練且有知悉簽署確認'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'是否有完整的出勤管理系統，且加班申請流程符合勞基法，可應對勞動主管機關查核？', opts:['出勤管理不完整，有潛在風險','有系統，但加班申請流程有疏漏','有完整系統，偶有例外狀況','完全合規，隨時可提供查核'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'是否已建立職場不法侵害預防計畫、申訴管道及定期教育訓練，且高層積極支持？', opts:['有計畫但流於形式','有計畫，員工部分知道','有完整計畫且定期執行','高層積極支持，文化已內化'], sc:[1,2,3,4] },
+  { dim:'法遵與組織健全', text:'近兩年是否有勞資爭議、勞動檢查缺失，或 HR 法遵相關罰鍰紀錄？', opts:['有多起，問題持續存在','有過，已改善但仍有漏洞','有輕微缺失，已全面改善','從未有，且主動定期自我稽核'], sc:[4,3,2,1] },
+],
 
+}; // end QS_SETS
+
+// ── 維度評語（分數區間共用，語氣依規模已在 AI prompt 中調整）
+const COMMENTS = {
+  '招募效能': s => s>=70
+    ? '招募效能良好，聘用成功率與新人留任率均達標準，建議持續追蹤數據並優化面試工具。'
+    : s>=45
+    ? '招募基礎存在，建議優先縮短招募天數，並追蹤新人 3 個月留任率。'
+    : '招募效能偏低，建議立即盤點 JD 正確性、建立結構化面試評分表，並開始追蹤聘用成功率。',
+  '留才與人才發展': s => s>=70
+    ? '留才狀況優良，員工穩定度高。建議持續深化內部晉升機制，讓人才看到清晰的職涯路徑。'
+    : s>=45
+    ? '有基本留才意識，建議先確認離職率是否達標，並檢視員工滿意度是否維持在 4 分以上。'
+    : '留才風險偏高，建議立即啟動員工滿意度了解，找出主要流失原因，並強化新人 Onboarding 計畫。',
+  '職能與績效管理': s => s>=70
+    ? '職能與績效管理成熟，建議持續追蹤人才盤點與個人發展計畫執行成效。'
+    : s>=45
+    ? '有基礎架構，建議補強職能定義，並確保績效結果清楚連結至調薪與晉升決策。'
+    : '職能與績效制度幾乎空白，建議先定義核心職能，再導入最小可行的年度評估架構。',
+  'HR數據分析力': s => s>=70
+    ? 'HR 數據分析能力領先，建議持續優化人才儀表板，並將人事成本維持在合理範圍。'
+    : s>=45
+    ? '有初步數據意識，建議優先完整追蹤離職率、招募天數、留任率三項核心指標。'
+    : 'HR 數據分析幾乎空白，建議先建立基礎指標記錄，逐步數位化人事資料。',
+  '法遵與組織健全': s => s>=70
+    ? '法遵基礎扎實，建議定期追蹤法令修訂，並每年更新工作規則及職場不法侵害預防計畫。'
+    : s>=45
+    ? '有基本合規意識，需補強出勤紀錄完整性，並確認不法侵害預防計畫員工均已知悉。'
+    : '法遵風險偏高，建議立即確認勞動契約與出勤記錄合規，並整備職場霸凌預防制度。',
+};
+
+// ── 狀態 ──────────────────────────────────────────────────────
+let SIZE = null;
+let QS = [];
+let cur = 0;
+let answers = new Array(20).fill(null);
+
+// ── 規模選擇 ──────────────────────────────────────────────────
+function pickSize(key) {
+  SIZE = key;
+  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('active'));
+  document.querySelector(`.size-card[onclick="pickSize('${key}')"]`).classList.add('active');
+  document.getElementById('btn-start').disabled = false;
+  document.getElementById('btn-start').textContent = '開始健檢 →';
+}
+
+function startQuiz() {
+  if (!SIZE) return;
+  QS = QS_SETS[SIZE];
+  answers = new Array(20).fill(null);
+  cur = 0;
+  document.getElementById('size-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  document.getElementById('size-label-bar').textContent = SIZE_META[SIZE].label;
+  renderQ();
+}
+
+function backToSize() {
+  document.getElementById('quiz-section').style.display = 'none';
+  document.getElementById('size-section').style.display = 'block';
+}
+
+// ── 問卷邏輯 ──────────────────────────────────────────────────
 function renderQ() {
   const q = QS[cur];
   document.getElementById('q-dim').textContent = q.dim;
@@ -250,19 +488,12 @@ function select(i) {
 function prevQ() { if(cur>0){cur--;renderQ();} }
 function nextQ() { if(cur===19){showResult();return;} cur++;renderQ(); }
 
+// ── 計分 ──────────────────────────────────────────────────────
 function dimScore(dim) {
   const idxs = QS.map((q,i)=>q.dim===dim?i:-1).filter(i=>i>=0);
   const total = idxs.reduce((s,i)=>s+(answers[i]!==null?QS[i].sc[answers[i]]:0),0);
   return Math.round((total/(idxs.length*4))*100);
 }
-
-const COMMENTS = {
-  '招募效能': s => s>=70?'招募效能良好，聘用成功率與新人留任率均達業界標準，建議持續追蹤數據並優化面試工具。':s>=45?'招募基礎存在，建議優先縮短招募天數至 30 天內，並追蹤 3 個月新人留任率是否達 90%。':'招募效能偏低，建議立即盤點 JD 正確性、建立結構化面試評分表，並開始追蹤聘用成功率。',
-  '留才與人才發展': s => s>=70?'留才狀況優良，員工穩定度高。建議持續深化內部晉升機制，讓優秀人才看到清晰的職涯路徑。':s>=45?'有基本留才意識，建議先確認離職率是否低於 20%，並檢視員工滿意度調查結果是否達 4 分以上。':'留才風險偏高，建議立即啟動員工滿意度調查，找出主要流失原因，並加強 30-90 天 Onboarding 計畫。',
-  '職能與績效管理': s => s>=70?'職能與績效管理成熟，建議擴大職能架構至全職類，並持續追蹤人才盤點與 IDP 執行成效。':s>=45?'有基礎架構，建議補強核心職能定義，並確保績效結果清楚連結至調薪與晉升決策。':'職能與績效制度幾乎空白，建議先建立核心職能定義，再導入最小可行的 KPI 架構與年度評估。',
-  'HR數據分析力': s => s>=70?'HR 數據分析能力領先，建議建立跨部門 HR 儀表板，並確保人事成本維持在營收 20–30% 合理範圍。':s>=45?'有初步數據意識，建議優先完整追蹤 10 大 HR 指標，並評估導入 HR 系統或 AI 工具的可行性。':'HR 數據分析幾乎空白，建議從建立離職率、招募天數、留任率三項基礎指標開始，逐步數位化 HR 資料。',
-  '法遵與組織健全': s => s>=70?'法遵基礎扎實，建議定期追蹤法令修訂，並每年更新工作規則及職場不法侵害預防計畫。':s>=45?'有基本合規意識，需補強出勤紀錄管理完整性，並確認不法侵害預防計畫員工均已知悉。':'法遵風險偏高，建議立即確認工作規則核備狀態，並整備出勤紀錄與職場霸凌預防制度。',
-};
 
 function levelLabel(s) {
   if(s>=75) return '🏆 人資優質型';
@@ -271,8 +502,9 @@ function levelLabel(s) {
   return '🚨 人資緊急型';
 }
 function scoreClass(s) { return s>=70?'s-high':s>=45?'s-mid':'s-low'; }
-function barClass(s) { return s>=70?'b-high':s>=45?'b-mid':'b-low'; }
+function barClass(s)   { return s>=70?'b-high':s>=45?'b-mid':'b-low'; }
 
+// ── 顯示報告 ──────────────────────────────────────────────────
 function showResult() {
   document.getElementById('quiz-section').style.display = 'none';
 
@@ -283,9 +515,9 @@ function showResult() {
 
   HCLead.gate('tool-01', 'AI 人資成熟度健檢', {score:overall, level:level}, function() {
     document.getElementById('result-section').style.display = 'block';
-
     document.getElementById('overall-score').textContent = overall;
     document.getElementById('overall-level').textContent = levelLabel(overall);
+    document.getElementById('result-size-label').textContent = SIZE_META[SIZE].label;
 
     const grid = document.getElementById('dim-grid');
     grid.innerHTML = DIMS.map(d => {
@@ -300,42 +532,47 @@ function showResult() {
       </div>`;
     }).join('');
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        document.querySelectorAll('.dim-bar[data-w]').forEach(el => {
-          el.style.width = el.dataset.w + '%';
-        });
-      });
-    });
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      document.querySelectorAll('.dim-bar[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%';});
+    }));
 
     callAI(dimScores, overall);
   });
 }
 
+// ── AI 分析 ──────────────────────────────────────────────────
 async function callAI(dimScores, overall) {
-  const prompt = `企業完成「AI 人資成熟度健檢」結果如下：
-總分：${overall}/100（${levelLabel(overall)}）
-- 招募效能：${dimScores['招募效能']}/100（含聘用成功率、招募天數、新人3個月留任率）
-- 留才與人才發展：${dimScores['留才與人才發展']}/100（含年度離職率、平均在職年資、內部晉升率、員工滿意度）
-- 職能與績效管理：${dimScores['職能與績效管理']}/100（含職能架構、績效制度、人才盤點IDP、訓練投資比）
-- HR數據分析力：${dimScores['HR數據分析力']}/100（含HR指標追蹤、人事成本比、AI工具應用、數位化程度）
-- 法遵與組織健全：${dimScores['法遵與組織健全']}/100（含工作規則核備、出勤紀錄、不法侵害預防）
+  const sizeCtx = {
+    micro: '微型企業（10人以下），無工作規則法定義務，HR 通常由老闆兼任，重點在基礎合規與人員穩定',
+    small: '小型企業（10–30人），開始需要 HR 制度化，留才壓力明顯，重點在建立基礎制度',
+    mid:   '中小型企業（30–100人），工作規則為法定義務（30人以上），績效與職能管理開始關鍵',
+    large: '中型企業（100–500人），需要完整 HR 體系，策略人才發展、接班計畫與數據分析能力至關重要',
+  };
 
-請以策識永續 AI 人資顧問身份，用繁體中文撰寫診斷報告，格式如下：
+  const prompt = `企業完成「AI 人資成熟度健檢」結果如下：
+企業規模：${SIZE_META[SIZE].label}（${sizeCtx[SIZE]}）
+總分：${overall}/100（${levelLabel(overall)}）
+- 招募效能：${dimScores['招募效能']}/100
+- 留才與人才發展：${dimScores['留才與人才發展']}/100
+- 職能與績效管理：${dimScores['職能與績效管理']}/100
+- HR數據分析力：${dimScores['HR數據分析力']}/100
+- 法遵與組織健全：${dimScores['法遵與組織健全']}/100
+
+請以策識永續 AI 人資顧問身份，用繁體中文撰寫診斷報告，必須針對「${SIZE_META[SIZE].label}」的規模特性給出適合的建議（例如微型企業不需要 HR 系統，但需要基礎勞法觀念）：
 
 【整體評語】
-針對此分數給予 2 句精準評語，點出企業目前人資發展階段與最大機會點。
+針對此分數與規模，給予 2 句精準評語，點出目前人資發展階段與最大機會點。
 
 【優先改善維度】
-列出得分最低的 2 個維度，各提供 2–3 條具體可執行的改善建議（引用業界標準數據，例如「業界聘用成功率建議達 80% 以上」）。
+列出得分最低的 2 個維度，各提供 2–3 條具體可執行的改善建議（依企業規模調整建議複雜度，小企業給簡單實用的行動）。
 
 【本月可立即行動的 3 件事】
-1. 行動一（具體、可在 30 天內執行）
+1. 行動一（30天內可完成，符合該規模資源）
 2. 行動二
 3. 行動三
 
 【結語】
-1 句激勵語，鼓勵企業持續優化人資體質。
+1 句激勵語，鼓勵持續優化人資體質。
 
 語氣專業、具實戰感，適合企業主與 HR 直接閱讀。`;
 
@@ -355,7 +592,7 @@ async function callAI(dimScores, overall) {
     if (!resp.ok) {
       const err = await resp.json().catch(()=>({}));
       document.getElementById('ai-body').innerHTML = err.limitReached
-        ? `<div class="limit-msg">今日健檢次數已達上限，請明日再試。<br>或 <a href="upgrade.html" style="color:var(--navy);font-weight:700;">升級專業版</a> 享無限使用。</div>`
+        ? `<div class="limit-msg">今日健檢次數已達上限，請明日再試。</div>`
         : `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
       return;
     }
@@ -367,7 +604,7 @@ async function callAI(dimScores, overall) {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      for (const line of decoder.decode(value, { stream: true }).split('\n')) {
+      for (const line of decoder.decode(value, { stream:true }).split('\n')) {
         if (!line.startsWith('data: ')) continue;
         const d = line.slice(6).trim();
         if (d === '[DONE]') break;
@@ -381,15 +618,19 @@ async function callAI(dimScores, overall) {
   }
 }
 
+// ── 重來 ──────────────────────────────────────────────────────
 function restart() {
+  SIZE = null;
   cur = 0;
   answers = new Array(20).fill(null);
   document.getElementById('result-section').style.display = 'none';
-  document.getElementById('quiz-section').style.display = 'block';
-  renderQ();
+  document.getElementById('quiz-section').style.display = 'none';
+  document.querySelectorAll('.size-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('btn-start').disabled = true;
+  document.getElementById('btn-start').textContent = '選擇規模後開始健檢 →';
+  document.getElementById('size-section').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-
-renderQ();
 </script>
 <script src="assets/hc-lead.js"></script>
 </body>
