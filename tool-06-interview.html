@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI ?�試模擬??· 策�?永�?</title>
+<title>AI 面試模擬訓練 · 策識永續</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646}
 body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
 a{text-decoration:none}
 nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
@@ -16,59 +16,50 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
 .nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
 .nav-back:hover{background:var(--navy);color:#fff}
-.page-header{background:linear-gradient(135deg,#0d1f3c,var(--navy),#1a3060);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.page-header{background:linear-gradient(135deg,#1e0a3c,#3d1a6e,var(--navy));padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
 .tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
 .page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
-.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:520px;margin:0 auto}
+.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:540px;margin:0 auto}
 .main{max-width:780px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
-/* setup */
-.setup-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
-.setup-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
-.setup-card p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.form-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.form-card p{font-size:13px;color:var(--ink-soft);margin-bottom:18px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
-.field input,.field select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s}
-.field input:focus,.field select:focus{outline:none;border-color:var(--navy)}
-.q-count-row{display:flex;gap:8px}
-.q-count-btn{flex:1;padding:10px;border:2px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-size:14px;font-weight:700;color:var(--ink-soft);cursor:pointer;transition:all .2s;text-align:center}
-.q-count-btn.sel{border-color:var(--navy);color:var(--navy);background:rgba(16,36,76,.04)}
-.btn-start{width:100%;background:var(--navy);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .2s}
-.btn-start:hover:not(:disabled){background:var(--teal)}
+.field input,.field textarea,.field select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#3d1a6e}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.q-count-row{display:flex;gap:10px;flex-wrap:wrap}
+.q-chip{padding:8px 16px;border:2px solid var(--line);border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-soft);transition:all .2s;user-select:none}
+.q-chip.on{border-color:#3d1a6e;color:#3d1a6e;background:rgba(61,26,110,.05)}
+.btn-start{width:100%;background:linear-gradient(135deg,#3d1a6e,var(--navy));color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-start:hover:not(:disabled){opacity:.85}
 .btn-start:disabled{opacity:.4;cursor:not-allowed}
-/* quiz */
-#quiz-section{display:none}
-.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.quiz-progress{font-size:13px;color:var(--ink-soft);font-weight:600}
-.prog-bar{height:5px;background:rgba(16,36,76,.08);border-radius:999px;overflow:hidden;margin-bottom:20px}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--teal));border-radius:999px;transition:width .4s}
-.q-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
-.q-tag{display:inline-block;background:rgba(16,36,76,.07);border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:10px}
-.q-text{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--navy);line-height:1.65;margin-bottom:16px}
-.q-hint{font-size:12px;color:var(--ink-soft);margin-bottom:14px;padding:8px 12px;background:rgba(29,117,111,.06);border-radius:6px;border-left:3px solid var(--teal)}
-.answer-area{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:100px;transition:border-color .2s}
-.answer-area:focus{outline:none;border-color:var(--navy)}
-.q-nav{display:flex;justify-content:space-between;gap:12px;margin-top:14px}
-.btn-prev{background:#fff;border:2px solid var(--line);color:var(--ink-soft);padding:11px 20px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
-.btn-prev:hover:not(:disabled){border-color:var(--navy);color:var(--navy)}
-.btn-prev:disabled{opacity:.35;cursor:not-allowed}
-.btn-next{background:var(--navy);color:#fff;padding:11px 24px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:background .2s}
-.btn-next:hover:not(:disabled){background:var(--teal)}
-.btn-next:disabled{opacity:.4;cursor:not-allowed}
-/* result */
+#sim-section{display:none}
 #result-section{display:none}
-.score-head{background:linear-gradient(135deg,#0d1f3c,var(--navy));border-radius:14px;padding:28px;text-align:center;margin-bottom:18px}
-.score-head h2{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:6px}
-.total-score{font-size:56px;font-weight:900;color:var(--gold-bright);line-height:1}
-.score-sub{font-size:14px;color:rgba(255,255,255,.7);margin-top:6px}
-.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:18px}
-.dim-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
-.dc-label{font-size:12px;color:var(--ink-soft);margin-bottom:6px}
-.dc-bar{height:6px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:6px}
-.dc-fill{height:100%;background:var(--teal);border-radius:999px;transition:width .8s ease}
-.dc-num{font-size:20px;font-weight:800;color:var(--navy)}
+.q-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:16px}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.q-badge{font-size:11px;font-weight:800;color:#3d1a6e;background:rgba(61,26,110,.08);padding:3px 10px;border-radius:999px}
+.q-num-txt{font-size:12px;color:var(--ink-faded)}
+.q-text{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);line-height:1.65;margin-bottom:16px}
+.ans-field{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;transition:border-color .2s}
+.ans-field:focus{outline:none;border-color:#3d1a6e}
+.nav-btns{display:flex;justify-content:space-between;gap:12px;margin-top:14px}
+.btn-prev{background:#fff;border:2px solid var(--line);color:var(--ink-soft);padding:10px 20px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.btn-prev:disabled{opacity:.35;cursor:not-allowed}
+.btn-next{background:var(--navy);color:#fff;padding:10px 24px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none}
+.btn-submit{background:linear-gradient(135deg,#3d1a6e,var(--navy));color:#fff;padding:10px 24px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none}
+.prog-bar-wrap{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.prog-bar{flex:1;height:6px;background:rgba(16,36,76,.08);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#3d1a6e,var(--gold));border-radius:999px;transition:width .4s}
+.prog-txt{font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap}
+.result-header{background:linear-gradient(135deg,#1e0a3c,#3d1a6e);border-radius:14px;padding:32px;text-align:center;margin-bottom:18px}
+.result-header h2{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:900;color:#fff;margin-bottom:8px}
+.result-score{font-size:64px;font-weight:900;color:var(--gold-bright);line-height:1}
+.result-level{font-size:14px;color:var(--gold-bright);margin-top:8px;font-weight:700}
 .ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
 .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-.ai-icon{width:34px;height:34px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-icon{width:34px;height:34px;background:#3d1a6e;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
 .ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
 .ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
 .typing{display:inline-flex;gap:4px;align-items:center}
@@ -82,334 +73,278 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
 .btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
 .btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.loading-overlay{position:fixed;inset:0;background:rgba(7,20,47,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;gap:16px}
-.loading-overlay p{color:#fff;font-size:16px;font-weight:600}
-.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:var(--gold-bright);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <nav>
-  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI 人�??�檢中�?</span></a>
-  <a href="hr-health-center.html" class="nav-back">???�健檢中�?/a>
+  <a href="hr-health-center.html" class="nav-brand">
+    <img src="assets/logo.png" alt="策識永續">
+    <span>AI 人資健檢中心</span>
+  </a>
+  <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
 </nav>
 <div class="page-header">
-  <div class="tool-badge">?�� No.06 · AI ?�試模擬??/div>
-  <h1>AI ?�試模擬 &amp; 評�?系統</h1>
-  <p>模擬?�實?�試?��?，AI ?��?評�??�改?�建議�??��??�試?��???/p>
+  <div class="tool-badge">🎯 No.06 · AI 面試模擬訓練</div>
+  <h1>AI 面試官模擬實戰</h1>
+  <p>輸入應徵職位與背景，AI 扮演面試官出題，即時評分反饋</p>
 </div>
 <div class="main">
-
-  <!-- Setup -->
-  <div id="setup-section">
-    <div class="setup-card">
-      <h2>設�??�試?��?</h2>
-      <p>填寫以�?資�?，AI 將為?�產?��?對性�??�試題目</p>
-      <div class="field">
-        <label>?�徵?��?</label>
-        <input type="text" id="inp-position" placeholder="例�?行銷企�??��?體工程師?�人資�??? oninput="checkReady()">
-      </div>
-      <div class="field">
-        <label>?�試類�?</label>
-        <select id="inp-type" onchange="checkReady()">
-          <option value="">請選?�面試�???/option>
-          <option value="behavioral">行為?�試（STAR 法�?�?/option>
-          <option value="competency">?�能?�試</option>
-          <option value="situational">?��??�試</option>
-          <option value="technical">?�術面�?/option>
-          <option value="comprehensive">綜�??�試</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>題數設�?</label>
-        <div class="q-count-row">
-          <div class="q-count-btn sel" id="qc-5" onclick="setQCount(5, this)">5 題�?快速�?�?/div>
-          <div class="q-count-btn" id="qc-8" onclick="setQCount(8, this)">8 題�?標�??��?</div>
-          <div class="q-count-btn" id="qc-12" onclick="setQCount(12, this)">12 題�?完整?��?</div>
+  <div id="form-section">
+    <div class="form-card">
+      <h2>設定面試情境</h2>
+      <p>填寫越詳細，AI 面試官出的題目越貼近真實情境</p>
+      <div class="row2">
+        <div class="field">
+          <label>應徵職位 *</label>
+          <input type="text" id="inp-position" placeholder="例：人資專員" oninput="checkReady()">
+        </div>
+        <div class="field">
+          <label>產業別</label>
+          <select id="inp-industry">
+            <option value="">請選擇</option>
+            <option>科技／軟體</option><option>製造業</option><option>金融／保險</option>
+            <option>零售／電商</option><option>醫療／生技</option><option>餐飲／服務</option>
+            <option>教育／培訓</option><option>顧問／專業服務</option><option>其他</option>
+          </select>
         </div>
       </div>
-      <button class="btn-start" id="btn-start" onclick="startInterview()" disabled>?��??�試模擬</button>
-    </div>
-  </div>
-
-  <!-- Quiz -->
-  <div id="quiz-section">
-    <div class="quiz-header">
-      <div class="quiz-progress" id="quiz-progress">�?1 / 5 �?/div>
-    </div>
-    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:20%"></div></div>
-    <div class="q-card">
-      <div class="q-tag" id="q-tag"></div>
-      <div class="q-text" id="q-text"></div>
-      <div class="q-hint" id="q-hint"></div>
-      <textarea class="answer-area" id="answer-area" placeholder="請在此輸?�您?��?�?.." oninput="checkAnswer()"></textarea>
-      <div class="q-nav">
-        <button class="btn-prev" id="btn-prev" onclick="prevQ()" disabled>??上�?�?/button>
-        <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>下�?�???/button>
+      <div class="field">
+        <label>您的工作年資與背景（選填）</label>
+        <textarea id="inp-background" rows="4" placeholder="例：3 年行銷經驗，熟悉數位廣告，曾帶領 2 人小組..."></textarea>
       </div>
+      <div class="field">
+        <label>面試題數</label>
+        <div class="q-count-row" id="q-count-row">
+          <div class="q-chip on" onclick="setCount(this,3)">3 題（快速）</div>
+          <div class="q-chip" onclick="setCount(this,5)">5 題（標準）</div>
+          <div class="q-chip" onclick="setCount(this,8)">8 題（深度）</div>
+        </div>
+      </div>
+      <button class="btn-start" id="btn-start" onclick="startSim()" disabled>🎯 開始模擬面試</button>
     </div>
   </div>
 
-  <!-- Result -->
-  <div id="result-section">
-    <div class="score-head">
-      <h2>?�試模擬評�??��?</h2>
-      <div class="total-score" id="total-score">--</div>
-      <div class="score-sub">綜�?評�?（滿??100�?/div>
+  <div id="sim-section">
+    <div class="prog-bar-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-txt" id="prog-txt">第 1 / 3 題</div>
     </div>
-    <div class="dim-grid" id="dim-grid"></div>
+    <div id="questions-container"></div>
+    <div class="nav-btns">
+      <button class="btn-prev" id="btn-prev" onclick="prevQ()" disabled>← 上一題</button>
+      <button class="btn-next" id="btn-next" onclick="nextQ()">下一題 →</button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="result-header">
+      <h2>面試模擬評分報告</h2>
+      <div class="result-score" id="result-score">—</div>
+      <div class="result-level" id="result-level"></div>
+    </div>
     <div class="ai-box">
-      <div class="ai-head"><div class="ai-icon">?��</div><div><div class="ai-title">AI ?�試表現?��??�建�?/div></div></div>
+      <div class="ai-head">
+        <div class="ai-icon">🤖</div>
+        <div class="ai-title">AI 面試官詳細反饋</div>
+      </div>
       <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
     </div>
     <div class="cta-box">
-      <h3>?�進�?步�??�面試表?��?</h3>
-      <p>策�?永�??��?一對�??�試輔�??�履歷修?�、職涯諮詢�???/p>
+      <h3>想提升面試表現？</h3>
+      <p>策識永續提供一對一面試輔導與職涯諮詢服務</p>
       <div class="cta-row">
-        <a href="ai-hr-consultant.html" class="btn-gold">?�費諮詢 AI 顧�?</a>
-        <a href="pricing-and-booking.html" class="btn-ghost">?��??�方�?/a>
+        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
       </div>
     </div>
-    <button class="btn-restart" onclick="restart()">?�新模擬</button>
+    <button class="btn-restart" onclick="restart()">再次模擬</button>
   </div>
-</div>
-
-<div class="loading-overlay" id="loading" style="display:none">
-  <div class="spinner"></div>
-  <p id="loading-msg">AI �?��?��??�試題目...</p>
 </div>
 
 <script>
 const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 const SESSION = 'hc6-' + Math.random().toString(36).slice(2);
 
-let totalQ = 5, questions = [], answers = [], cur = 0;
+let qCount = 3;
+let questions = [];
+let answers = [];
+let curQ = 0;
 
-const TYPE_LABEL = {
-  behavioral:'行為?�試',competency:'?�能?�試',
-  situational:'?��??�試',technical:'?�術面�?,comprehensive:'綜�??�試'
-};
-
-function setQCount(n, el) {
-  totalQ = n;
-  document.querySelectorAll('.q-count-btn').forEach(e=>e.classList.remove('sel'));
-  el.classList.add('sel');
+function setCount(el, n) {
+  document.querySelectorAll('.q-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  qCount = n;
 }
 
 function checkReady() {
-  const pos = document.getElementById('inp-position').value.trim();
-  const typ = document.getElementById('inp-type').value;
-  document.getElementById('btn-start').disabled = !(pos && typ);
+  document.getElementById('btn-start').disabled = !document.getElementById('inp-position').value.trim();
 }
 
-async function startInterview() {
+async function startSim() {
   const position = document.getElementById('inp-position').value.trim();
-  const type = document.getElementById('inp-type').value;
-  const typeLabel = TYPE_LABEL[type];
+  const industry = document.getElementById('inp-industry').value;
+  const background = document.getElementById('inp-background').value.trim();
 
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('loading-msg').textContent='AI �?��?��??�試題目...';
+  HCLead.gate('tool-06', 'AI 面試模擬訓練', {}, async function() {
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('sim-section').style.display = 'block';
 
-  const prompt = `請為??{position}?�職位產??${totalQ} ??{typeLabel}?�試題�?
-每�??��?�?Q: [題目]
-HINT: [作�??�示�?0字以?�]
-TAG: [題�?標籤，�?：�?驗�?/?��?�?行為�??��?�??��?題]
+    const genPrompt = `你是專業的人資面試官，請針對以下應徵者產生 ${qCount} 道面試題目。
 
-?�輸?��??��?不�?要�?語�??��?說�??�`;
+應徵職位：${position}
+${industry ? `產業：${industry}` : ''}
+${background ? `應徵者背景：${background}` : ''}
 
-  try {
-    const resp = await fetch(API + '/api/hr-health-check', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        tool:'interview',
-        system:'你是專業?�試官�??��??�灣?�場?��?，�??�接輸出?�試題目，�??�要�?外說?��?,
-        messages:[{role:'user',content:prompt}],
-        sessionId:SESSION, stream:false
-      })
-    });
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      document.getElementById('loading').style.display='none';
-      alert(err.limitReached ? '今日使用次數已�?上�?，�??�日?�試?? : 'AI ?��??��??��?使用，�?稍�??�試??);
-      return;
+請以 JSON 陣列格式回覆，每題包含 type（題型）和 question（問題）：
+[{"type":"自我介紹","question":"..."},{"type":"行為面試","question":"..."},...]
+
+題型選擇：自我介紹、行為面試（STAR法則）、情境題、動機與價值觀、專業能力、壓力測試
+
+只回覆 JSON，不要其他文字。`;
+
+    const container = document.getElementById('questions-container');
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-soft)">AI 正在產生面試題目...</div>';
+
+    try {
+      const res = await fetch(`${API}/api/hr-health-check`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: genPrompt, sessionId: SESSION + '-gen' })
+      });
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let raw = '';
+      while(true) {
+        const {done, value} = await reader.read();
+        if(done) break;
+        const chunk = decoder.decode(value, {stream:true});
+        for(const line of chunk.split('\n')) {
+          if(line.startsWith('data:')) {
+            const d = line.slice(5).trim();
+            if(d === '[DONE]') break;
+            try { raw += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch(e) {}
+          }
+        }
+      }
+
+      const match = raw.match(/\[[\s\S]*\]/);
+      if(match) questions = JSON.parse(match[0]);
+      else questions = Array.from({length:qCount},(_,i)=>({type:'行為面試',question:`請描述一個您在工作中遇到的挑戰，以及如何克服它？（題 ${i+1}）`}));
+    } catch(e) {
+      questions = Array.from({length:qCount},(_,i)=>({type:'行為面試',question:`請描述一個您曾經成功完成的重要專案，說明您的角色與貢獻。（題 ${i+1}）`}));
     }
-    const data = await resp.json();
-    parseQuestions(data.text || '', position, typeLabel);
-  } catch {
-    document.getElementById('loading').style.display='none';
-    alert('?��??????AI ?��?，�?稍�??�試??);
-    return;
-  }
 
-  document.getElementById('loading').style.display='none';
-  answers = new Array(questions.length).fill('');
-  cur = 0;
-  document.getElementById('setup-section').style.display='none';
-  document.getElementById('quiz-section').style.display='block';
-  renderQ();
-}
-
-function parseQuestions(text, position, typeLabel) {
-  questions = [];
-  const blocks = text.split(/\n(?=Q:)/);
-  for (const block of blocks) {
-    const qm = block.match(/Q:\s*(.+)/);
-    const hm = block.match(/HINT:\s*(.+)/);
-    const tm = block.match(/TAG:\s*(.+)/);
-    if (qm) questions.push({
-      text: qm[1].trim(),
-      hint: hm ? hm[1].trim() : '請具體�?述您?��?驗�??��?',
-      tag: tm ? tm[1].trim() : typeLabel
-    });
-  }
-  if (questions.length < totalQ) {
-    const fallback = [
-      {text:`請�?紹�?下您?�徵??{position}?��??��??�相?��??�。`,hint:'說�??��??�涯規�??�此?��??��??',tag:'?��?�?},
-      {text:`請�?述�??�您?��??�工作中?�到?��?大�??��?以�??��?何解決�??�`,hint:'使用 STAR 法�?：�?境�?任�??��??��?結�?',tag:'行為�?},
-      {text:`?��???{position}?�這個職位�??��??�核心能?�是什麼�??��?何具?�這�??��?？`,hint:'結�?實�?工�?經歷說�?',tag:'?��?�?},
-      {text:`請�?述�?次您?��??�發?��?見�?突�?經�?，以?�您如�??��??�。`,hint:'?��??��??�方式�?結�?',tag:'?��?�?},
-      {text:`?�未�?3-5 年�??�涯?��?規�??��?麼�?`,hint:'說�??��??��??��??��???,tag:'規�?�?},
-      {text:`如�??�在工�?中犯了�??�錯誤�??��?如�??��?？`,hint:'展現責任?��?學�??�度',tag:'?��?�?},
-      {text:`?��??�自己�?大�??��??�缺點�??��?麼�?`,hint:'誠實且�??��?覺�??��?�?,tag:'?��?認知'},
-      {text:`?��?何在高�??��?迫�??�止?��?下�??�工作�??��?`,hint:'?�享?��??��??�管?�方�?,tag:'壓�?�?},
-    ];
-    while (questions.length < totalQ) {
-      questions.push(fallback[questions.length % fallback.length]);
-    }
-  }
-  questions = questions.slice(0, totalQ);
+    answers = new Array(questions.length).fill('');
+    curQ = 0;
+    renderQ();
+  });
 }
 
 function renderQ() {
-  const q = questions[cur];
-  document.getElementById('quiz-progress').textContent = `�?${cur+1} / ${questions.length} 題`;
-  document.getElementById('prog-fill').style.width = Math.round(((cur+1)/questions.length)*100) + '%';
-  document.getElementById('q-tag').textContent = q.tag;
-  document.getElementById('q-text').textContent = q.text;
-  document.getElementById('q-hint').textContent = '?�� ' + q.hint;
-  document.getElementById('answer-area').value = answers[cur] || '';
-  document.getElementById('btn-prev').disabled = cur === 0;
-  document.getElementById('btn-next').textContent = cur === questions.length-1 ? '?�交評�? ?? : '下�?�???;
-  document.getElementById('btn-next').disabled = !(answers[cur] && answers[cur].trim().length > 5);
+  const q = questions[curQ];
+  const total = questions.length;
+  document.getElementById('prog-fill').style.width = ((curQ+1)/total*100)+'%';
+  document.getElementById('prog-txt').textContent = `第 ${curQ+1} / ${total} 題`;
+
+  const container = document.getElementById('questions-container');
+  container.innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-badge">${q.type}</span>
+        <span class="q-num-txt">第 ${curQ+1} 題，共 ${total} 題</span>
+      </div>
+      <div class="q-text">${q.question}</div>
+      <textarea class="ans-field" id="cur-answer" rows="6" placeholder="請在此輸入您的回答...">${answers[curQ]}</textarea>
+    </div>`;
+
+  document.getElementById('btn-prev').disabled = curQ === 0;
+  const nextBtn = document.getElementById('btn-next');
+  if(curQ === total-1) {
+    nextBtn.textContent = '提交評分 →';
+    nextBtn.className = 'btn-submit';
+  } else {
+    nextBtn.textContent = '下一題 →';
+    nextBtn.className = 'btn-next';
+  }
 }
 
-function checkAnswer() {
-  const val = document.getElementById('answer-area').value;
-  answers[cur] = val;
-  document.getElementById('btn-next').disabled = val.trim().length < 5;
+function saveAnswer() {
+  const el = document.getElementById('cur-answer');
+  if(el) answers[curQ] = el.value;
 }
 
-function prevQ() { if(cur>0){cur--;renderQ();} }
+function prevQ() { saveAnswer(); if(curQ>0){curQ--;renderQ();} }
+
 function nextQ() {
-  answers[cur] = document.getElementById('answer-area').value;
-  if (cur === questions.length-1) { evaluate(); return; }
-  cur++; renderQ();
+  saveAnswer();
+  if(curQ < questions.length-1) { curQ++; renderQ(); }
+  else evaluate();
 }
 
 async function evaluate() {
-  HCLead.gate('tool-06', 'AI ?�試模擬訓練', {}, async function() {
-  document.getElementById('loading').style.display='flex';
-  document.getElementById('loading-msg').textContent='AI �?��評�?，�?稍�?..';
+  document.getElementById('sim-section').style.display = 'none';
+  document.getElementById('result-section').style.display = 'block';
 
-  const qa = questions.map((q,i) => `?��???{i+1}??{q.text}\n?��?答�?{answers[i]||'（未作�?�?}`).join('\n\n');
-  const position = document.getElementById('inp-position').value.trim();
+  const qas = questions.map((q,i)=>`【第${i+1}題 - ${q.type}】\n問題：${q.question}\n回答：${answers[i]||'（未作答）'}`).join('\n\n');
 
-  const prompt = `請�?估以下�?{position}?�職位�??�試作�?表現??
-${qa}
+  const prompt = `你是資深人資面試官，請根據以下模擬面試的問答，給出詳細的評分與反饋。
 
-請�?輸出評�? JSON（只輸出 JSON，�?要其他�?字�?�?{"total":XX,"content":XX,"structure":XX,"specificity":XX,"impression":XX}
-（total=綜�?, content=?�容?��??? structure=表�?結�?, specificity=?��?程度, impression=?��??�象，�??�滿??00�?
-?��??��?，用繁�?中�??��??�試表現?��?�?
-?�整體表?��?要】�?2?��?
+${qas}
 
-?�強?�表?�】�?2-3點�?
+請先給出整體分數（0-100），以 JSON 格式：{"score":75}
+然後換行開始詳細反饋，包含：
+1. 整體表現評估
+2. 每道題目的回答分析（優點與待改進處）
+3. 表達技巧建議（STAR法則應用、邏輯結構等）
+4. 面試技巧提升建議
 
-?��??��??��??��?2-3點�??��?說�?�?
-?��?題�?點建議】�??��??�弱�? 2-3 題�?
+請用繁體中文，約 500-600 字。`;
 
-?��??�面試通�??��??�鍵建議?��?3點�?
-
-?��?清晰條�?，�?超�? 600 字。`;
+  const aiBody = document.getElementById('ai-body');
 
   try {
-    const resp = await fetch(API + '/api/hr-health-check', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        tool:'interview',
-        system:'你是專業?�試評審，�??�台??��?��?準�?請給予客觀?��??�面試�??��?建議，�??�使?��?體中?��?,
-        messages:[{role:'user',content:prompt}],
-        sessionId:SESSION, stream:true
-      })
+    const res = await fetch(`${API}/api/hr-health-check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: prompt, sessionId: SESSION + '-eval' })
     });
-
-    document.getElementById('loading').style.display='none';
-    document.getElementById('quiz-section').style.display='none';
-    document.getElementById('result-section').style.display='block';
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      document.getElementById('ai-body').innerHTML = err.limitReached
-        ? `<div class="limit-msg">今日?�檢次數已�?上�?，�??�日?�試??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?��?專業??/a>??/div>`
-        : `<span style="color:var(--ink-soft)">（AI 評�??��??��?使用�?/span>`;
-      return;
-    }
-
-    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
-    const bodyEl = document.getElementById('ai-body');
-    bodyEl.innerHTML = '';
-    let scoresSet = false;
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let txt = '';
+    aiBody.textContent = '';
     while(true) {
-      const{done,value}=await reader.read(); if(done) break;
-      for(const line of dec.decode(value,{stream:true}).split('\n')) {
-        if(!line.startsWith('data: ')) continue;
-        const d=line.slice(6).trim(); if(d==='[DONE]') break;
-        try{txt+=JSON.parse(d).text||'';}catch{}
+      const {done, value} = await reader.read();
+      if(done) break;
+      for(const line of decoder.decode(value,{stream:true}).split('\n')) {
+        if(line.startsWith('data:')) {
+          const d = line.slice(5).trim();
+          if(d==='[DONE]') break;
+          try { const t=JSON.parse(d).choices?.[0]?.delta?.content||''; txt+=t; aiBody.textContent=txt; } catch(e){}
+        }
       }
-      if (!scoresSet) scoresSet = parseEvalScores(txt);
-      bodyEl.textContent = txt.replace(/^\{[^}]*\}\n?/,'').trim();
     }
-    if (!scoresSet) parseEvalScores(txt);
-    HCLead.reportDone(txt.replace(/^\{[^}]*\}\n?/,'').trim());
-  } catch {
-    document.getElementById('loading').style.display='none';
-    document.getElementById('quiz-section').style.display='none';
-    document.getElementById('result-section').style.display='block';
-    document.getElementById('ai-body').textContent='（AI 評�??��??��??��????�?;
-  }
-  }); // end gate
-}
 
-function parseEvalScores(txt) {
-  const m = txt.match(/\{"total"\s*:\s*(\d+)\s*,\s*"content"\s*:\s*(\d+)\s*,\s*"structure"\s*:\s*(\d+)\s*,\s*"specificity"\s*:\s*(\d+)\s*,\s*"impression"\s*:\s*(\d+)\s*\}/);
-  if (!m) return false;
-  const [,total,content,structure,specificity,impression] = m.map(Number);
-  document.getElementById('total-score').textContent = total;
-  const dims = [
-    {label:'?�容?��???,val:content},{label:'表�?結�?',val:structure},
-    {label:'?��?程度',val:specificity},{label:'?��??�象',val:impression}
-  ];
-  document.getElementById('dim-grid').innerHTML = dims.map(d => `
-    <div class="dim-card">
-      <div class="dc-label">${d.label}</div>
-      <div class="dc-bar"><div class="dc-fill" data-w="${d.val}" style="width:0"></div></div>
-      <div class="dc-num">${d.val}</div>
-    </div>`).join('');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    document.querySelectorAll('.dc-fill[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%';});
-  }));
-  return true;
+    try {
+      const m = txt.match(/\{"score":\s*(\d+)\}/);
+      if(m) {
+        const score = parseInt(m[1]);
+        document.getElementById('result-score').textContent = score;
+        document.getElementById('result-level').textContent = score>=80?'優秀（強烈推薦）':score>=65?'良好（建議錄取）':score>=50?'普通（可再考慮）':'需加強（建議練習）';
+        aiBody.textContent = txt.replace(/^\{[^}]*\}\n?/, '').trim();
+      }
+    } catch(e){}
+
+    HCLead.reportDone(txt.replace(/^\{[^}]*\}\n?/,'').trim());
+  } catch(e) {
+    aiBody.textContent = 'AI 評分暫時無法取得，請稍後再試。';
+  }
 }
 
 function restart() {
-  questions=[]; answers=[]; cur=0;
+  questions=[]; answers=[]; curQ=0;
   document.getElementById('result-section').style.display='none';
-  document.getElementById('setup-section').style.display='block';
-  document.getElementById('inp-position').value='';
-  document.getElementById('inp-type').value='';
-  document.getElementById('btn-start').disabled=true;
-  document.getElementById('total-score').textContent='--';
-  document.getElementById('ai-body').innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+  document.getElementById('form-section').style.display='block';
 }
 </script>
 <script src="assets/hc-lead.js"></script>

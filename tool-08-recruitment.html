@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI ?��??��??��???· 策�?永�?</title>
+<title>AI 招募文案生成器 · 策識永續</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -68,70 +68,69 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 </head>
 <body>
 <nav>
-  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI 人�??�檢中�?</span></a>
-  <a href="hr-health-center.html" class="nav-back">???�健檢中�?/a>
+  <a href="hr-health-center.html" class="nav-brand">
+    <img src="assets/logo.png" alt="策識永續">
+    <span>AI 人資健檢中心</span>
+  </a>
+  <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
 </nav>
 <div class="page-header">
-  <div class="tool-badge">?�� No.08 · AI ?��??��??��???/div>
-  <h1>AI ?��?�??一?��???/h1>
-  <p>?��? 104??111?�LinkedIn 等平?�特?��??��??��??��?人�??��??��?�?/p>
+  <div class="tool-badge">📢 No.08 · AI 招募文案生成器</div>
+  <h1>AI 招募文案一鍵生成</h1>
+  <p>針對 104、111、LinkedIn 等平台特性，生成吸引人才的招募文案</p>
 </div>
 <div class="main">
   <div id="form-section">
     <div class="form-card">
-      <h2>填寫?��?資�?</h2>
-      <p>填寫越詳細�??��??��??��?案�??�說?��?</p>
+      <h2>填寫職缺資料</h2>
+      <p>填寫越詳細，文案效果越好，說服力越強</p>
       <div class="row2">
         <div class="field">
-          <label>?��??�稱 *</label>
-          <input type="text" id="inp-title" placeholder="例�?資深行銷企�?" oninput="checkReady()">
+          <label>職位名稱 *</label>
+          <input type="text" id="inp-title" placeholder="例：資深行銷企劃" oninput="checkReady()">
         </div>
         <div class="field">
-          <label>?�司?�稱</label>
-          <input type="text" id="inp-company" placeholder="例�?策�?永�??�份?��??�司">
+          <label>公司名稱</label>
+          <input type="text" id="inp-company" placeholder="例：策識永續股份有限公司">
         </div>
       </div>
       <div class="row3">
         <div class="field">
-          <label>?�業??/label>
+          <label>產業別</label>
           <select id="inp-industry">
-            <option value="">請選??/option>
-            <option>科�?/軟�?</option><option>製造業</option><option>?��?/保險</option>
-            <option>?�售/?��?</option><option>?��?/?��?</option><option>餐飲/?��?</option>
-            <option>?�育/?��?</option><option>顧�?/專業?��?</option><option>?��?</option>
+            <option value="">請選擇</option>
+            <option>科技／軟體</option><option>製造業</option><option>金融／保險</option>
+            <option>零售／電商</option><option>醫療／生技</option><option>餐飲／服務</option>
+            <option>教育／培訓</option><option>顧問／專業服務</option><option>其他</option>
           </select>
         </div>
         <div class="field">
-          <label>?��?範�?</label>
-          <input type="text" id="inp-salary" placeholder="例�??�薪 40,000-60,000">
+          <label>薪資範圍</label>
+          <input type="text" id="inp-salary" placeholder="例：月薪 40,000-60,000">
         </div>
         <div class="field">
-          <label>工�??��?</label>
-          <input type="text" id="inp-location" placeholder="例�??��?市信義�?">
+          <label>工作地點</label>
+          <input type="text" id="inp-location" placeholder="例：台北市信義區">
         </div>
       </div>
       <div class="field">
-        <label>主�??�責�?-5 點�?</label>
-        <textarea id="inp-duties" rows="3" placeholder="例�?規�?並執行�??��??��??�、管?�社群�?體帳?�、�??��??�數??.."></textarea>
+        <label>公司特色與文化（選填）</label>
+        <textarea id="inp-culture" rows="3" placeholder="例：彈性工時、遠端辦公、團隊年輕有活力、重視員工成長..."></textarea>
       </div>
       <div class="field">
-        <label>?�求�?�?/label>
-        <textarea id="inp-requirements" rows="2" placeholder="例�?3年以上相?��?驗、�???Meta Ads?�具?��??�維..."></textarea>
+        <label>主要職責（選填）</label>
+        <textarea id="inp-duties" rows="3" placeholder="例：負責品牌社群內容規劃、廣告投放優化、數據分析報告..."></textarea>
       </div>
       <div class="field">
-        <label>?�司福利亮�?</label>
-        <textarea id="inp-benefits" rows="2" placeholder="例�?彈性工?�、�?距工作、年�?2-4 ?��??��??��?練�???.."></textarea>
-      </div>
-      <div class="field">
-        <label>?��??��?平台</label>
+        <label>選擇發布平台</label>
         <div class="platform-row">
-          <div class="platform-chip on" id="chip-104" onclick="toggleChip(this)"><div class="chip-dot"></div>104 人�??��?/div>
-          <div class="platform-chip on" id="chip-1111" onclick="toggleChip(this)"><div class="chip-dot"></div>1111 人�??��?/div>
-          <div class="platform-chip" id="chip-linkedin" onclick="toggleChip(this)"><div class="chip-dot"></div>LinkedIn</div>
-          <div class="platform-chip" id="chip-fb" onclick="toggleChip(this)"><div class="chip-dot"></div>Facebook 社�?</div>
+          <div class="platform-chip on" data-p="104" onclick="togglePlatform(this)"><div class="chip-dot"></div>104 人力銀行</div>
+          <div class="platform-chip on" data-p="111" onclick="togglePlatform(this)"><div class="chip-dot"></div>1111 人力銀行</div>
+          <div class="platform-chip" data-p="LinkedIn" onclick="togglePlatform(this)"><div class="chip-dot"></div>LinkedIn</div>
+          <div class="platform-chip" data-p="社群" onclick="togglePlatform(this)"><div class="chip-dot"></div>社群媒體</div>
         </div>
       </div>
-      <button class="btn-gen" id="btn-gen" onclick="generate()" disabled>AI 一?��??��??��?�?/button>
+      <button class="btn-gen" id="btn-gen" onclick="generate()" disabled>🚀 生成招募文案</button>
     </div>
   </div>
 
@@ -139,14 +138,14 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
     <div class="tabs" id="tabs"></div>
     <div class="panels" id="panels"></div>
     <div class="cta-box">
-      <h3>?��??��??��??��?�?/h3>
-      <p>策�?永�??��??��?流�??��??��?主�??��??�、人?��?尋�??��???/p>
+      <h3>需要完整的招募策略規劃？</h3>
+      <p>策識永續提供招募流程設計、雇主品牌建立與人才吸引策略服務</p>
       <div class="cta-row">
-        <a href="ai-hr-consultant.html" class="btn-gold">?�費諮詢 AI 顧�?</a>
-        <a href="pricing-and-booking.html" class="btn-ghost">?��??�方�?/a>
+        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
       </div>
     </div>
-    <button class="btn-restart" onclick="restart()">?�新?��?</button>
+    <button class="btn-restart" onclick="restart()">重新生成</button>
   </div>
 </div>
 
@@ -154,159 +153,167 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 const SESSION = 'hc8-' + Math.random().toString(36).slice(2);
 
-function toggleChip(el) { el.classList.toggle('on'); }
+function togglePlatform(el) {
+  el.classList.toggle('on');
+  checkReady();
+}
 
 function checkReady() {
-  document.getElementById('btn-gen').disabled = !document.getElementById('inp-title').value.trim();
+  const hasTitle = document.getElementById('inp-title').value.trim();
+  const hasPlatform = document.querySelectorAll('.platform-chip.on').length > 0;
+  document.getElementById('btn-gen').disabled = !(hasTitle && hasPlatform);
 }
 
 const PLATFORM_PROMPTS = {
-  '104': (info) => `請為 104 人�??�行撰寫�?{info.title}?��?徵�?�????
-104 平台?�性�??��?結�?清晰?��??��??��??��?豐�?，�??�者�???��?�瀏覽??
-請�??��?
-?�職缺�?稱�?{info.title}
-?�公?��?稱�?{info.company}
-?�工作內容】�?條�? 5-8 點�?
-?�職?��?求】�?條�? 4-6 點�?
-?��??��?供】�?福利條�?�??�薪資�??��?{info.salary}
-?�工作地點�?{info.location}
+  '104': (info) => `請為 104 人力銀行撰寫一份吸引人才的職缺說明，符合 104 平台用戶習慣（台灣求職者，重視穩定性與發展）。
 
-語氣專業?�直?��??�鍵字�?富�?符�? 104 ?�面?��??��?體中?�。`,
+${info}
 
-  '1111': (info) => `請為 1111 人�??�行撰寫�?{info.title}?��?徵�?�????
-1111 平台?�性�??�眾較廣，�?�?��?�親?��??�?�顯?�司?��??�員工�??��?
-請�??��?
-?�職位�?{info.title}�?{info.company}
-?��??��??��??�由?��?3點�?強調?��??�價?��?
-?�您將�?責】�?條�?工�??�容�??��??�在?��?人】�?條�??�求�?件�?
-?��??�制度】�?完整條�?�??�薪?��?{info.salary}
+請包含：
+1. 吸引眼球的職缺標題（1-2個備選）
+2. 公司簡介（2-3句，突出優勢）
+3. 工作內容（條列式，6-8項）
+4. 職位要求（必要條件3-5項、加分條件2-3項）
+5. 公司福利（8-10項）
+6. 應徵說明
 
-語氣?��?，強調公?��??��?繁�?中�??�`,
+用繁體中文，語氣親切專業，約 400-500 字。`,
 
-  'LinkedIn': (info) => `請為 LinkedIn ?�寫??{info.title}?��??��??��?貼�?（�?繁�?中�?對照）�?
-LinkedIn ?�性�??��??�、�?業社群�??�?��?主�??�被?��??�者�?強調影響?��??�長機�???
-?��?�??? [?��??��??��??�句]
-[?�司使命/影響?��?述�?2-3?�]
+  '111': (info) => `請為 1111 人力銀行撰寫職缺說明，著重清楚條列與具體描述。
 
-What you'll do:
-??[?�責點]
+${info}
 
-What we're looking for:
-??[?�求�?]
+請包含：
+1. 職缺標題
+2. 工作內容（詳細條列，8-10項）
+3. 職位需求（學歷、經歷、技能）
+4. 待遇福利（薪資範圍、各項福利）
+5. 工作環境說明
 
-What we offer:
-??[福利點]
+用繁體中文，清楚直接，約 350-400 字。`,
 
-[CTA 結尾?�]
+  'LinkedIn': (info) => `請為 LinkedIn 撰寫一份高質感的職缺說明，目標是吸引有一定工作經驗的專業人才。
 
-?��?�?{info.title} | ?�司�?{info.company} | ?��?�?{info.salary}
-?��??��?繁�?中�?完整?�。`,
+${info}
 
-  'Facebook': (info) => `請為 Facebook 社�?（�?：台??��資社群、�??�社群�??�寫??{info.title}?��?徵�?貼�???
-Facebook ?�性�?社群?�強，�??��?注�?，適?��???emoji?�親?��?�?��CTA ?�確??
-?�含�??��??�吸引句（含 emoji�??�公?��??��?�??�職缺亮點�?3點�???emoji�??��?徵方式�?簡單?�確�??�截止日?��??��??��?
+請包含：
+1. 吸引人的開場段落（突出機會與影響力）
+2. About the Role（英文＋中文對照）
+3. What You'll Do（英文＋中文條列）
+4. What We're Looking For（英文＋中文條列）
+5. Why Join Us（公司文化與福利亮點）
 
-?��?�?{info.title}，薪資�?${info.salary}，地點�?${info.location}
-語氣活�?，�?體中?��?總長�?200-300 字。`,
+語氣專業且充滿活力，中英夾雜，約 400 字。`,
+
+  '社群': (info) => `請撰寫適合在 Facebook、Instagram、LinkedIn 貼文分享的招募文案，要有吸引力且適合社群傳播。
+
+${info}
+
+請提供 2 個版本：
+版本 A：Facebook 長文（300字左右，正式但有溫度）
+版本 B：Instagram 短文（150字內＋適合的 hashtag）
+
+文案要吸睛、有人情味，讓員工願意分享轉發。`
 };
 
 async function generate() {
-  const chips = { '104':'chip-104','1111':'chip-1111','LinkedIn':'chip-linkedin','Facebook':'chip-fb' };
-  const selected = Object.entries(chips).filter(([,id]) => document.getElementById(id)?.classList.contains('on')).map(([k])=>k);
-  if (!selected.length) { alert('請至少選?��??�發布平??); return; }
+  const title = document.getElementById('inp-title').value.trim();
+  const company = document.getElementById('inp-company').value.trim();
+  const industry = document.getElementById('inp-industry').value;
+  const salary = document.getElementById('inp-salary').value.trim();
+  const location = document.getElementById('inp-location').value.trim();
+  const culture = document.getElementById('inp-culture').value.trim();
+  const duties = document.getElementById('inp-duties').value.trim();
+  const platforms = Array.from(document.querySelectorAll('.platform-chip.on')).map(el=>el.dataset.p);
 
-  const info = {
-    title:        document.getElementById('inp-title').value.trim(),
-    company:      document.getElementById('inp-company').value.trim() || '（公?��?稱�?',
-    industry:     document.getElementById('inp-industry').value || '',
-    salary:       document.getElementById('inp-salary').value.trim() || '?�議',
-    location:     document.getElementById('inp-location').value.trim() || '?�灣',
-    duties:       document.getElementById('inp-duties').value.trim() || '',
-    requirements: document.getElementById('inp-requirements').value.trim() || '',
-    benefits:     document.getElementById('inp-benefits').value.trim() || '',
-  };
+  const info = `職位：${title}
+${company?`公司：${company}`:''}
+${industry?`產業：${industry}`:''}
+${salary?`薪資：${salary}`:''}
+${location?`地點：${location}`:''}
+${culture?`公司文化：${culture}`:''}
+${duties?`主要職責：${duties}`:''}`;
 
-  document.getElementById('form-section').style.display = 'none';
-  HCLead.gate('tool-08', 'AI ?��??��??��???, {}, async function() {
-  document.getElementById('result-section').style.display = 'block';
+  HCLead.gate('tool-08', 'AI 招募文案生成器', {}, async function() {
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('result-section').style.display = 'block';
 
-  const tabsEl = document.getElementById('tabs');
-  const panelsEl = document.getElementById('panels');
-  tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+    const tabsEl = document.getElementById('tabs');
+    const panelsEl = document.getElementById('panels');
+    tabsEl.innerHTML = '';
+    panelsEl.innerHTML = '';
 
-  selected.forEach((plat, i) => {
-    const isFirst = i === 0;
-    tabsEl.innerHTML += `<div class="tab${isFirst?' active':''}" id="tab-${plat}" onclick="switchTab('${plat}')">${plat}</div>`;
-    panelsEl.innerHTML += `<div class="panel${isFirst?' active':''}" id="panel-${plat}">
-      <div class="panel-head">
-        <div class="panel-title">${plat} ?��??��?</div>
-        <button class="btn-copy" onclick="copyPanel('${plat}')">複製</button>
-      </div>
-      <div class="panel-body" id="body-${plat}"><div class="typing"><span></span><span></span><span></span></div></div>
-    </div>`;
-  });
+    platforms.forEach((p, idx) => {
+      const tab = document.createElement('div');
+      tab.className = 'tab' + (idx===0?' active':'');
+      tab.textContent = p;
+      tab.onclick = () => switchTab(idx);
+      tabsEl.appendChild(tab);
 
-  for (const plat of selected) {
-    await generatePanel(plat, PLATFORM_PROMPTS[plat](info));
-  }
-  const _rpt = selected.map(p => { const el = document.getElementById('body-'+p); return p + '?��??��?:\n' + (el ? el.textContent : ''); }).join('\n\n---\n\n');
-  HCLead.reportDone(_rpt);
-  }); // end gate
-}
-
-async function generatePanel(plat, prompt) {
-  const bodyEl = document.getElementById('body-' + plat);
-  try {
-    const resp = await fetch(API + '/api/hr-health-check', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        tool:'recruitment',
-        system:'你是策�?永�? AI ?��??��?專家，�??�台???大�??�平?�特?��??��??�寫，�??�使?��?體中?��?LinkedIn ?�本?�英?��???,
-        messages:[{role:'user',content:prompt}],
-        sessionId:SESSION, stream:true
-      })
+      const panel = document.createElement('div');
+      panel.className = 'panel' + (idx===0?' active':'');
+      panel.id = 'panel-'+idx;
+      panel.innerHTML = `
+        <div class="panel-head">
+          <div class="panel-title">${p} 招募文案</div>
+          <button class="btn-copy" onclick="copyPanel(${idx})">複製</button>
+        </div>
+        <div class="panel-body" id="body-${idx}"><div class="typing"><span></span><span></span><span></span></div></div>`;
+      panelsEl.appendChild(panel);
     });
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      bodyEl.innerHTML = err.limitReached
-        ? `<div class="limit-msg">今日?�檢次數已�?上�?，�??�日?�試??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?��?專業??/a>??/div>`
-        : `<span style="color:var(--ink-soft)">（AI ?��??��??��?使用�?/span>`;
-      return;
-    }
-    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
-    bodyEl.innerHTML = '';
-    while(true) {
-      const{done,value}=await reader.read(); if(done) break;
-      for(const line of dec.decode(value,{stream:true}).split('\n')) {
-        if(!line.startsWith('data: ')) continue;
-        const d=line.slice(6).trim(); if(d==='[DONE]') break;
-        try{txt+=JSON.parse(d).text||'';}catch{}
+
+    for(const [idx, platform] of platforms.entries()) {
+      const prompt = PLATFORM_PROMPTS[platform](info);
+      const bodyEl = document.getElementById('body-'+idx);
+      bodyEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+
+      try {
+        const res = await fetch(`${API}/api/hr-health-check`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: prompt, sessionId: SESSION+'-'+idx })
+        });
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let txt = '';
+        bodyEl.textContent = '';
+        while(true) {
+          const {done, value} = await reader.read();
+          if(done) break;
+          for(const line of decoder.decode(value,{stream:true}).split('\n')) {
+            if(line.startsWith('data:')) {
+              const d = line.slice(5).trim();
+              if(d==='[DONE]') break;
+              try { const t=JSON.parse(d).choices?.[0]?.delta?.content||''; txt+=t; bodyEl.textContent=txt; } catch(e){}
+            }
+          }
+        }
+      } catch(e) {
+        bodyEl.textContent = 'AI 生成暫時失敗，請稍後再試。';
       }
-      bodyEl.textContent = txt;
     }
-  } catch { bodyEl.textContent = '（AI ?��??��??��??��????�?; }
+
+    const allText = platforms.map((p,i) => `=== ${p} ===\n${document.getElementById('body-'+i).textContent}`).join('\n\n---\n\n');
+    HCLead.reportDone(allText);
+  });
 }
 
-function switchTab(plat) {
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+plat).classList.add('active');
-  document.getElementById('panel-'+plat).classList.add('active');
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
 }
 
-function copyPanel(plat) {
-  const text = document.getElementById('body-'+plat).textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn = event.target; btn.textContent='已�?�???;
-    setTimeout(()=>btn.textContent='複製', 2000);
+function copyPanel(idx) {
+  const txt = document.getElementById('body-'+idx).textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = document.querySelectorAll('.btn-copy')[idx];
+    btn.textContent='已複製！'; setTimeout(()=>btn.textContent='複製',2000);
   });
 }
 
 function restart() {
   document.getElementById('result-section').style.display='none';
   document.getElementById('form-section').style.display='block';
-  document.getElementById('inp-title').value='';
-  document.getElementById('btn-gen').disabled=true;
 }
 </script>
 <script src="assets/hc-lead.js"></script>

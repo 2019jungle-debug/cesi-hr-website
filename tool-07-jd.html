@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI ?��?說�??�產?�器 · 策�?永�?</title>
+<title>AI 職缺文件生成器 · 策識永續</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -35,7 +35,7 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .out-item.on{border-color:var(--navy);background:rgba(16,36,76,.04)}
 .out-check{width:17px;height:17px;border:2px solid var(--line);border-radius:4px;flex-shrink:0;position:relative;transition:all .2s}
 .out-item.on .out-check{background:var(--navy);border-color:var(--navy)}
-.out-item.on .out-check::after{content:'??;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:900}
+.out-item.on .out-check::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:900}
 .out-label{font-size:13px;font-weight:600;color:var(--ink)}
 .btn-gen{width:100%;background:linear-gradient(135deg,#3d1a6e,var(--navy));color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
 .btn-gen:hover:not(:disabled){opacity:.85}
@@ -63,70 +63,71 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
 .btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
 .btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
 @media(max-width:560px){.row2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <nav>
-  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI 人�??�檢中�?</span></a>
-  <a href="hr-health-center.html" class="nav-back">???�健檢中�?/a>
+  <a href="hr-health-center.html" class="nav-brand">
+    <img src="assets/logo.png" alt="策識永續">
+    <span>AI 人資健檢中心</span>
+  </a>
+  <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
 </nav>
 <div class="page-header">
-  <div class="tool-badge">?? No.07 · AI ?��?說�??�產?�器</div>
-  <h1>AI ?��??�件一?�產??/h1>
-  <p>輸入?��?資�?，自?��???JD?�KPI?�KSA?�面試�?庫�?完整人�?管�??�件</p>
+  <div class="tool-badge">📋 No.07 · AI 職缺文件生成器</div>
+  <h1>AI 職缺文件一鍵產出</h1>
+  <p>輸入職位資料，自動生成 JD、KPI、KSA、面試題庫等完整人才管理文件</p>
 </div>
 <div class="main">
   <div id="form-section">
     <div class="form-card">
-      <h2>填寫?��?資�?</h2>
-      <p>資�?越�??��?AI ?��??��?件�?質�?�?/p>
+      <h2>填寫職位資料</h2>
+      <p>資料越詳細，AI 產出文件品質越高</p>
       <div class="row2">
         <div class="field">
-          <label>?��??�稱 *</label>
-          <input type="text" id="inp-title" placeholder="例�?資深行銷企�?" oninput="checkReady()">
+          <label>職位名稱 *</label>
+          <input type="text" id="inp-title" placeholder="例：資深行銷企劃" oninput="checkReady()">
         </div>
         <div class="field">
-          <label>?�屬部?�</label>
-          <input type="text" id="inp-dept" placeholder="例�?行銷??>
+          <label>所屬部門</label>
+          <input type="text" id="inp-dept" placeholder="例：行銷部">
         </div>
       </div>
       <div class="row2">
         <div class="field">
-          <label>?�業??/label>
+          <label>產業別</label>
           <select id="inp-industry">
-            <option value="">請選??/option>
-            <option>科�?/軟�?</option><option>製造業</option><option>?��?/保險</option>
-            <option>?�售/?��?</option><option>?��?/?��?</option><option>餐飲/?��?</option>
-            <option>?�育/?��?</option><option>顧�?/專業?��?</option><option>?��?</option>
+            <option value="">請選擇</option>
+            <option>科技／軟體</option><option>製造業</option><option>金融／保險</option>
+            <option>零售／電商</option><option>醫療／生技</option><option>餐飲／服務</option>
+            <option>教育／培訓</option><option>顧問／專業服務</option><option>其他</option>
           </select>
         </div>
         <div class="field">
-          <label>?��?/年�?要�?</label>
-          <select id="inp-level">
-            <option value="">請選??/option>
-            <option>?��?�?-2年�?</option><option>中�?�?-5年�?</option>
-            <option>資深�?-8年�?</option><option>主管級�?8年以上�?</option>
+          <label>年資要求</label>
+          <select id="inp-exp">
+            <option value="">不限</option>
+            <option>不需經驗（新鮮人）</option><option>1-3 年</option><option>3-5 年</option>
+            <option>5-8 年</option><option>8 年以上</option>
           </select>
         </div>
       </div>
       <div class="field">
-        <label>主�?工�??�責（簡述即?��?</label>
-        <textarea id="inp-duties" rows="3" placeholder="例�?負責?��?策略規�??�社群�?體管?�、活?��??��?"></textarea>
+        <label>主要職責說明（選填）</label>
+        <textarea id="inp-duties" rows="4" placeholder="例：負責品牌社群經營、廣告投放規劃、與跨部門協作推動行銷活動..."></textarea>
       </div>
       <div class="field">
-        <label>?��?要產?��??�件</label>
+        <label>選擇要生成的文件</label>
         <div class="output-grid">
-          <div class="out-item on" id="out-jd" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? ?��?說�???JD</div></div>
-          <div class="out-item on" id="out-kpi" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? KPI ?��?清單</div></div>
-          <div class="out-item on" id="out-ksa" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? KSA ?�能框架</div></div>
-          <div class="out-item" id="out-interview" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?�� ?�試題庫</div></div>
-          <div class="out-item" id="out-assess" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? 測�?工具建議</div></div>
-          <div class="out-item" id="out-exam" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? 筆試題目設�?</div></div>
+          <div class="out-item on" data-doc="JD" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">📄 職務說明書（JD）</div></div>
+          <div class="out-item on" data-doc="KPI" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">📊 KPI 績效指標</div></div>
+          <div class="out-item on" data-doc="KSA" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">🎯 KSA 職能要件</div></div>
+          <div class="out-item on" data-doc="面試題庫" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">💬 面試題庫</div></div>
+          <div class="out-item" data-doc="Onboarding" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">🚀 新人報到計畫</div></div>
         </div>
       </div>
-      <button class="btn-gen" id="btn-gen" onclick="generate()" disabled>AI 一?��??��?�?/button>
+      <button class="btn-gen" id="btn-gen" onclick="generate()" disabled>🚀 一鍵生成文件</button>
     </div>
   </div>
 
@@ -134,14 +135,14 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
     <div class="tabs" id="tabs"></div>
     <div class="panels" id="panels"></div>
     <div class="cta-box">
-      <h3>?�要客製�?人�?管�??�件?�制度建置�?</h3>
-      <p>策�?永�??�助企業建�?完整?�能?��??�人?�發展�?�?/p>
+      <h3>需要更完整的職能架構設計？</h3>
+      <p>策識永續提供職位評鑑、職能模型建置與薪酬設計服務</p>
       <div class="cta-row">
-        <a href="ai-hr-consultant.html" class="btn-gold">?�費諮詢 AI 顧�?</a>
-        <a href="pricing-and-booking.html" class="btn-ghost">?��??�方�?/a>
+        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
       </div>
     </div>
-    <button class="btn-restart" onclick="restart()">?�新?��?</button>
+    <button class="btn-restart" onclick="restart()">重新生成</button>
   </div>
 </div>
 
@@ -149,116 +150,103 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 const SESSION = 'hc7-' + Math.random().toString(36).slice(2);
 
-const OUTPUT_DEFS = {
-  jd:        { label:'?��?說�???JD', prompt: (info) => `請為??{info.title}?��?${info.dept}�?{info.industry}�?{info.level}）撰寫�??�職?�說?�書（JD）�??�含：職位目?�、隸屬�?係、主要職責�?8-10點�??�工作�?件、薪資�??�建議�??�灣市場）。主要職責�??��?${info.duties}?�用繁�?中�?，格式�??�。` },
-  kpi:       { label:'KPI ?��?清單', prompt: (info) => `請為??{info.title}?�設�?KPI 績�??��?清單，�??��??��??��?�?-8?��??�目標值�?例�??�質?��?標�?3-5?��??��??��??��??�方式�??��??�格式�?表格式�?條�?式�?繁�?中�??�` },
-  ksa:       { label:'KSA ?�能框架', prompt: (info) => `請為??{info.title}?�建�?KSA ?�能框架，�??��?Knowledge（知識�?求�??�Skills（�??��?求�??�Abilities（能?��?求�???5-7 ?��?以�??��??�能?�差?��??�能說�??��?體中?��?條�?清晰?�` },
-  interview: { label:'?�試題庫', prompt: (info) => `請為??{info.title}?�設計面試�?庫�??�含：�??�面試�?�?題�??��?境面試�?�?題�??��?�??��?契�?題�?3題�?，�?題�?上�??��?點。�?體中?��??��?清晰?�` },
-  assess:    { label:'測�?工具建議', prompt: (info) => `請為??{info.title}?�建議適?��?測�?工具，�??��?人格?�質測�?（推?�工??說�?）、�??�能?�測評、職?�測評工?��?以�??�工?�在?�灣?��?得方式�?費用?�考。�?體中?�。` },
-  exam:      { label:'筆試題目設�?', prompt: (info) => `請為??{info.title}?�設計�?試�??��??�含：�?業知識測驗�?5題選?��?+答�?）、�?例�??��?�?�?評�??��?）、�??��??��?題�?1�?評�?標�?）。�?體中?��??��??�灣?�場?�` },
-};
-
-function toggleOut(el) { el.classList.toggle('on'); }
+function toggleDoc(el) { el.classList.toggle('on'); checkReady(); }
 
 function checkReady() {
-  document.getElementById('btn-gen').disabled = !document.getElementById('inp-title').value.trim();
+  const hasTitle = document.getElementById('inp-title').value.trim();
+  const hasDoc = document.querySelectorAll('.out-item.on').length > 0;
+  document.getElementById('btn-gen').disabled = !(hasTitle && hasDoc);
+}
+
+function buildPrompt(doc, title, dept, industry, exp, duties) {
+  const base = '職位：'+title+(dept?'\n部門：'+dept:'')+(industry?'\n產業：'+industry:'')+(exp?'\n年資：'+exp:'')+(duties?'\n職責：'+duties:'');
+  if(doc==='JD') return '請為以下職位撰寫專業的職務說明書（JD），包含：職位概述、主要職責（6-8條）、任職資格（必要與加分條件）、工作條件。用繁體中文，語氣正式專業。\n\n'+base;
+  if(doc==='KPI') return '請為以下職位設計 KPI 績效指標框架，包含：核心 KPI（4-6個，含計算方式與目標值）、輔助指標（2-3個）、追蹤頻率建議、評分標準。用繁體中文。\n\n'+base;
+  if(doc==='KSA') return '請為以下職位設計 KSA 職能要件（知識、技能、能力），包含：必要知識（4-6項）、核心技能（4-6項）、關鍵能力（3-5項）、加分職能（2-3項）。用繁體中文，具體可評估。\n\n'+base;
+  if(doc==='面試題庫') return '請為以下職位設計結構化面試題庫，包含：暖身題（2題）、行為面試STAR（4題含評分重點）、情境題（2題含理想回答方向）、動機題（2題）、專業驗證（2題）、壓力測試（1題）。用繁體中文，符合法規。\n\n'+base;
+  if(doc==='Onboarding') return '請為以下職位設計 90 天新人報到計畫，涵蓋第一週、第一月、第二月、第三月，每階段列出目標、關鍵任務（3-4項）、評估方式。用繁體中文，實際可執行。\n\n'+base;
+  return '';
 }
 
 async function generate() {
-  const selected = Object.keys(OUTPUT_DEFS).filter(k => document.getElementById('out-'+k)?.classList.contains('on'));
-  if (!selected.length) { alert('請至少選?��??��??��??��?�?); return; }
+  const title = document.getElementById('inp-title').value.trim();
+  const dept = document.getElementById('inp-dept').value.trim();
+  const industry = document.getElementById('inp-industry').value;
+  const exp = document.getElementById('inp-exp').value;
+  const duties = document.getElementById('inp-duties').value.trim();
+  const selectedDocs = Array.from(document.querySelectorAll('.out-item.on')).map(el=>el.dataset.doc);
 
-  const info = {
-    title:    document.getElementById('inp-title').value.trim(),
-    dept:     document.getElementById('inp-dept').value.trim() || '?��?定部?�',
-    industry: document.getElementById('inp-industry').value || '?��?定產�?,
-    level:    document.getElementById('inp-level').value || '?��?定職�?,
-    duties:   document.getElementById('inp-duties').value.trim() || '（未?��?�?,
-  };
+  HCLead.gate('tool-07', 'AI 職缺文件生成器', {}, async function() {
+    document.getElementById('form-section').style.display = 'none';
+    document.getElementById('result-section').style.display = 'block';
 
-  document.getElementById('form-section').style.display = 'none';
-  HCLead.gate('tool-07', 'AI ?�缺?�件?��???, {}, async function() {
-  document.getElementById('result-section').style.display = 'block';
+    const tabsEl = document.getElementById('tabs');
+    const panelsEl = document.getElementById('panels');
+    tabsEl.innerHTML = '';
+    panelsEl.innerHTML = '';
 
-  const tabsEl = document.getElementById('tabs');
-  const panelsEl = document.getElementById('panels');
-  tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+    selectedDocs.forEach((doc, idx) => {
+      const tab = document.createElement('div');
+      tab.className = 'tab'+(idx===0?' active':'');
+      tab.textContent = doc;
+      tab.onclick = () => switchTab(idx);
+      tabsEl.appendChild(tab);
 
-  selected.forEach((key, i) => {
-    const def = OUTPUT_DEFS[key];
-    const isFirst = i === 0;
-    tabsEl.innerHTML += `<div class="tab${isFirst?' active':''}" id="tab-${key}" onclick="switchTab('${key}')">${def.label}</div>`;
-    panelsEl.innerHTML += `<div class="panel${isFirst?' active':''}" id="panel-${key}">
-      <div class="panel-head">
-        <div class="panel-title">${def.label}</div>
-        <button class="btn-copy" onclick="copyPanel('${key}')">複製</button>
-      </div>
-      <div class="panel-body" id="body-${key}"><div class="typing"><span></span><span></span><span></span></div></div>
-    </div>`;
-  });
-
-  for (const key of selected) {
-    await generatePanel(key, OUTPUT_DEFS[key].prompt(info));
-  }
-  const _rpt = selected.map(k => { const el = document.getElementById('body-'+k); return OUTPUT_DEFS[k].label + ':\n' + (el ? el.textContent : ''); }).join('\n\n---\n\n');
-  HCLead.reportDone(_rpt);
-  }); // end gate
-}
-
-async function generatePanel(key, prompt) {
-  const bodyEl = document.getElementById('body-' + key);
-  try {
-    const resp = await fetch(API + '/api/hr-health-check', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        tool:'jd-generator',
-        system:'你是策�?永�? AI 人�?顧�?，�??�台??��?�人?�管?��?準�??��?使用繁�?中�?，格式�??��?業�?,
-        messages:[{role:'user',content:prompt}],
-        sessionId:SESSION, stream:true
-      })
+      const panel = document.createElement('div');
+      panel.className = 'panel'+(idx===0?' active':'');
+      panel.id = 'panel-'+idx;
+      panel.innerHTML = '<div class="panel-head"><div class="panel-title">'+doc+'</div><button class="btn-copy" onclick="copyPanel('+idx+')">複製</button></div><div class="panel-body" id="body-'+idx+'"><div class="typing"><span></span><span></span><span></span></div></div>';
+      panelsEl.appendChild(panel);
     });
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      bodyEl.innerHTML = err.limitReached
-        ? `<div class="limit-msg">今日?�檢次數已�?上�?，�??�日?�試??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?��?專業??/a>??/div>`
-        : `<span style="color:var(--ink-soft)">（AI ?��??��??��?使用�?/span>`;
-      return;
+
+    for(const [idx, doc] of selectedDocs.entries()) {
+      const prompt = buildPrompt(doc, title, dept, industry, exp, duties);
+      const bodyEl = document.getElementById('body-'+idx);
+      bodyEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+      try {
+        const res = await fetch(API+'/api/hr-health-check', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ message: prompt, sessionId: SESSION+'-'+idx })
+        });
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let txt = '';
+        bodyEl.textContent = '';
+        while(true) {
+          const {done, value} = await reader.read();
+          if(done) break;
+          for(const line of decoder.decode(value,{stream:true}).split('\n')) {
+            if(line.startsWith('data:')) {
+              const d = line.slice(5).trim();
+              if(d==='[DONE]') break;
+              try { const t=JSON.parse(d).choices?.[0]?.delta?.content||''; txt+=t; bodyEl.textContent=txt; } catch(e){}
+            }
+          }
+        }
+      } catch(e) { bodyEl.textContent='AI 生成暫時失敗，請稍後再試。'; }
     }
-    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
-    bodyEl.innerHTML = '';
-    while(true) {
-      const{done,value}=await reader.read(); if(done) break;
-      for(const line of dec.decode(value,{stream:true}).split('\n')) {
-        if(!line.startsWith('data: ')) continue;
-        const d=line.slice(6).trim(); if(d==='[DONE]') break;
-        try{txt+=JSON.parse(d).text||'';}catch{}
-      }
-      bodyEl.textContent = txt;
-    }
-  } catch { bodyEl.textContent = '（AI ?��??��??��??��????�?; }
+
+    const allText = selectedDocs.map((doc,i)=>'=== '+doc+' ===\n'+document.getElementById('body-'+i).textContent).join('\n\n---\n\n');
+    HCLead.reportDone(allText);
+  });
 }
 
-function switchTab(key) {
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+key).classList.add('active');
-  document.getElementById('panel-'+key).classList.add('active');
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
 }
 
-function copyPanel(key) {
-  const text = document.getElementById('body-'+key).textContent;
-  navigator.clipboard.writeText(text).then(()=>{
-    const btn = event.target; btn.textContent='已�?�???;
-    setTimeout(()=>btn.textContent='複製', 2000);
+function copyPanel(idx) {
+  const txt = document.getElementById('body-'+idx).textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = document.querySelectorAll('.btn-copy')[idx];
+    btn.textContent='已複製！'; setTimeout(()=>btn.textContent='複製',2000);
   });
 }
 
 function restart() {
   document.getElementById('result-section').style.display='none';
   document.getElementById('form-section').style.display='block';
-  document.getElementById('inp-title').value='';
-  document.getElementById('inp-duties').value='';
-  document.getElementById('btn-gen').disabled=true;
 }
 </script>
 <script src="assets/hc-lead.js"></script>
