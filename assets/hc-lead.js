@@ -91,8 +91,9 @@ const HCL_API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
       <div class="hcl-err" id="hcl-email-err">請填寫正確的Email</div>
     </div>
     <div class="hcl-field">
-      <label>手機號碼<span class="opt">選填</span></label>
+      <label>手機號碼<span class="req">*</span></label>
       <input id="hcl-phone" type="tel" placeholder="0912 345 678" autocomplete="tel">
+      <div class="hcl-err" id="hcl-phone-err">請填寫手機號碼</div>
     </div>
     <button class="hcl-submit" id="hcl-submit-btn" onclick="HCLead._submit()">查看完整診斷報告 →</button>
     <div class="hcl-sending" id="hcl-sending">⏳ 儲存中，請稍候…</div>
@@ -151,6 +152,11 @@ window.HCLead = (function() {
     var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRe.test(emailEl.value.trim())) {
       document.getElementById('hcl-email-err').style.display = 'block';
+      ok = false;
+    }
+    var phoneEl = document.getElementById('hcl-phone');
+    if (!phoneEl.value.trim()) {
+      document.getElementById('hcl-phone-err').style.display = 'block';
       ok = false;
     }
     if (!ok) return;
