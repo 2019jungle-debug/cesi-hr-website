@@ -17,11 +17,18 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
 .nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
 .nav-back:hover{background:var(--navy);color:#fff}
-.page-header{background:linear-gradient(135deg,var(--navy-deep),var(--navy));padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.page-header{background:linear-gradient(135deg,#5a1a1a,#8b2020,#c34646);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
 .tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
 .page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
-.page-header p{color:rgba(255,255,255,.7);font-size:15px;max-width:520px;margin:0 auto}
-.main{max-width:760px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:540px;margin:0 auto}
+.main{max-width:780px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+
+/* alert banner */
+.alert-banner{background:linear-gradient(135deg,rgba(195,70,70,.08),rgba(195,70,70,.04));border:1px solid rgba(195,70,70,.25);border-radius:10px;padding:14px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start}
+.alert-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.alert-text strong{display:block;font-size:13px;font-weight:700;color:var(--danger);margin-bottom:3px}
+.alert-text span{font-size:12.5px;color:var(--ink-soft);line-height:1.7}
+
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:20px}
 .card h2{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px}
 .card .sub{font-size:13px;color:var(--ink-soft);margin-bottom:22px}
@@ -31,14 +38,24 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .sw select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;background:#fff;color:var(--ink);appearance:none;transition:border .2s}
 .sw select:focus{outline:none;border-color:var(--navy)}
 .sw::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink-faded);pointer-events:none}
-.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:8px}
-.ci{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s;user-select:none}
-.ci:hover{border-color:var(--gold)}
-.ci.on{border-color:var(--navy);background:rgba(16,36,76,.04)}
-.ci input{accent-color:var(--navy);width:15px;height:15px;cursor:pointer}
-.ci span{font-size:13px}
-.btn-sub{width:100%;background:var(--navy);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
-.btn-sub:hover{background:var(--teal)}
+
+/* 風險勾選區 */
+.risk-section{margin-bottom:18px}
+.risk-section .risk-group-title{font-size:12px;font-weight:800;color:var(--danger);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;margin-top:14px}
+.risk-section .risk-group-title:first-child{margin-top:0}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:8px;margin-bottom:4px}
+.ci{display:flex;align-items:flex-start;gap:8px;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s;user-select:none}
+.ci:hover{border-color:rgba(195,70,70,.35);background:rgba(195,70,70,.03)}
+.ci.on{border-color:var(--danger);background:rgba(195,70,70,.06)}
+.ci input{accent-color:var(--danger);width:15px;height:15px;cursor:pointer;flex-shrink:0;margin-top:2px}
+.ci .ci-text{font-size:13px;line-height:1.5}
+.ci .ci-penalty{font-size:11px;color:var(--danger);font-weight:600;display:block;margin-top:2px}
+
+.penalty-note{font-size:12px;color:var(--ink-faded);margin-top:8px;line-height:1.7;padding:8px 12px;background:rgba(16,36,76,.04);border-radius:6px}
+
+.btn-sub{width:100%;background:linear-gradient(135deg,#8b2020,var(--danger));color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
+.btn-sub:hover{opacity:.88}
+
 /* result */
 #result-section{display:none}
 .meter{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;text-align:center;margin-bottom:18px}
@@ -47,13 +64,23 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .score-desc{font-size:13px;color:var(--ink-soft);margin-top:4px}
 .bar-outer{height:12px;background:rgba(16,36,76,.08);border-radius:999px;margin:18px 0 6px;overflow:hidden}
 .bar-inner{height:100%;border-radius:999px;transition:width 1.2s ease;width:0}
-.c-low{color:var(--teal)} .c-mid{color:var(--warning)} .c-high{color:var(--danger)}
+.c-low{color:var(--teal)}.c-mid{color:var(--warning)}.c-high{color:var(--danger)}
 .bar-low{background:linear-gradient(90deg,var(--teal),#3aaf8a)}
 .bar-mid{background:linear-gradient(90deg,var(--warning),#f0a832)}
 .bar-high{background:linear-gradient(90deg,var(--danger),#e05a5a)}
+
+/* 必備文件清單 */
+.doc-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.doc-card h3{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.doc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.doc-item{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:8px;background:rgba(29,117,111,.06);border:1px solid rgba(29,117,111,.15)}
+.doc-item .doc-icon{font-size:16px;flex-shrink:0}
+.doc-item .doc-info strong{display:block;font-size:13px;font-weight:700;color:var(--navy)}
+.doc-item .doc-info span{font-size:11px;color:var(--ink-soft)}
+
 .ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
 .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-.ai-icon{width:34px;height:34px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.ai-icon{width:34px;height:34px;background:var(--danger);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
 .ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
 .ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
 .typing{display:inline-flex;gap:4px;align-items:center}
@@ -67,25 +94,32 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
 .btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
 .btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
-.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
 </style>
 </head>
 <body>
 <nav>
-  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI 人資健檢中心</span></a>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt="策識永續"><span>AI 人資健檢中心</span></a>
   <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
 </nav>
 <div class="page-header">
   <div class="tool-badge">⚖️ No.02 · AI 勞動檢查風險檢測</div>
-  <h1>企業勞動違規風險查詢系統</h1>
-  <p>輸入基本資訊，AI 即時評估勞動檢查風險並提供改善建議</p>
+  <h1>企業勞動違規風險自評系統</h1>
+  <p>勾選目前狀況，AI 即時分析勞動檢查風險、潛在罰款，並提供優先改善建議</p>
 </div>
 <div class="main">
 
   <div id="form-section">
+    <div class="alert-banner">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-text">
+        <strong>拒絕勞動檢查，罰鍰 3 萬至 15 萬元</strong>
+        <span>勞動局得隨時進行例行、申訴或專案檢查，企業無權拒絕。<br>常見違規裁罰範圍：一般違規 <strong>2 萬至 100 萬元</strong>；出勤紀錄未備置 <strong>9 萬至 45 萬元</strong>。</span>
+      </div>
+    </div>
+
     <div class="card">
       <h2>企業基本資訊</h2>
-      <p class="sub">填寫以下資訊，系統根據您的狀況進行風險評估</p>
+      <p class="sub">填寫以下資訊，系統依您的規模、行業與排班方式評估檢查機率與風險強度</p>
       <div class="field">
         <label>員工人數 *</label>
         <div class="sw"><select id="f-size">
@@ -105,8 +139,9 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
           <option value="服務業">服務業（餐飲、零售等）</option>
           <option value="科技業">科技業 / 軟體業</option>
           <option value="建築營造業">建築營造業</option>
-          <option value="醫療照護業">醫療照護業</option>
-          <option value="運輸業">運輸、倉儲業</option>
+          <option value="醫療照護業">醫療照護業（勞動局重點專案行業）</option>
+          <option value="運輸物流業">運輸、物流業（勞動局重點專案行業）</option>
+          <option value="保全業">保全業（勞動局重點專案行業）</option>
           <option value="金融業">金融、保險業</option>
           <option value="教育業">教育業</option>
           <option value="批發零售業">批發零售業</option>
@@ -125,20 +160,57 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
           <option value="責任制">責任制（含主管、業務）</option>
         </select></div>
       </div>
-      <div class="field">
-        <label>目前存在的狀況（可複選）</label>
-        <div class="check-grid" id="risk-checks">
-          <label class="ci"><input type="checkbox" value="加班超時"><span>加班時數常超標</span></label>
-          <label class="ci"><input type="checkbox" value="未給加班費"><span>加班費計算不清楚</span></label>
-          <label class="ci"><input type="checkbox" value="未足額投保"><span>勞健保投保薪資偏低</span></label>
-          <label class="ci"><input type="checkbox" value="工作規則未核備"><span>工作規則未送核備</span></label>
-          <label class="ci"><input type="checkbox" value="未建立職安衛"><span>職安衛規定未建立</span></label>
-          <label class="ci"><input type="checkbox" value="性騷擾預防未建立"><span>性騷擾預防機制不完整</span></label>
-          <label class="ci"><input type="checkbox" value="外籍員工"><span>有聘用外籍員工</span></label>
-          <label class="ci"><input type="checkbox" value="承攬爭議"><span>有承攬/派遣爭議</span></label>
+    </div>
+
+    <div class="card">
+      <h2>目前可能存在的狀況</h2>
+      <p class="sub">請如實勾選，越誠實的評估，AI 分析越精準（資料僅用於本次診斷）</p>
+
+      <div class="risk-section">
+        <div class="risk-group-title">⏱ 工時 ／ 加班費問題（最常被開罰）</div>
+        <div class="check-grid">
+          <label class="ci"><input type="checkbox" value="加班超時"><div class="ci-text">加班時數常超標<span class="ci-penalty">罰 2–100 萬（勞基法 §32）</span></div></label>
+          <label class="ci"><input type="checkbox" value="加班費計算不清楚"><div class="ci-text">加班費計算方式不確定<span class="ci-penalty">罰 2–100 萬（勞基法 §24）</span></div></label>
+          <label class="ci"><input type="checkbox" value="未申請直接加班"><div class="ci-text">加班未事先申請核准<span class="ci-penalty">罰 2–100 萬（勞基法 §32）</span></div></label>
+          <label class="ci"><input type="checkbox" value="輪班換班間隔不足"><div class="ci-text">輪班換班間隔未達 11 小時<span class="ci-penalty">罰 2–100 萬（勞基法 §34）</span></div></label>
+        </div>
+
+        <div class="risk-group-title">📋 出勤紀錄問題（未備置最重可罰45萬）</div>
+        <div class="check-grid">
+          <label class="ci"><input type="checkbox" value="出勤未記至分鐘"><div class="ci-text">出勤紀錄未記錄至分鐘<span class="ci-penalty">罰 2–100 萬（勞基法 §30）</span></div></label>
+          <label class="ci"><input type="checkbox" value="出勤紀錄未備置"><div class="ci-text">未備置出勤紀錄或保存不足5年<span class="ci-penalty">罰 9–45 萬（勞基法 §30）</span></div></label>
+          <label class="ci"><input type="checkbox" value="強制提前延後打卡"><div class="ci-text">要求員工提前或延後打卡<span class="ci-penalty">罰 2–100 萬（勞基法 §30）</span></div></label>
+        </div>
+
+        <div class="risk-group-title">💰 薪資問題</div>
+        <div class="check-grid">
+          <label class="ci"><input type="checkbox" value="低於基本工資"><div class="ci-text">薪資低於基本工資<span class="ci-penalty">罰 2–100 萬（勞基法 §21）</span></div></label>
+          <label class="ci"><input type="checkbox" value="工資未全額給付"><div class="ci-text">非法扣薪或預扣工資<span class="ci-penalty">罰 2–100 萬（勞基法 §26）</span></div></label>
+          <label class="ci"><input type="checkbox" value="工資清冊未備置"><div class="ci-text">工資清冊未建立或不完整<span class="ci-penalty">罰 9–45 萬（勞基法 §23）</span></div></label>
+          <label class="ci"><input type="checkbox" value="投保薪資偏低"><div class="ci-text">勞健保投保薪資低於實際薪資<span class="ci-penalty">補繳保費＋罰則</span></div></label>
+        </div>
+
+        <div class="risk-group-title">📄 制度 ／ 文件合規問題</div>
+        <div class="check-grid">
+          <label class="ci"><input type="checkbox" value="工作規則未核備"><div class="ci-text">工作規則未送勞動局核備<span class="ci-penalty">罰 2–30 萬（勞基法 §70）</span></div></label>
+          <label class="ci"><input type="checkbox" value="未建立勞資會議"><div class="ci-text">未定期召開勞資會議<span class="ci-penalty">罰 2–30 萬（勞基法 §83）</span></div></label>
+          <label class="ci"><input type="checkbox" value="職安衛未建立"><div class="ci-text">職業安全衛生規定未建立<span class="ci-penalty">罰 3–30 萬（職安法）</span></div></label>
+          <label class="ci"><input type="checkbox" value="性騷擾預防不完整"><div class="ci-text">性騷擾防治機制不完整<span class="ci-penalty">罰 10–100 萬（性平法）</span></div></label>
+        </div>
+
+        <div class="risk-group-title">🔍 其他高風險狀況</div>
+        <div class="check-grid">
+          <label class="ci"><input type="checkbox" value="責任制適用爭議"><div class="ci-text">責任制適用對象不確定合法<span class="ci-penalty">罰 2–100 萬（勞基法 §84-1）</span></div></label>
+          <label class="ci"><input type="checkbox" value="外籍員工"><div class="ci-text">有聘用外籍員工<span class="ci-penalty">就業服務法裁罰風險</span></div></label>
+          <label class="ci"><input type="checkbox" value="承攬派遣爭議"><div class="ci-text">有承攬 / 派遣爭議疑慮<span class="ci-penalty">假外包真僱傭裁罰風險</span></div></label>
+          <label class="ci"><input type="checkbox" value="曾被申訴或檢查"><div class="ci-text">曾有員工申訴或被勞檢<span class="ci-penalty">列管後被加強追蹤</span></div></label>
         </div>
       </div>
-      <button class="btn-sub" onclick="submit()">開始風險檢測</button>
+
+      <div class="penalty-note">
+        💡 <strong>資料保存提醒：</strong>出勤紀錄與工資清冊需保存至少 <strong>5 年</strong>；勞工名卡需保存至員工離職後 <strong>5 年</strong>。未達保存期限即屬違規。
+      </div>
+      <button class="btn-sub" onclick="submitForm()">⚖️ 開始勞動風險檢測</button>
     </div>
   </div>
 
@@ -150,6 +222,20 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
       <div class="score-desc" id="s-desc"></div>
       <div class="bar-outer"><div class="bar-inner" id="s-bar"></div></div>
     </div>
+
+    <!-- 必備文件清單 -->
+    <div class="doc-card">
+      <h3>📁 勞動局必查文件清單</h3>
+      <div class="doc-list">
+        <div class="doc-item"><div class="doc-icon">👤</div><div class="doc-info"><strong>勞工名卡</strong><span>保存至離職後 5 年</span></div></div>
+        <div class="doc-item"><div class="doc-icon">🕐</div><div class="doc-info"><strong>出勤紀錄</strong><span>逐日記至分鐘，保存 5 年</span></div></div>
+        <div class="doc-item"><div class="doc-icon">💵</div><div class="doc-info"><strong>工資清冊</strong><span>含加班費明細，保存 5 年</span></div></div>
+        <div class="doc-item"><div class="doc-icon">📋</div><div class="doc-info"><strong>工作規則</strong><span>30人以上須核備並公告</span></div></div>
+        <div class="doc-item"><div class="doc-icon">🤝</div><div class="doc-info"><strong>勞資會議紀錄</strong><span>每3個月召開一次</span></div></div>
+        <div class="doc-item"><div class="doc-icon">🛡️</div><div class="doc-info"><strong>勞健保投保資料</strong><span>到職日起即須投保</span></div></div>
+      </div>
+    </div>
+
     <div class="ai-box">
       <div class="ai-head"><div class="ai-icon">⚖️</div><div><div class="ai-title">AI 勞動法令風險分析報告</div></div></div>
       <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
@@ -171,118 +257,148 @@ const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 const SESSION = 'hc2-' + Math.random().toString(36).slice(2);
 let formData = {};
 
-// toggle check items
 document.querySelectorAll('.ci').forEach(el => {
   el.addEventListener('click', () => el.classList.toggle('on'));
 });
 
-function submit() {
-  const size = document.getElementById('f-size').value;
+function submitForm() {
+  const size     = document.getElementById('f-size').value;
   const industry = document.getElementById('f-industry').value;
-  const shift = document.getElementById('f-shift').value;
+  const shift    = document.getElementById('f-shift').value;
   if (!size || !industry || !shift) { alert('請填寫所有必填欄位（*）'); return; }
-  const risks = [...document.querySelectorAll('#risk-checks input:checked')].map(el => el.value);
+  const risks = [...document.querySelectorAll('#form-section input[type=checkbox]:checked')].map(el => el.value);
   formData = { size, industry, shift, risks };
   document.getElementById('form-section').style.display = 'none';
-  const _sc = calcScore();
-  HCLead.gate('tool-02', 'AI 勞動法遵風險健檢', {score:_sc, level:_sc>=70?'高':_sc>=40?'中':'低'}, function() {
+  const sc = calcScore();
+  HCLead.gate('tool-02', 'AI 勞動法遵風險健檢', { score:sc, level:sc>=70?'高':sc>=40?'中':'低' }, function() {
     document.getElementById('result-section').style.display = 'block';
-    calcAndRender();
+    renderScore(sc);
+    callAI(sc);
   });
 }
 
 function calcScore() {
-  const sizeMap = { under10:5, s11to30:10, m31to100:20, l101to300:28, xl300plus:35 };
-  const shiftMap = { 固定:0, 彈性工時:5, 部分工時:5, 輪班二班:15, 責任制:20, 輪班三班:25 };
-  const indMap = { 製造業:20, 建築營造業:25, 醫療照護業:15, 運輸業:20, 服務業:10, 科技業:5, 批發零售業:10, 金融業:8, 教育業:8, 其他:10 };
+  // 規模：人數越多，被列管機率越高（100人以上且有違規紀錄列為特別列管）
+  const sizeMap = { under10:5, s11to30:10, m31to100:18, l101to300:28, xl300plus:35 };
+  // 排班：三班制與責任制最高風險
+  const shiftMap = { 固定:0, 彈性工時:5, 部分工時:5, 輪班二班:15, 責任制:22, 輪班三班:28 };
+  // 行業：依勞動局重點專案行業加權（醫療、物流、保全為高風險）
+  const indMap = {
+    製造業:18, 建築營造業:22, 醫療照護業:25, 運輸物流業:25, 保全業:25,
+    服務業:12, 科技業:8, 批發零售業:12, 金融業:8, 教育業:8, 其他:10
+  };
+  // 各風險項目罰則權重
+  const riskWeightMap = {
+    '加班超時':10, '加班費計算不清楚':10, '未申請直接加班':8, '輪班換班間隔不足':10,
+    '出勤未記至分鐘':10, '出勤紀錄未備置':14, '強制提前延後打卡':8,
+    '低於基本工資':12, '工資未全額給付':10, '工資清冊未備置':12, '投保薪資偏低':8,
+    '工作規則未核備':6, '未建立勞資會議':5, '職安衛未建立':8, '性騷擾預防不完整':7,
+    '責任制適用爭議':10, '外籍員工':7, '承攬派遣爭議':8, '曾被申訴或檢查':12,
+  };
   let s = (sizeMap[formData.size]||10) + (shiftMap[formData.shift]||0) + (indMap[formData.industry]||10);
-  s += formData.risks.length * 10;
+  formData.risks.forEach(r => { s += riskWeightMap[r] || 8; });
   return Math.min(s, 100);
 }
 
-function calcAndRender() {
-  const score = calcScore();
-  const big = document.getElementById('s-big');
-  const lbl = document.getElementById('s-lbl');
+function renderScore(score) {
+  const big  = document.getElementById('s-big');
+  const lbl  = document.getElementById('s-lbl');
   const desc = document.getElementById('s-desc');
-  const bar = document.getElementById('s-bar');
+  const bar  = document.getElementById('s-bar');
   big.textContent = score;
   if (score >= 70) {
-    big.className = 'score-big c-high'; lbl.className = 'score-lbl c-high'; lbl.textContent = '高度風險 🚨';
-    desc.textContent = '存在多項重大違規風險，建議立即進行全面合規盤點'; bar.className = 'bar-inner bar-high';
+    big.className='score-big c-high'; lbl.className='score-lbl c-high';
+    lbl.textContent='高度風險 🚨';
+    desc.textContent='存在多項重大違規風險，建議立即進行全面合規盤點，避免遭裁罰 2–100 萬元';
+    bar.className='bar-inner bar-high';
   } else if (score >= 40) {
-    big.className = 'score-big c-mid'; lbl.className = 'score-lbl c-mid'; lbl.textContent = '中度風險 ⚠️';
-    desc.textContent = '部分環節存在違規風險，建議逐項排查並改善'; bar.className = 'bar-inner bar-mid';
+    big.className='score-big c-mid'; lbl.className='score-lbl c-mid';
+    lbl.textContent='中度風險 ⚠️';
+    desc.textContent='部分環節存在違規疑慮，建議逐項排查並在下次勞檢前完成改善';
+    bar.className='bar-inner bar-mid';
   } else {
-    big.className = 'score-big c-low'; lbl.className = 'score-lbl c-low'; lbl.textContent = '低度風險 ✓';
-    desc.textContent = '整體合規狀況良好，建議持續監控並定期自查'; bar.className = 'bar-inner bar-low';
+    big.className='score-big c-low'; lbl.className='score-lbl c-low';
+    lbl.textContent='低度風險 ✓';
+    desc.textContent='整體合規狀況尚可，建議持續自主管理並定期檢視法令修訂';
+    bar.className='bar-inner bar-low';
   }
   requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = score + '%'; }));
-  callAI(score);
 }
 
 async function callAI(score) {
-  const sizeLabel = { under10:'10人以下', s11to30:'11-30人', m31to100:'31-100人', l101to300:'101-300人', xl300plus:'301人以上' };
-  const prompt = `企業勞動風險自評資訊：
+  const sizeLabel = { under10:'10人以下', s11to30:'11–30人', m31to100:'31–100人', l101to300:'101–300人', xl300plus:'301人以上' };
+  const riskTxt = formData.risks.length ? formData.risks.join('、') : '無特別勾選';
+
+  const prompt = `企業勞動合規自評資訊如下：
 - 員工人數：${sizeLabel[formData.size]}
-- 行業別：${formData.industry}
+- 行業別：${formData.industry}（${['醫療照護業','運輸物流業','保全業'].includes(formData.industry)?'⚠️ 勞動局重點專案查核行業':'一般行業'}）
 - 排班方式：${formData.shift}
-- 已知風險項目：${formData.risks.length ? formData.risks.join('、') : '無特別勾選'}
-- 系統評估風險分數：${score}/100
+- 已勾選風險項目（共 ${formData.risks.length} 項）：${riskTxt}
+- 系統評估風險分數：${score}/100（${score>=70?'高度風險':score>=40?'中度風險':'低度風險'}）
 
-請以台灣勞動法令顧問身份，用繁體中文撰寫風險分析報告：
+請以台灣勞動法令顧問身份，用繁體中文撰寫合規風險分析報告，請包含具體法條與罰款金額：
 
-【整體風險概述】（2句）
+【整體風險評估】
+依企業規模、行業與排班特性，說明被勞動局主動查核的機率與主要風險來源（2–3句）。
 
-【依行業與排班特性，最可能被勞動局查核的 3-5 項（含勞基法條號）】
+【最可能被開罰的項目（含法條與罰款）】
+依勾選風險與排班型態，列出 3–5 項最需注意的違規風險，每項格式：
+・[違規項目]（勞基法第XX條）：違規態樣說明＋罰款範圍
 
-【針對已知風險的具體改善建議】（每項 1-2 條）
+【具體改善建議】
+針對已勾選的高風險項目，各提供 1–2 條 30 天內可完成的具體行動。
 
-【建議本月優先處理的 3 件事】
-1.
+【本月優先處理的 3 件事】
+1. （最急迫）
 2.
 3.
 
-格式清晰，語氣務實，不超過 550 字。`;
+語氣務實、數字具體，不超過 600 字。`;
 
   const bodyEl = document.getElementById('ai-body');
   try {
     const resp = await fetch(API + '/api/hr-health-check', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tool: 'labor-risk',
-        system: '你是策識永續 AI 勞動法令顧問，熟悉台灣勞基法、職安法、性別工作平等法，回應使用繁體中文。',
-        messages: [{ role: 'user', content: prompt }],
-        sessionId: SESSION, stream: true
-      })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: prompt, sessionId: SESSION })
     });
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      bodyEl.innerHTML = err.limitReached
-        ? `<div class="limit-msg">今日健檢次數已達上限，請明日再試或 <a href="upgrade.html" style="color:var(--navy);font-weight:700;">升級專業版</a>。</div>`
-        : `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
+    if (!resp.ok || !resp.body) {
+      bodyEl.innerHTML = `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
       return;
     }
-    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let txt = '';
     bodyEl.innerHTML = '';
     while (true) {
-      const { done, value } = await reader.read(); if (done) break;
-      for (const line of dec.decode(value, { stream: true }).split('\n')) {
-        if (!line.startsWith('data: ')) continue;
-        const d = line.slice(6).trim(); if (d === '[DONE]') break;
-        try { txt += JSON.parse(d).text || ''; } catch {}
+      const { done, value } = await reader.read();
+      if (done) break;
+      for (const line of dec.decode(value, { stream:true }).split('\n')) {
+        if (!line.startsWith('data:')) continue;
+        const d = line.slice(5).trim();
+        if (d === '[DONE]') break;
+        try { txt += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch {}
       }
       bodyEl.textContent = txt;
     }
     HCLead.reportDone(txt);
-  } catch { bodyEl.textContent = '（AI 分析服務暫時無法連線，請稍後再試）'; }
+  } catch {
+    bodyEl.textContent = '（AI 分析服務暫時無法連線，請稍後再試）';
+  }
 }
 
 function restart() {
   formData = {};
-  document.querySelectorAll('.ci').forEach(el => { el.classList.remove('on'); el.querySelector('input').checked = false; });
+  document.querySelectorAll('.ci').forEach(el => {
+    el.classList.remove('on');
+    el.querySelector('input').checked = false;
+  });
+  document.getElementById('f-size').value = '';
+  document.getElementById('f-industry').value = '';
+  document.getElementById('f-shift').value = '';
   document.getElementById('result-section').style.display = 'none';
   document.getElementById('form-section').style.display = 'block';
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 </script>
 <script src="assets/hc-lead.js"></script>
