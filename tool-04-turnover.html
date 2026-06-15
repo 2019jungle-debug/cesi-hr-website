@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI ?°Â∑•?¢ËÅ∑È¢®Èö™?êÊ∏¨ ¬∑ Á≠ñË?Ê∞∏Á?</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#0a2240,var(--navy),#1a3a60);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.7);font-size:15px;max-width:540px;margin:0 auto}
+.main{max-width:780px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.form-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.form-card p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.radio-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.radio-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s}
+.radio-item:hover{border-color:var(--gold)}
+.radio-item.sel{border-color:var(--navy);background:rgba(16,36,76,.04)}
+.radio-dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;position:relative;transition:all .2s}
+.radio-item.sel .radio-dot{border-color:var(--navy);background:var(--navy)}
+.radio-item.sel .radio-dot::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;border-radius:50%;background:#fff}
+.radio-label{font-size:13px;color:var(--ink)}
+.slider-wrap{margin-top:6px}
+.slider-wrap input[type=range]{width:100%;accent-color:var(--navy)}
+.slider-val{font-size:14px;font-weight:700;color:var(--navy);margin-top:4px}
+.slider-desc{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.btn-submit{width:100%;background:var(--navy);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .2s}
+.btn-submit:hover:not(:disabled){background:var(--teal)}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed}
+#result-section{display:none}
+.risk-head{border-radius:14px;padding:30px;text-align:center;margin-bottom:18px}
+.risk-low{background:linear-gradient(135deg,#1a3d2b,var(--teal))}
+.risk-mid{background:linear-gradient(135deg,#3d2a0a,var(--warning))}
+.risk-high{background:linear-gradient(135deg,#3d0a0a,var(--danger))}
+.risk-head h2{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:10px}
+.risk-badge{display:inline-block;font-size:16px;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:999px;padding:6px 22px;margin-bottom:8px}
+.risk-head .sub{color:rgba(255,255,255,.75);font-size:14px}
+.factor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:18px}
+.factor-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.fc-label{font-size:12px;color:var(--ink-soft);margin-bottom:6px}
+.fc-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.fc-bar{height:6px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.fc-fill{height:100%;border-radius:999px;transition:width .8s ease}
+.fill-low{background:var(--teal)}.fill-mid{background:var(--warning)}.fill-high{background:var(--danger)}
+.fc-pct{font-size:12px;font-weight:700}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ai-icon{width:34px;height:34px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI ‰∫∫Ë??•Ê™¢‰∏≠Â?</span></a>
+  <a href="hr-health-center.html" class="nav-back">???ûÂÅ•Ê™¢‰∏≠Âø?/a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">?? No.04 ¬∑ AI ?°Â∑•?¢ËÅ∑È¢®Èö™?êÊ∏¨</div>
+  <h1>?°Â∑•?™‰? 6 ?ãÊ??¢ËÅ∑È¢®Èö™?êÊ∏¨</h1>
+  <p>‰æùËñ™?¨„ÄÅ‰∏ªÁÆ°È?‰øÇ„ÄÅËÅ∑Ê∂ØÁôºÂ±ïÁ??úÈçµ?†Á?ÔºåÈ?Ê∏¨Âì°Â∑•Èõ¢?∑ÂÇæ??/p>
+</div>
+<div class="main">
+  <div id="form-section">
+    <div class="form-card">
+      <h2>Â°´ÂØ´?°Â∑•?∫Êú¨Ë≥áË?</h2>
+      <p>‰ª•‰?Ë≥áÊ??ÖÁî®?ºÊú¨Ê¨°È?Ê∏¨Ô?‰∏çÊ??≤Â??ã‰∫∫Ë≠òÂà•Ë≥áÊ?</p>
+
+      <div class="field">
+        <label>?™Ë?Á´∂Áà≠?õÔ??∏Ë??åÊ•≠?åËÅ∑Á¥öÔ?</label>
+        <div class="radio-row" id="r-salary">
+          <div class="radio-item" onclick="pick(this,'salary','high')"><div class="radio-dot"></div><div class="radio-label">È´òÊñºÂ∏ÇÂ†¥ 10%+</div></div>
+          <div class="radio-item" onclick="pick(this,'salary','mid')"><div class="radio-dot"></div><div class="radio-label">Á¥ÑÊ?Âπ≥Â???/div></div>
+          <div class="radio-item" onclick="pick(this,'salary','low')"><div class="radio-dot"></div><div class="radio-label">‰ΩéÊñºÂ∏ÇÂ†¥ 10%+</div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>?ÄËøë‰?Ê¨°Ë™ø?™Ë?‰ª?/label>
+        <div class="radio-row" id="r-raise">
+          <div class="radio-item" onclick="pick(this,'raise','recent')"><div class="radio-dot"></div><div class="radio-label">6 ?ãÊ???/div></div>
+          <div class="radio-item" onclick="pick(this,'raise','year')"><div class="radio-dot"></div><div class="radio-label">7??2 ?ãÊ?</div></div>
+          <div class="radio-item" onclick="pick(this,'raise','long')"><div class="radio-dot"></div><div class="radio-label">Ë∂ÖÈ? 1 Âπ?/div></div>
+          <div class="radio-item" onclick="pick(this,'raise','never')"><div class="radio-dot"></div><div class="radio-label">‰ªªËÅ∑?ßÂ??™Ë™ø??/div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>‰∏ªÁÆ°ÁÆ°Á?È¢®Ê†º</label>
+        <div class="radio-row" id="r-mgmt">
+          <div class="radio-item" onclick="pick(this,'mgmt','good')"><div class="radio-dot"></div><div class="radio-label">?ØÊ??Å‰ø°‰ª?/div></div>
+          <div class="radio-item" onclick="pick(this,'mgmt','avg')"><div class="radio-dot"></div><div class="radio-label">‰∏Ä?¨Ô??∂Ê??©Êì¶</div></div>
+          <div class="radio-item" onclick="pick(this,'mgmt','bad')"><div class="radio-dot"></div><div class="radio-label">?ßÂà∂?ÅÈ?Â£?/div></div>
+          <div class="radio-item" onclick="pick(this,'mgmt','toxic')"><div class="radio-dot"></div><div class="radio-label">‰∏çÁï∂Â∞çÂ?ÔºåÊÉ°??/div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>?∑Ê∂Ø?ºÂ?Ê©üÊ?</label>
+        <div class="radio-row" id="r-career">
+          <div class="radio-item" onclick="pick(this,'career','clear')"><div class="radio-dot"></div><div class="radio-label">?âÊ?Á¢∫Ê??áË∑ØÂæ?/div></div>
+          <div class="radio-item" onclick="pick(this,'career','vague')"><div class="radio-dot"></div><div class="radio-label">Ê®°Á?ÔºåÈ??†Ëá™Â∑?/div></div>
+          <div class="radio-item" onclick="pick(this,'career','none')"><div class="radio-dot"></div><div class="radio-label">Âπæ‰??°Ê??∑Á©∫??/div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Â∑•‰??áÁ?Ê¥ªÂπ≥Ë°?/label>
+        <div class="radio-row" id="r-wlb">
+          <div class="radio-item" onclick="pick(this,'wlb','good')"><div class="radio-dot"></div><div class="radio-label">?ΩÊ≠£Â∏∏‰???/div></div>
+          <div class="radio-item" onclick="pick(this,'wlb','avg')"><div class="radio-dot"></div><div class="radio-label">?∂Áàæ?†Áè≠</div></div>
+          <div class="radio-item" onclick="pick(this,'wlb','bad')"><div class="radio-dot"></div><div class="radio-label">?∑Ê??éÂ?</div></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Ëø?6 ?ãÊ??®È??¢ËÅ∑?áÔ??ÆÊ∏¨Ôº?nbsp;&nbsp;<span class="slider-val" id="turnover-val">10%</span></label>
+        <div class="slider-wrap">
+          <input type="range" min="0" max="50" value="10" id="turnover-slider" oninput="updateSlider()">
+        </div>
+        <div class="slider-desc" id="turnover-desc">‰∏Ä?¨Ê∞¥Ê∫?/div>
+      </div>
+
+      <button class="btn-submit" id="btn-submit" onclick="analyze()" disabled>?ãÂ? AI ?¢ËÅ∑È¢®Èö™?êÊ∏¨</button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="risk-head" id="risk-head">
+      <h2 id="risk-title"></h2>
+      <div class="risk-badge" id="risk-badge-el"></div>
+      <div class="sub" id="risk-sub"></div>
+    </div>
+    <div class="factor-grid" id="factor-grid"></div>
+    <div class="ai-box">
+      <div class="ai-head"><div class="ai-icon">??</div><div><div class="ai-title">AI ?ôÊ?È¢®Èö™?ÜÊ??áÂª∫Ë≠?/div></div></div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="cta-box">
+      <h3>?≥È?‰ΩéÈõ¢?∑Á?ÔºüË? AI Âπ´ÊÇ®?∂Â??ôÊ?Á≠ñÁï•</h3>
+      <p>Á≠ñË?Ê∞∏Á??ê‰??™ÈÖ¨?•Ë®∫?ÅÂì°Â∑•Êªø?èÂ∫¶Ë™øÊü•?ÅÁ??çË??´Ë®≠Ë®?/p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">?çË≤ªË´ÆË©¢ AI È°ßÂ?</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">?ãÊ??ôÊñπÊ°?/a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">?çÊñ∞Ë©ï‰º∞</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc4-' + Math.random().toString(36).slice(2);
+
+const choices = { salary:null, raise:null, mgmt:null, career:null, wlb:null };
+
+const SCORE_MAP = {
+  salary: { high:0, mid:15, low:30 },
+  raise:  { recent:0, year:10, long:20, never:30 },
+  mgmt:   { good:0, avg:10, bad:25, toxic:35 },
+  career: { clear:0, vague:15, none:25 },
+  wlb:    { good:0, avg:10, bad:25 },
+};
+
+const FACTOR_LABELS = {
+  salary:'?™Ë?Á´∂Áà≠??, raise:'Ë™øËñ™?ÇË?', mgmt:'‰∏ªÁÆ°?ú‰?',
+  career:'?∑Ê∂Ø?ºÂ?', wlb:'Â∑•‰??üÊ¥ªÂπ≥Ë°°', turnover:'?®È??¢ËÅ∑??
+};
+
+function pick(el, field, val) {
+  choices[field] = val;
+  document.querySelectorAll('#r-' + field + ' .radio-item').forEach(e => e.classList.remove('sel'));
+  el.classList.add('sel');
+  checkReady();
+}
+
+function checkReady() {
+  document.getElementById('btn-submit').disabled = !Object.values(choices).every(v => v !== null);
+}
+
+function updateSlider() {
+  const v = parseInt(document.getElementById('turnover-slider').value);
+  document.getElementById('turnover-val').textContent = v + '%';
+  document.getElementById('turnover-desc').textContent =
+    v>=30 ? '?¥È??èÈ?ÔºåÁ?ÁπîË≠¶Á§? : v>=20 ? '?èÈ?ÔºåÈ??úÊ≥®' : v>=10 ? '‰∏Ä?¨Ê∞¥Ê∫? : '?∏Áï∂Á©©Â?';
+}
+
+function analyze() {
+  const turnoverRate = parseInt(document.getElementById('turnover-slider').value);
+  const factors = {};
+  let total = 0;
+  for (const [f, v] of Object.entries(choices)) {
+    const sc = SCORE_MAP[f][v] || 0;
+    factors[f] = { val: v, score: sc };
+    total += sc;
+  }
+  const turnoverScore = Math.min(turnoverRate * 0.8, 30);
+  total += turnoverScore;
+  factors.turnover = { val: turnoverRate + '%', score: turnoverScore };
+  const pct = Math.min(Math.round(total), 100);
+
+  document.getElementById('form-section').style.display = 'none';
+  HCLead.gate('tool-04', 'AI ?¢ËÅ∑È¢®Èö™?êÊ∏¨', {score:pct, level:pct>=60?'È´?:pct>=35?'‰∏?:'‰Ω?}, function() {
+  document.getElementById('result-section').style.display = 'block';
+
+  const head = document.getElementById('risk-head');
+  const badge = document.getElementById('risk-badge-el');
+  const title = document.getElementById('risk-title');
+  const sub = document.getElementById('risk-sub');
+  let level;
+  if (pct >= 60) {
+    level='È´?; head.className='risk-head risk-high'; badge.textContent='?ö® È´òÂ∫¶?¢ËÅ∑È¢®Èö™';
+    title.textContent='6 ?ãÊ??ßÈõ¢?∑È¢®?™Ô?È´?;
+    sub.textContent='Ê≠§Âì°Â∑•Ê??éÈ°Ø?¢ËÅ∑?æÂ?ÔºåÂª∫Ë≠∞‰∏ªÁÆ°Ê? HR Á´ãÂç≥?üÂ??úÊá∑?¢Ë???;
+  } else if (pct >= 35) {
+    level='‰∏?; head.className='risk-head risk-mid'; badge.textContent='?†Ô? ‰∏≠Â∫¶?¢ËÅ∑È¢®Èö™';
+    title.textContent='6 ?ãÊ??ßÈõ¢?∑È¢®?™Ô?‰∏?;
+    sub.textContent='Â≠òÂú®?•Âπ≤?®Â??†Â?ÔºåËã•‰∏çÁ?Ê•µÊîπ?ÑÔ??¢ËÅ∑È¢®Èö™Â∞áÊ?Á∫åÂ?È´ò„Ä?;
+  } else {
+    level='‰Ω?; head.className='risk-head risk-low'; badge.textContent='??‰ΩéÂ∫¶?¢ËÅ∑È¢®Èö™';
+    title.textContent='6 ?ãÊ??ßÈõ¢?∑È¢®?™Ô?‰Ω?;
+    sub.textContent='?¥È??ô‰ªª?èÈ?Â∞ö‰Ω≥ÔºåÂª∫Ë≠∞Ê?Á∫åÁ∂≠?ÅËâØÂ•ΩÁÆ°?ÜÁí∞Â¢É„Ä?;
+  }
+
+  const LABEL_MAP = {
+    high:'È´òÊñºÂ∏ÇÂ†¥', mid:'?ÅÂπ≥Â∏ÇÂ†¥', low:'‰ΩéÊñºÂ∏ÇÂ†¥',
+    recent:'6?ãÊ???, year:'7-12?ãÊ?', long:'Ë∂ÖÈ?1Âπ?, never:'ÂæûÊú™Ë™øËñ™',
+    good:'?ØÊ?‰ø°‰ªª', avg:'‰∏Ä??, bad:'È´òÂ?ÁÆ°Êéß', toxic:'‰∏çÁï∂Â∞çÂ?',
+    clear:'?âÊ??áË∑ØÂæ?, vague:'Ë∑ØÂ?Ê®°Á?', none:'?°Ê??∑Á©∫??,
+  };
+
+  const fg = document.getElementById('factor-grid');
+  fg.innerHTML = Object.entries(factors).map(([f, d]) => {
+    const maxSc = f === 'turnover' ? 30 : f === 'mgmt' ? 35 : 30;
+    const pctF = Math.min(Math.round((d.score / maxSc) * 100), 100);
+    const cls = pctF>=60 ? 'fill-high' : pctF>=35 ? 'fill-mid' : 'fill-low';
+    const color = pctF>=60 ? 'var(--danger)' : pctF>=35 ? 'var(--warning)' : 'var(--teal)';
+    const lv = pctF>=60 ? 'È´òÈ¢®?? : pctF>=35 ? '‰∏≠È¢®?? : '‰ΩéÈ¢®??;
+    const dispVal = LABEL_MAP[d.val] || d.val;
+    return `<div class="factor-card">
+      <div class="fc-label">${FACTOR_LABELS[f]}</div>
+      <div class="fc-name">${dispVal}</div>
+      <div class="fc-bar"><div class="fc-fill ${cls}" data-w="${pctF}" style="width:0"></div></div>
+      <div class="fc-pct" style="color:${color}">${lv}</div>
+    </div>`;
+  }).join('');
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.fc-fill[data-w]').forEach(el => {
+      el.style.width = el.dataset.w + '%';
+    });
+  }));
+
+  callAI(pct, level, factors, turnoverRate);
+  }); // end gate
+}
+
+async function callAI(pct, level, factors, turnoverRate) {
+  const factorDesc = Object.entries(factors).map(([f, d]) =>
+    `- ${FACTOR_LABELS[f]}Ôº?{d.val}ÔºàÈ¢®?™Ë≤¢??${Math.round(d.score)} ?ÜÔ?`
+  ).join('\n');
+
+  const prompt = `?°Â∑•?¢ËÅ∑È¢®Èö™Ë©ï‰º∞Ôº??¥È?È¢®Èö™?ÜÊï∏Ôº?{pct}/100Ôº?{level}Â∫¶È¢®?™Ô?
+?®È?Ëø??ãÊ??¢ËÅ∑?áÔ?${turnoverRate}%
+?ÑÂ?Â≠êÔ?\n${factorDesc}
+
+Ë´ãÁî®ÁπÅÈ?‰∏≠Ê??ê‰?Ôº??êÈ¢®?™Ê?Ë¶Å„ÄëÔ?2?•Ô?
+?êÊ?È´òÈ¢®?™Â?Â≠êÂ??ê„ÄëÔ????ÖÔ?
+?êÂÖ∑È´îÁ??çË??ïÂª∫Ë≠∞„ÄëÔ?3?Ö‰??™Â?Â∫èÔ?
+1.
+2.
+3.
+?êÂª∫Ë≠∞Â??ïÈ??∑Èù¢Ë´áÊ??êË??áÂÖ•Èªû„Ä??ºÂ?Ê¢ùÂ?Ê∏ÖÊô∞Ôºå‰?Ë∂ÖÈ? 450 Â≠ó„ÄÇ`;
+
+  const bodyEl = document.getElementById('ai-body');
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'turnover',
+        system:'‰Ω†ÊòØÁ≠ñË?Ê∞∏Á? AI ‰∫∫Ë?È°ßÂ?ÔºåÁ??âÂè∞??∫∫?õË?Ê∫êÁÆ°?ÜË??ôÊ?Á≠ñÁï•ÔºåÂ??â‰Ωø?®Á?È´î‰∏≠?á„Ä?,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:true
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      bodyEl.innerHTML = err.limitReached
+        ? `<div class="limit-msg">‰ªäÊó•?•Ê™¢Ê¨°Êï∏Â∑≤È?‰∏äÈ?ÔºåË??éÊó•?çË©¶??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?áÁ?Â∞àÊ•≠??/a>??/div>`
+        : `<span style="color:var(--ink-soft)">ÔºàAI ?ÜÊ??´Ê??°Ê?‰ΩøÁî®Ôº?/span>`;
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    while(true) {
+      const{done,value}=await reader.read(); if(done) break;
+      for(const line of dec.decode(value,{stream:true}).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') break;
+        try{txt+=JSON.parse(d).text||'';}catch{}
+      }
+      bodyEl.textContent=txt;
+    }
+    HCLead.reportDone(txt);
+  } catch { bodyEl.textContent='ÔºàAI ?ÜÊ??çÂ??´Ê??°Ê????Ôº?; }
+}
+
+function restart() {
+  Object.keys(choices).forEach(k => choices[k]=null);
+  document.querySelectorAll('.radio-item').forEach(el=>el.classList.remove('sel'));
+  document.getElementById('turnover-slider').value=10;
+  updateSlider();
+  document.getElementById('btn-submit').disabled=true;
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('form-section').style.display='block';
+  document.getElementById('ai-body').innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 勞動檢查風險檢測 · 策識永續</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,var(--navy-deep),var(--navy));padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.7);font-size:15px;max-width:520px;margin:0 auto}
+.main{max-width:760px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:20px}
+.card h2{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.card .sub{font-size:13px;color:var(--ink-soft);margin-bottom:22px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.sw{position:relative}
+.sw select{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;background:#fff;color:var(--ink);appearance:none;transition:border .2s}
+.sw select:focus{outline:none;border-color:var(--navy)}
+.sw::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink-faded);pointer-events:none}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:8px}
+.ci{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s;user-select:none}
+.ci:hover{border-color:var(--gold)}
+.ci.on{border-color:var(--navy);background:rgba(16,36,76,.04)}
+.ci input{accent-color:var(--navy);width:15px;height:15px;cursor:pointer}
+.ci span{font-size:13px}
+.btn-sub{width:100%;background:var(--navy);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
+.btn-sub:hover{background:var(--teal)}
+/* result */
+#result-section{display:none}
+.meter{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;text-align:center;margin-bottom:18px}
+.score-big{font-family:'Noto Serif TC',serif;font-size:72px;font-weight:900;line-height:1;margin:12px 0 6px}
+.score-lbl{font-size:20px;font-weight:800}
+.score-desc{font-size:13px;color:var(--ink-soft);margin-top:4px}
+.bar-outer{height:12px;background:rgba(16,36,76,.08);border-radius:999px;margin:18px 0 6px;overflow:hidden}
+.bar-inner{height:100%;border-radius:999px;transition:width 1.2s ease;width:0}
+.c-low{color:var(--teal)} .c-mid{color:var(--warning)} .c-high{color:var(--danger)}
+.bar-low{background:linear-gradient(90deg,var(--teal),#3aaf8a)}
+.bar-mid{background:linear-gradient(90deg,var(--warning),#f0a832)}
+.bar-high{background:linear-gradient(90deg,var(--danger),#e05a5a)}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ai-icon{width:34px;height:34px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:26px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI 人資健檢中心</span></a>
+  <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">⚖️ No.02 · AI 勞動檢查風險檢測</div>
+  <h1>企業勞動違規風險查詢系統</h1>
+  <p>輸入基本資訊，AI 即時評估勞動檢查風險並提供改善建議</p>
+</div>
+<div class="main">
+
+  <div id="form-section">
+    <div class="card">
+      <h2>企業基本資訊</h2>
+      <p class="sub">填寫以下資訊，系統根據您的狀況進行風險評估</p>
+      <div class="field">
+        <label>員工人數 *</label>
+        <div class="sw"><select id="f-size">
+          <option value="">請選擇</option>
+          <option value="under10">10 人以下</option>
+          <option value="s11to30">11–30 人</option>
+          <option value="m31to100">31–100 人</option>
+          <option value="l101to300">101–300 人</option>
+          <option value="xl300plus">301 人以上</option>
+        </select></div>
+      </div>
+      <div class="field">
+        <label>行業別 *</label>
+        <div class="sw"><select id="f-industry">
+          <option value="">請選擇</option>
+          <option value="製造業">製造業</option>
+          <option value="服務業">服務業（餐飲、零售等）</option>
+          <option value="科技業">科技業 / 軟體業</option>
+          <option value="建築營造業">建築營造業</option>
+          <option value="醫療照護業">醫療照護業</option>
+          <option value="運輸業">運輸、倉儲業</option>
+          <option value="金融業">金融、保險業</option>
+          <option value="教育業">教育業</option>
+          <option value="批發零售業">批發零售業</option>
+          <option value="其他">其他行業</option>
+        </select></div>
+      </div>
+      <div class="field">
+        <label>主要排班方式 *</label>
+        <div class="sw"><select id="f-shift">
+          <option value="">請選擇</option>
+          <option value="固定">固定班（如 9–18 時）</option>
+          <option value="彈性工時">彈性工時制</option>
+          <option value="輪班二班">二班制輪班</option>
+          <option value="輪班三班">三班制輪班（含夜班）</option>
+          <option value="部分工時">部分工時（兼職）為主</option>
+          <option value="責任制">責任制（含主管、業務）</option>
+        </select></div>
+      </div>
+      <div class="field">
+        <label>目前存在的狀況（可複選）</label>
+        <div class="check-grid" id="risk-checks">
+          <label class="ci"><input type="checkbox" value="加班超時"><span>加班時數常超標</span></label>
+          <label class="ci"><input type="checkbox" value="未給加班費"><span>加班費計算不清楚</span></label>
+          <label class="ci"><input type="checkbox" value="未足額投保"><span>勞健保投保薪資偏低</span></label>
+          <label class="ci"><input type="checkbox" value="工作規則未核備"><span>工作規則未送核備</span></label>
+          <label class="ci"><input type="checkbox" value="未建立職安衛"><span>職安衛規定未建立</span></label>
+          <label class="ci"><input type="checkbox" value="性騷擾預防未建立"><span>性騷擾預防機制不完整</span></label>
+          <label class="ci"><input type="checkbox" value="外籍員工"><span>有聘用外籍員工</span></label>
+          <label class="ci"><input type="checkbox" value="承攬爭議"><span>有承攬/派遣爭議</span></label>
+        </div>
+      </div>
+      <button class="btn-sub" onclick="submit()">開始風險檢測</button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="meter">
+      <div style="font-size:13px;color:var(--ink-soft);font-weight:600">勞動檢查風險分數</div>
+      <div class="score-big" id="s-big">—</div>
+      <div class="score-lbl" id="s-lbl">—</div>
+      <div class="score-desc" id="s-desc"></div>
+      <div class="bar-outer"><div class="bar-inner" id="s-bar"></div></div>
+    </div>
+    <div class="ai-box">
+      <div class="ai-head"><div class="ai-icon">⚖️</div><div><div class="ai-title">AI 勞動法令風險分析報告</div></div></div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="cta-box">
+      <h3>想降低勞動違規風險？</h3>
+      <p>策識永續顧問協助企業建立合規制度，防患於未然</p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">企業健檢方案</a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">重新檢測</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc2-' + Math.random().toString(36).slice(2);
+let formData = {};
+
+// toggle check items
+document.querySelectorAll('.ci').forEach(el => {
+  el.addEventListener('click', () => el.classList.toggle('on'));
+});
+
+function submit() {
+  const size = document.getElementById('f-size').value;
+  const industry = document.getElementById('f-industry').value;
+  const shift = document.getElementById('f-shift').value;
+  if (!size || !industry || !shift) { alert('請填寫所有必填欄位（*）'); return; }
+  const risks = [...document.querySelectorAll('#risk-checks input:checked')].map(el => el.value);
+  formData = { size, industry, shift, risks };
+  document.getElementById('form-section').style.display = 'none';
+  const _sc = calcScore();
+  HCLead.gate('tool-02', 'AI 勞動法遵風險健檢', {score:_sc, level:_sc>=70?'高':_sc>=40?'中':'低'}, function() {
+    document.getElementById('result-section').style.display = 'block';
+    calcAndRender();
+  });
+}
+
+function calcScore() {
+  const sizeMap = { under10:5, s11to30:10, m31to100:20, l101to300:28, xl300plus:35 };
+  const shiftMap = { 固定:0, 彈性工時:5, 部分工時:5, 輪班二班:15, 責任制:20, 輪班三班:25 };
+  const indMap = { 製造業:20, 建築營造業:25, 醫療照護業:15, 運輸業:20, 服務業:10, 科技業:5, 批發零售業:10, 金融業:8, 教育業:8, 其他:10 };
+  let s = (sizeMap[formData.size]||10) + (shiftMap[formData.shift]||0) + (indMap[formData.industry]||10);
+  s += formData.risks.length * 10;
+  return Math.min(s, 100);
+}
+
+function calcAndRender() {
+  const score = calcScore();
+  const big = document.getElementById('s-big');
+  const lbl = document.getElementById('s-lbl');
+  const desc = document.getElementById('s-desc');
+  const bar = document.getElementById('s-bar');
+  big.textContent = score;
+  if (score >= 70) {
+    big.className = 'score-big c-high'; lbl.className = 'score-lbl c-high'; lbl.textContent = '高度風險 🚨';
+    desc.textContent = '存在多項重大違規風險，建議立即進行全面合規盤點'; bar.className = 'bar-inner bar-high';
+  } else if (score >= 40) {
+    big.className = 'score-big c-mid'; lbl.className = 'score-lbl c-mid'; lbl.textContent = '中度風險 ⚠️';
+    desc.textContent = '部分環節存在違規風險，建議逐項排查並改善'; bar.className = 'bar-inner bar-mid';
+  } else {
+    big.className = 'score-big c-low'; lbl.className = 'score-lbl c-low'; lbl.textContent = '低度風險 ✓';
+    desc.textContent = '整體合規狀況良好，建議持續監控並定期自查'; bar.className = 'bar-inner bar-low';
+  }
+  requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = score + '%'; }));
+  callAI(score);
+}
+
+async function callAI(score) {
+  const sizeLabel = { under10:'10人以下', s11to30:'11-30人', m31to100:'31-100人', l101to300:'101-300人', xl300plus:'301人以上' };
+  const prompt = `企業勞動風險自評資訊：
+- 員工人數：${sizeLabel[formData.size]}
+- 行業別：${formData.industry}
+- 排班方式：${formData.shift}
+- 已知風險項目：${formData.risks.length ? formData.risks.join('、') : '無特別勾選'}
+- 系統評估風險分數：${score}/100
+
+請以台灣勞動法令顧問身份，用繁體中文撰寫風險分析報告：
+
+【整體風險概述】（2句）
+
+【依行業與排班特性，最可能被勞動局查核的 3-5 項（含勞基法條號）】
+
+【針對已知風險的具體改善建議】（每項 1-2 條）
+
+【建議本月優先處理的 3 件事】
+1.
+2.
+3.
+
+格式清晰，語氣務實，不超過 550 字。`;
+
+  const bodyEl = document.getElementById('ai-body');
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tool: 'labor-risk',
+        system: '你是策識永續 AI 勞動法令顧問，熟悉台灣勞基法、職安法、性別工作平等法，回應使用繁體中文。',
+        messages: [{ role: 'user', content: prompt }],
+        sessionId: SESSION, stream: true
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      bodyEl.innerHTML = err.limitReached
+        ? `<div class="limit-msg">今日健檢次數已達上限，請明日再試或 <a href="upgrade.html" style="color:var(--navy);font-weight:700;">升級專業版</a>。</div>`
+        : `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    while (true) {
+      const { done, value } = await reader.read(); if (done) break;
+      for (const line of dec.decode(value, { stream: true }).split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        const d = line.slice(6).trim(); if (d === '[DONE]') break;
+        try { txt += JSON.parse(d).text || ''; } catch {}
+      }
+      bodyEl.textContent = txt;
+    }
+    HCLead.reportDone(txt);
+  } catch { bodyEl.textContent = '（AI 分析服務暫時無法連線，請稍後再試）'; }
+}
+
+function restart() {
+  formData = {};
+  document.querySelectorAll('.ci').forEach(el => { el.classList.remove('on'); el.querySelector('input').checked = false; });
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'block';
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI ?·å?èªªæ??¸ç”¢?Ÿå™¨ Â· ç­–è?æ°¸ç?</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#1e0a3c,#3d1a6e,var(--navy));padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:520px;margin:0 auto}
+.main{max-width:820px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.form-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.form-card p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--navy)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.output-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:6px}
+.out-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s;user-select:none}
+.out-item:hover{border-color:var(--gold)}
+.out-item.on{border-color:var(--navy);background:rgba(16,36,76,.04)}
+.out-check{width:17px;height:17px;border:2px solid var(--line);border-radius:4px;flex-shrink:0;position:relative;transition:all .2s}
+.out-item.on .out-check{background:var(--navy);border-color:var(--navy)}
+.out-item.on .out-check::after{content:'??;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:11px;font-weight:900}
+.out-label{font-size:13px;font-weight:600;color:var(--ink)}
+.btn-gen{width:100%;background:linear-gradient(135deg,#3d1a6e,var(--navy));color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity .2s}
+.btn-gen:hover:not(:disabled){opacity:.85}
+.btn-gen:disabled{opacity:.4;cursor:not-allowed}
+#result-section{display:none}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--line);margin-bottom:0;overflow-x:auto}
+.tab{padding:10px 18px;font-size:13px;font-weight:700;color:var(--ink-soft);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy)}
+.panels{background:#fff;border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;margin-bottom:18px}
+.panel{display:none;padding:24px}
+.panel.active{display:block}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.panel-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.btn-copy{background:rgba(16,36,76,.06);border:1px solid var(--line);color:var(--navy);padding:6px 14px;border-radius:6px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-copy:hover{background:var(--navy);color:#fff}
+.panel-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:80px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI äººè??¥æª¢ä¸­å?</span></a>
+  <a href="hr-health-center.html" class="nav-back">???å¥æª¢ä¸­å¿?/a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">?? No.07 Â· AI ?·å?èªªæ??¸ç”¢?Ÿå™¨</div>
+  <h1>AI ?·å??‡ä»¶ä¸€?µç”¢??/h1>
+  <p>è¼¸å…¥?·ä?è³‡è?ï¼Œè‡ª?•ç???JD?KPI?KSA?é¢è©¦é?åº«ç?å®Œæ•´äººæ?ç®¡ç??‡ä»¶</p>
+</div>
+<div class="main">
+  <div id="form-section">
+    <div class="form-card">
+      <h2>å¡«å¯«?·ä?è³‡è?</h2>
+      <p>è³‡è?è¶Šå??´ï?AI ?Ÿæ??„æ?ä»¶å?è³ªè?é«?/p>
+      <div class="row2">
+        <div class="field">
+          <label>?·ä??ç¨± *</label>
+          <input type="text" id="inp-title" placeholder="ä¾‹ï?è³‡æ·±è¡ŒéŠ·ä¼å?" oninput="checkReady()">
+        </div>
+        <div class="field">
+          <label>?€å±¬éƒ¨?€</label>
+          <input type="text" id="inp-dept" placeholder="ä¾‹ï?è¡ŒéŠ·??>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>?¢æ¥­??/label>
+          <select id="inp-industry">
+            <option value="">è«‹é¸??/option>
+            <option>ç§‘æ?/è»Ÿé?</option><option>è£½é€ æ¥­</option><option>?‘è?/ä¿éšª</option>
+            <option>?¶å”®/?»å?</option><option>?«ç?/?Ÿæ?</option><option>é¤é£²/?å?</option>
+            <option>?™è‚²/?¹è?</option><option>é¡§å?/å°ˆæ¥­?å?</option><option>?¶ä?</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>?·ç?/å¹´è?è¦æ?</label>
+          <select id="inp-level">
+            <option value="">è«‹é¸??/option>
+            <option>?é?ï¼?-2å¹´ï?</option><option>ä¸­é?ï¼?-5å¹´ï?</option>
+            <option>è³‡æ·±ï¼?-8å¹´ï?</option><option>ä¸»ç®¡ç´šï?8å¹´ä»¥ä¸Šï?</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>ä¸»è?å·¥ä??·è²¬ï¼ˆç°¡è¿°å³?¯ï?</label>
+        <textarea id="inp-duties" rows="3" placeholder="ä¾‹ï?è² è²¬?ç?ç­–ç•¥è¦å??ç¤¾ç¾¤å?é«”ç®¡?†ã€æ´»?•è??·ç?"></textarea>
+      </div>
+      <div class="field">
+        <label>?¸æ?è¦ç”¢?Ÿç??‡ä»¶</label>
+        <div class="output-grid">
+          <div class="out-item on" id="out-jd" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? ?·å?èªªæ???JD</div></div>
+          <div class="out-item on" id="out-kpi" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? KPI ?‡æ?æ¸…å–®</div></div>
+          <div class="out-item on" id="out-ksa" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? KSA ?·èƒ½æ¡†æ¶</div></div>
+          <div class="out-item" id="out-interview" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?¯ ?¢è©¦é¡Œåº«</div></div>
+          <div class="out-item" id="out-assess" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? æ¸¬è?å·¥å…·å»ºè­°</div></div>
+          <div class="out-item" id="out-exam" onclick="toggleOut(this)"><div class="out-check"></div><div class="out-label">?? ç­†è©¦é¡Œç›®è¨­è?</div></div>
+        </div>
+      </div>
+      <button class="btn-gen" id="btn-gen" onclick="generate()" disabled>AI ä¸€?µç??æ?ä»?/button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="tabs" id="tabs"></div>
+    <div class="panels" id="panels"></div>
+    <div class="cta-box">
+      <h3>?€è¦å®¢è£½å?äººæ?ç®¡ç??‡ä»¶?–åˆ¶åº¦å»ºç½®ï?</h3>
+      <p>ç­–è?æ°¸ç??”åŠ©ä¼æ¥­å»ºç?å®Œæ•´?·èƒ½?¶æ??‡äºº?ç™¼å±•é?ç³?/p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">?è²»è«®è©¢ AI é¡§å?</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">?‹æ??™æ–¹æ¡?/a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">?æ–°?¢ç?</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc7-' + Math.random().toString(36).slice(2);
+
+const OUTPUT_DEFS = {
+  jd:        { label:'?·å?èªªæ???JD', prompt: (info) => `è«‹ç‚º??{info.title}?ï?${info.dept}ï¼?{info.industry}ï¼?{info.level}ï¼‰æ’°å¯«å??´è·?™èªª?æ›¸ï¼ˆJDï¼‰ï??…å«ï¼šè·ä½ç›®?„ã€éš¸å±¬é?ä¿‚ã€ä¸»è¦è·è²¬ï?8-10é»ï??å·¥ä½œæ?ä»¶ã€è–ªè³‡ç??å»ºè­°ï??°ç£å¸‚å ´ï¼‰ã€‚ä¸»è¦è·è²¬å??ƒï?${info.duties}?‚ç”¨ç¹é?ä¸­æ?ï¼Œæ ¼å¼æ??°ã€‚` },
+  kpi:       { label:'KPI ?‡æ?æ¸…å–®', prompt: (info) => `è«‹ç‚º??{info.title}?è¨­è¨?KPI ç¸¾æ??‡æ?æ¸…å–®ï¼Œå??«ï??å??‡æ?ï¼?-8?…ï??«ç›®æ¨™å€¼ç?ä¾‹ï??è³ª?–æ?æ¨™ï?3-5?…ï??å??‡æ??„è??æ–¹å¼è??±æ??‚æ ¼å¼ï?è¡¨æ ¼å¼æ?æ¢å?å¼ï?ç¹é?ä¸­æ??‚` },
+  ksa:       { label:'KSA ?·èƒ½æ¡†æ¶', prompt: (info) => `è«‹ç‚º??{info.title}?å»ºç«?KSA ?·èƒ½æ¡†æ¶ï¼Œå??«ï?Knowledgeï¼ˆçŸ¥è­˜è?æ±‚ï??Skillsï¼ˆæ??½è?æ±‚ï??Abilitiesï¼ˆèƒ½?›è?æ±‚ï???5-7 ?…ï?ä»¥å??¸å??·èƒ½?‡å·®?°å??·èƒ½èªªæ??‚ç?é«”ä¸­?‡ï?æ¢å?æ¸…æ™°?‚` },
+  interview: { label:'?¢è©¦é¡Œåº«', prompt: (info) => `è«‹ç‚º??{info.title}?è¨­è¨ˆé¢è©¦é?åº«ï??…å«ï¼šè??ºé¢è©¦é?ï¼?é¡Œï??æ?å¢ƒé¢è©¦é?ï¼?é¡Œï??å?æ©??‡å?å¥‘å?é¡Œï?3é¡Œï?ï¼Œæ?é¡Œé?ä¸Šè??†é?é»ã€‚ç?é«”ä¸­?‡ï??¼å?æ¸…æ™°?‚` },
+  assess:    { label:'æ¸¬è?å·¥å…·å»ºè­°', prompt: (info) => `è«‹ç‚º??{info.title}?å»ºè­°é©?ˆç?æ¸¬è?å·¥å…·ï¼Œå??«ï?äººæ ¼?¹è³ªæ¸¬è?ï¼ˆæ¨?¦å·¥??èªªæ?ï¼‰ã€è??¥èƒ½?›æ¸¬è©•ã€è·?½æ¸¬è©•å·¥?·ï?ä»¥å??„å·¥?·åœ¨?°ç£?„å?å¾—æ–¹å¼è?è²»ç”¨?ƒè€ƒã€‚ç?é«”ä¸­?‡ã€‚` },
+  exam:      { label:'ç­†è©¦é¡Œç›®è¨­è?', prompt: (info) => `è«‹ç‚º??{info.title}?è¨­è¨ˆç?è©¦é??®ï??…å«ï¼šå?æ¥­çŸ¥è­˜æ¸¬é©—ï?5é¡Œé¸?‡é?+ç­”æ?ï¼‰ã€æ?ä¾‹å??é?ï¼?é¡?è©•å??é?ï¼‰ã€é??¾å??³è?é¡Œï?1é¡?è©•å?æ¨™æ?ï¼‰ã€‚ç?é«”ä¸­?‡ï??©å??°ç£?·å ´?‚` },
+};
+
+function toggleOut(el) { el.classList.toggle('on'); }
+
+function checkReady() {
+  document.getElementById('btn-gen').disabled = !document.getElementById('inp-title').value.trim();
+}
+
+async function generate() {
+  const selected = Object.keys(OUTPUT_DEFS).filter(k => document.getElementById('out-'+k)?.classList.contains('on'));
+  if (!selected.length) { alert('è«‹è‡³å°‘é¸?‡ä??…è??¢ç??„æ?ä»?); return; }
+
+  const info = {
+    title:    document.getElementById('inp-title').value.trim(),
+    dept:     document.getElementById('inp-dept').value.trim() || '?ªæ?å®šéƒ¨?€',
+    industry: document.getElementById('inp-industry').value || '?ªæ?å®šç”¢æ¥?,
+    level:    document.getElementById('inp-level').value || '?ªæ?å®šè·ç´?,
+    duties:   document.getElementById('inp-duties').value.trim() || 'ï¼ˆæœª?ä?ï¼?,
+  };
+
+  document.getElementById('form-section').style.display = 'none';
+  HCLead.gate('tool-07', 'AI ?·ç¼º?‡ä»¶?Ÿæ???, {}, async function() {
+  document.getElementById('result-section').style.display = 'block';
+
+  const tabsEl = document.getElementById('tabs');
+  const panelsEl = document.getElementById('panels');
+  tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+
+  selected.forEach((key, i) => {
+    const def = OUTPUT_DEFS[key];
+    const isFirst = i === 0;
+    tabsEl.innerHTML += `<div class="tab${isFirst?' active':''}" id="tab-${key}" onclick="switchTab('${key}')">${def.label}</div>`;
+    panelsEl.innerHTML += `<div class="panel${isFirst?' active':''}" id="panel-${key}">
+      <div class="panel-head">
+        <div class="panel-title">${def.label}</div>
+        <button class="btn-copy" onclick="copyPanel('${key}')">è¤‡è£½</button>
+      </div>
+      <div class="panel-body" id="body-${key}"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>`;
+  });
+
+  for (const key of selected) {
+    await generatePanel(key, OUTPUT_DEFS[key].prompt(info));
+  }
+  const _rpt = selected.map(k => { const el = document.getElementById('body-'+k); return OUTPUT_DEFS[k].label + ':\n' + (el ? el.textContent : ''); }).join('\n\n---\n\n');
+  HCLead.reportDone(_rpt);
+  }); // end gate
+}
+
+async function generatePanel(key, prompt) {
+  const bodyEl = document.getElementById('body-' + key);
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'jd-generator',
+        system:'ä½ æ˜¯ç­–è?æ°¸ç? AI äººè?é¡§å?ï¼Œç??‰å°??·?´äºº?ç®¡?†æ?æº–ï??æ?ä½¿ç”¨ç¹é?ä¸­æ?ï¼Œæ ¼å¼æ??°å?æ¥­ã€?,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:true
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      bodyEl.innerHTML = err.limitReached
+        ? `<div class="limit-msg">ä»Šæ—¥?¥æª¢æ¬¡æ•¸å·²é?ä¸Šé?ï¼Œè??æ—¥?è©¦??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?‡ç?å°ˆæ¥­??/a>??/div>`
+        : `<span style="color:var(--ink-soft)">ï¼ˆAI ?Ÿæ??«æ??¡æ?ä½¿ç”¨ï¼?/span>`;
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    while(true) {
+      const{done,value}=await reader.read(); if(done) break;
+      for(const line of dec.decode(value,{stream:true}).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') break;
+        try{txt+=JSON.parse(d).text||'';}catch{}
+      }
+      bodyEl.textContent = txt;
+    }
+  } catch { bodyEl.textContent = 'ï¼ˆAI ?Ÿæ??å??«æ??¡æ????ï¼?; }
+}
+
+function switchTab(key) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+key).classList.add('active');
+  document.getElementById('panel-'+key).classList.add('active');
+}
+
+function copyPanel(key) {
+  const text = document.getElementById('body-'+key).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target; btn.textContent='å·²è?è£???;
+    setTimeout(()=>btn.textContent='è¤‡è£½', 2000);
+  });
+}
+
+function restart() {
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('form-section').style.display='block';
+  document.getElementById('inp-title').value='';
+  document.getElementById('inp-duties').value='';
+  document.getElementById('btn-gen').disabled=true;
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

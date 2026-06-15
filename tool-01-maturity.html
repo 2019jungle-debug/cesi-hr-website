@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 人資成熟度健檢 · 策識永續</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --navy-deep:#07142f; --navy:#10244c; --teal:#1d756f;
+  --gold:#c9a15d; --gold-bright:#e2bf79; --ivory:#fbf8ef;
+  --ink:#182036; --ink-soft:#5a6377; --ink-faded:#8b94a7;
+  --line:rgba(16,36,76,0.12);
+}
+body { font-family:'Noto Sans TC',system-ui,sans-serif; background:var(--ivory); color:var(--ink); min-height:100vh; }
+a { text-decoration:none; }
+nav { background:rgba(255,255,255,0.95); border-bottom:1px solid var(--line); padding:14px clamp(20px,4vw,60px); display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 4px 20px rgba(16,36,76,0.07); }
+.nav-brand { display:flex; align-items:center; gap:10px; }
+.nav-brand img { height:40px; }
+.nav-brand span { font-family:'Noto Serif TC',serif; font-size:14px; font-weight:700; color:var(--navy); }
+.nav-back { color:var(--ink-soft); font-size:13px; font-weight:600; padding:7px 14px; border-radius:6px; border:1px solid var(--line); transition:all .2s; }
+.nav-back:hover { background:var(--navy); color:white; }
+.page-header { background:linear-gradient(135deg,var(--navy-deep),var(--navy)); padding:48px clamp(20px,4vw,60px) 44px; text-align:center; }
+.tool-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(226,191,121,0.15); border:1px solid rgba(226,191,121,0.3); border-radius:999px; padding:5px 16px; font-size:12px; color:var(--gold-bright); font-weight:600; margin-bottom:16px; }
+.page-header h1 { font-family:'Noto Serif TC',serif; font-size:clamp(24px,3.5vw,40px); font-weight:900; color:white; margin-bottom:10px; }
+.page-header p { color:rgba(255,255,255,0.7); font-size:15px; max-width:540px; margin:0 auto; }
+.main { max-width:820px; margin:0 auto; padding:40px clamp(20px,4vw,40px) 80px; }
+
+/* Progress */
+.progress-wrap { background:white; border:1px solid var(--line); border-radius:12px; padding:20px 24px; margin-bottom:24px; }
+.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.progress-label { font-size:13px; font-weight:700; color:var(--navy); }
+.progress-count { font-size:13px; color:var(--ink-soft); }
+.progress-bar { height:6px; background:rgba(16,36,76,0.08); border-radius:999px; overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:999px; transition:width .4s ease; }
+.dim-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+.dim-pill { font-size:11px; padding:3px 10px; border-radius:999px; font-weight:600; transition:all .2s; }
+.dim-active { background:var(--navy); color:white; }
+.dim-done { background:rgba(29,117,111,0.12); color:var(--teal); }
+.dim-pending { background:rgba(16,36,76,0.06); color:var(--ink-faded); }
+
+/* Question */
+.q-card { background:white; border:1px solid var(--line); border-radius:12px; padding:32px; margin-bottom:20px; }
+.q-dim { font-size:11px; font-weight:800; color:var(--teal); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
+.q-num { font-size:12px; color:var(--ink-faded); margin-bottom:12px; }
+.q-text { font-family:'Noto Serif TC',serif; font-size:18px; font-weight:700; color:var(--navy); line-height:1.65; margin-bottom:24px; }
+.opts { display:grid; gap:10px; }
+.opt { display:flex; align-items:center; gap:12px; padding:14px 18px; border:2px solid var(--line); border-radius:8px; cursor:pointer; transition:all .2s; }
+.opt:hover { border-color:var(--gold); background:rgba(201,161,93,0.05); }
+.opt.selected { border-color:var(--navy); background:rgba(16,36,76,0.04); }
+.opt-radio { width:18px; height:18px; border-radius:50%; border:2px solid var(--line); flex-shrink:0; position:relative; transition:all .2s; }
+.opt.selected .opt-radio { border-color:var(--navy); background:var(--navy); }
+.opt.selected .opt-radio::after { content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:6px; height:6px; border-radius:50%; background:white; }
+.opt-text { font-size:14.5px; color:var(--ink); line-height:1.5; }
+.nav-btns { display:flex; justify-content:space-between; gap:16px; }
+.btn-prev { background:white; border:2px solid var(--line); color:var(--ink-soft); padding:12px 24px; border-radius:8px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; }
+.btn-prev:hover:not(:disabled) { border-color:var(--navy); color:var(--navy); }
+.btn-prev:disabled { opacity:.35; cursor:not-allowed; }
+.btn-next { background:var(--navy); color:white; padding:12px 28px; border-radius:8px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; border:none; transition:background .2s; }
+.btn-next:hover:not(:disabled) { background:var(--teal); }
+.btn-next:disabled { opacity:.4; cursor:not-allowed; }
+
+/* Result */
+#result-section { display:none; }
+.result-header { background:linear-gradient(135deg,var(--navy-deep),var(--navy)); border-radius:16px; padding:36px; text-align:center; margin-bottom:24px; }
+.result-header h2 { font-family:'Noto Serif TC',serif; font-size:22px; font-weight:900; color:white; margin-bottom:16px; }
+.overall-score { font-family:'Noto Serif TC',serif; font-size:72px; font-weight:900; color:var(--gold-bright); line-height:1; }
+.overall-level { font-size:16px; font-weight:800; color:var(--gold-bright); margin:10px 0 6px; }
+.overall-desc { font-size:13px; color:rgba(255,255,255,0.65); }
+.dim-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:14px; margin-bottom:24px; }
+.dim-card { background:white; border:1px solid var(--line); border-radius:10px; padding:20px; }
+.dim-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.dim-name { font-size:14px; font-weight:700; color:var(--navy); }
+.dim-score { font-family:'Noto Serif TC',serif; font-size:24px; font-weight:900; }
+.s-high { color:var(--teal); } .s-mid { color:var(--gold); } .s-low { color:#c34646; }
+.dim-bar-wrap { height:8px; background:rgba(16,36,76,0.08); border-radius:999px; overflow:hidden; margin-bottom:8px; }
+.dim-bar { height:100%; border-radius:999px; transition:width 1s ease; width:0; }
+.b-high { background:linear-gradient(90deg,var(--teal),#3aaf8a); }
+.b-mid { background:linear-gradient(90deg,var(--gold),var(--gold-bright)); }
+.b-low { background:linear-gradient(90deg,#c34646,#e05a5a); }
+.dim-comment { font-size:12.5px; color:var(--ink-soft); line-height:1.7; }
+.ai-box { background:white; border:1px solid var(--line); border-radius:12px; padding:28px; margin-bottom:24px; }
+.ai-box-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+.ai-box-icon { width:36px; height:36px; background:var(--navy); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-size:18px; }
+.ai-box-title { font-family:'Noto Serif TC',serif; font-size:15px; font-weight:700; color:var(--navy); }
+.ai-box-sub { font-size:12px; color:var(--ink-faded); margin-top:2px; }
+.ai-body { font-size:14px; color:var(--ink); line-height:2; white-space:pre-wrap; min-height:80px; }
+.typing { display:inline-flex; gap:4px; align-items:center; }
+.typing span { width:6px; height:6px; background:var(--navy); border-radius:50%; animation:bounce .9s infinite; }
+.typing span:nth-child(2){animation-delay:.15s} .typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box { background:linear-gradient(135deg,var(--navy-deep),var(--navy)); border-radius:12px; padding:28px; text-align:center; }
+.cta-box h3 { font-family:'Noto Serif TC',serif; font-size:18px; color:white; font-weight:800; margin-bottom:8px; }
+.cta-box p { color:rgba(255,255,255,0.7); font-size:13px; margin-bottom:18px; }
+.cta-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-gold { background:var(--gold-bright); color:var(--navy-deep); padding:11px 24px; border-radius:8px; font-weight:800; font-size:14px; }
+.btn-ghost { border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.85); padding:11px 20px; border-radius:8px; font-size:13px; }
+.btn-restart { display:block; margin:16px auto 0; background:white; border:2px solid var(--line); color:var(--ink); padding:10px 22px; border-radius:8px; font:inherit; font-weight:700; font-size:14px; cursor:pointer; }
+.limit-msg { background:#fff0f0; border:1px solid #f5c0c0; border-radius:8px; padding:14px 18px; color:#c34646; font-size:14px; line-height:1.7; text-align:center; }
+@media(max-width:560px){.dim-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand">
+    <img src="assets/logo.png" alt="策識永續">
+    <span>AI 人資健檢中心</span>
+  </a>
+  <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">📊 No.01 · AI 人資成熟度健檢</div>
+  <h1>企業人資健康報告書</h1>
+  <p>回答 20 題，AI 即時分析五大維度健全度，產出專屬報告</p>
+</div>
+<div class="main">
+
+  <!-- Quiz -->
+  <div id="quiz-section">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label">健檢進度</span>
+        <span class="progress-count" id="prog-count">第 1 題，共 20 題</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:5%"></div></div>
+      <div class="dim-pills" id="dim-pills"></div>
+    </div>
+    <div class="q-card">
+      <div class="q-dim" id="q-dim"></div>
+      <div class="q-num" id="q-num"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="opts" id="q-opts"></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-prev" id="btn-prev" onclick="prevQ()">← 上一題</button>
+      <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>下一題 →</button>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="result-section">
+    <div class="result-header">
+      <h2>《企業人資健康報告書》</h2>
+      <div class="overall-score" id="overall-score">—</div>
+      <div class="overall-level" id="overall-level"></div>
+      <div class="overall-desc">人資成熟度總分（滿分 100）</div>
+    </div>
+    <div class="dim-grid" id="dim-grid"></div>
+    <div class="ai-box">
+      <div class="ai-box-head">
+        <div class="ai-box-icon">🤖</div>
+        <div>
+          <div class="ai-box-title">AI 人資顧問個人化分析報告</div>
+          <div class="ai-box-sub">基於作答結果，由 AI 生成</div>
+        </div>
+      </div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="cta-box">
+      <h3>想進一步改善人資體質？</h3>
+      <p>策識永續提供企業人資健檢到制度建置的完整顧問服務</p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">重新健檢</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc1-' + Math.random().toString(36).slice(2);
+
+const DIMS = ['招募健全度','留才健全度','績效健全度','AI涵蓋度','法遵風險'];
+
+const QS = [
+  // 招募健全度
+  { dim:'招募健全度', text:'您的企業是否有標準化的招募流程（職缺申請→面試→錄取通知）？', opts:['完全沒有，每次都臨時處理','有一些基本步驟，但不一致','大部分有標準流程','完整標準化，且持續優化'], sc:[1,2,3,4] },
+  { dim:'招募健全度', text:'公司的職務說明書（JD）是否定期更新並反映實際工作內容？', opts:['沒有職務說明書','有但從未更新','偶爾更新','每年定期更新且有版本管理'], sc:[1,2,3,4] },
+  { dim:'招募健全度', text:'是否有結構化的面試評分表或標準面試問題庫？', opts:['完全沒有','靠主管自由發揮','有簡單的評分表','有完整的結構化面試工具'], sc:[1,2,3,4] },
+  { dim:'招募健全度', text:'您是否追蹤招募指標（到職率、試用期通過率、平均招募天數）？', opts:['從未追蹤','偶爾統計','有追蹤但少分析','定期追蹤並用於改善招募策略'], sc:[1,2,3,4] },
+  // 留才健全度
+  { dim:'留才健全度', text:'公司是否有明確的薪資架構或職等薪資帶（Pay Band）？', opts:['沒有，薪資由老闆決定','有簡單的薪資區間','有職等薪資架構','完整薪酬架構且定期市場比對'], sc:[1,2,3,4] },
+  { dim:'留才健全度', text:'公司是否定期進行員工滿意度或敬業度調查？', opts:['從未做過','偶爾做非正式問卷','每年正式調查','每年調查並追蹤改善行動'], sc:[1,2,3,4] },
+  { dim:'留才健全度', text:'是否有完整的新人報到（Onboarding）計畫，超過 1 個月？', opts:['沒有，新人自己適應','只有第一天說明','有 1-2 週的報到計畫','有 30-90 天完整 Onboarding 計畫'], sc:[1,2,3,4] },
+  { dim:'留才健全度', text:'公司年度自願離職率大約是多少？', opts:['超過 30%','20%-30%','10%-20%','低於 10%'], sc:[1,2,3,4] },
+  // 績效健全度
+  { dim:'績效健全度', text:'公司是否有正式的績效評估制度（非僅年終調薪）？', opts:['沒有正式制度','有年度考核但流於形式','有半年或年度正式評估','有 OKR/KPI 搭配定期 1on1'], sc:[1,2,3,4] },
+  { dim:'績效健全度', text:'績效目標是否在年初與員工共同設定並確認？', opts:['沒有設定目標','目標由主管單方訂定','有設定但未正式確認','雙向討論並書面確認'], sc:[1,2,3,4] },
+  { dim:'績效健全度', text:'績效不佳的員工是否有明確的改善計畫（PIP）流程？', opts:['沒有，直接請走或忍耐','口頭警告後不了了之','有書面警告但無計畫','有完整 PIP 流程與跟蹤'], sc:[1,2,3,4] },
+  { dim:'績效健全度', text:'公司是否將績效結果連結至調薪、升遷或訓練計畫？', opts:['完全沒有連結','偶爾參考','部分連結','完整連結且員工清楚規則'], sc:[1,2,3,4] },
+  // AI涵蓋度
+  { dim:'AI涵蓋度', text:'公司目前是否在 HR 流程中使用任何 AI 或自動化工具？', opts:['完全沒有','有用基本 Excel/試算表','使用部分 HR 軟體','有多種 AI/自動化工具'], sc:[1,2,3,4] },
+  { dim:'AI涵蓋度', text:'招募流程是否有使用 AI 輔助（如履歷篩選、面試排程）？', opts:['沒有','手動但有考慮引入','有用平台功能（如 104 智能媒合）','有完整 ATS 系統'], sc:[1,2,3,4] },
+  { dim:'AI涵蓋度', text:'HR 人員是否定期使用 AI 工具（如 ChatGPT、Claude）協助工作？', opts:['完全不用','偶爾嘗試','每週使用','AI 已融入日常 HR 工作流'], sc:[1,2,3,4] },
+  { dim:'AI涵蓋度', text:'公司是否針對 AI 工具使用訂有規範或教育訓練？', opts:['沒有任何規範','有討論但無行動','有基本規範','有完整政策與訓練計畫'], sc:[1,2,3,4] },
+  // 法遵風險
+  { dim:'法遵風險', text:'公司的工作規則是否已送勞動局核備？', opts:['不確定或未核備','有核備但內容過時','有核備且定期更新','有核備、更新且員工知悉'], sc:[1,2,3,4] },
+  { dim:'法遵風險', text:'是否完整記錄員工的出勤紀錄（包含加班申請）？', opts:['沒有系統性記錄','有打卡但未管理加班','有出勤系統且加班需申請','完整記錄且可提供勞動局查核'], sc:[1,2,3,4] },
+  { dim:'法遵風險', text:'公司是否有職場不法侵害預防計畫（依法必備）？', opts:['完全沒有','知道需要但未建立','有但員工不知道','完整計畫且定期演練教育'], sc:[1,2,3,4] },
+  { dim:'法遵風險', text:'近兩年內是否曾被員工申訴勞資爭議或接受勞動檢查？', opts:['有多次爭議且未妥善處理','有爭議但已解決','有過一次，已改善','從未有爭議'], sc:[4,3,2,1] },
+];
+
+let cur = 0, answers = new Array(20).fill(null);
+
+function renderQ() {
+  const q = QS[cur];
+  document.getElementById('q-dim').textContent = q.dim;
+  document.getElementById('q-num').textContent = `第 ${cur+1} 題`;
+  document.getElementById('q-text').textContent = q.text;
+  const optsEl = document.getElementById('q-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((txt, i) => {
+    const d = document.createElement('div');
+    d.className = 'opt' + (answers[cur]===i?' selected':'');
+    d.innerHTML = `<div class="opt-radio"></div><div class="opt-text">${txt}</div>`;
+    d.onclick = () => select(i);
+    optsEl.appendChild(d);
+  });
+  document.getElementById('prog-fill').style.width = Math.round(((cur+1)/20)*100)+'%';
+  document.getElementById('prog-count').textContent = `第 ${cur+1} 題，共 20 題`;
+  document.getElementById('btn-prev').disabled = cur===0;
+  document.getElementById('btn-next').disabled = answers[cur]===null;
+  document.getElementById('btn-next').textContent = cur===19 ? '查看報告 →' : '下一題 →';
+  renderPills();
+}
+
+function renderPills() {
+  const el = document.getElementById('dim-pills');
+  el.innerHTML = '';
+  DIMS.forEach(d => {
+    const idxs = QS.map((q,i)=>q.dim===d?i:-1).filter(i=>i>=0);
+    const done = idxs.every(i=>answers[i]!==null);
+    const active = QS[cur].dim===d;
+    const span = document.createElement('span');
+    span.className = 'dim-pill ' + (active?'dim-active':done?'dim-done':'dim-pending');
+    span.textContent = d;
+    el.appendChild(span);
+  });
+}
+
+function select(i) {
+  answers[cur] = i;
+  document.querySelectorAll('.opt').forEach((el,j)=>el.classList.toggle('selected',j===i));
+  document.getElementById('btn-next').disabled = false;
+}
+function prevQ() { if(cur>0){cur--;renderQ();} }
+function nextQ() { if(cur===19){showResult();return;} cur++;renderQ(); }
+
+function dimScore(dim) {
+  const idxs = QS.map((q,i)=>q.dim===dim?i:-1).filter(i=>i>=0);
+  const total = idxs.reduce((s,i)=>s+(answers[i]!==null?QS[i].sc[answers[i]]:0),0);
+  return Math.round((total/(idxs.length*4))*100);
+}
+
+const COMMENTS = {
+  '招募健全度': s => s>=70?'招募流程完善，建議持續優化指標追蹤與數據分析。':s>=45?'基本架構存在，建議先建立結構化面試工具與 JD 版本管理。':'招募流程急需標準化，建議優先建立職務說明書與面試評分表。',
+  '留才健全度': s => s>=70?'留才機制健全，持續關注高潛力人才的個人發展計畫。':s>=45?'基礎到位，建議加強薪酬市場比對與 90 天 Onboarding 計畫。':'留才風險偏高，建議立即進行員工滿意度調查並找出主要流失原因。',
+  '績效健全度': s => s>=70?'績效制度完整，建議導入更精細的 OKR 目標對齊機制。':s>=45?'有基礎架構，需建立績效結果與薪酬升遷的明確對應規則。':'績效制度幾乎空白，建議先建立最小可行的 KPI 架構與半年評估。',
+  'AI涵蓋度': s => s>=70?'AI 應用領先同業，建議建立完整的 AI 治理政策。':s>=45?'有初步 AI 應用，建議從招募與文件產出兩個面向優先擴大。':'AI 應用幾乎空白，建議從免費工具開始小規模試行，累積使用習慣。',
+  '法遵風險': s => s>=70?'法遵基礎扎實，建議定期追蹤法令修訂並更新工作規則。':s>=45?'有基本合規意識，需補強出勤紀錄管理與不法侵害預防計畫。':'法遵風險偏高，建議立即進行工作規則核備並整備出勤制度。',
+};
+
+function levelLabel(s) {
+  if(s>=75) return '🏆 人資優質型';
+  if(s>=55) return '📈 人資成長型';
+  if(s>=35) return '⚠️ 人資基礎型';
+  return '🚨 人資緊急型';
+}
+function scoreClass(s) { return s>=70?'s-high':s>=45?'s-mid':'s-low'; }
+function barClass(s) { return s>=70?'b-high':s>=45?'b-mid':'b-low'; }
+
+function showResult() {
+  document.getElementById('quiz-section').style.display = 'none';
+
+  const dimScores = {};
+  DIMS.forEach(d => { dimScores[d] = dimScore(d); });
+  const overall = Math.round(Object.values(dimScores).reduce((a,b)=>a+b,0)/DIMS.length);
+  const level = overall>=70?'高':overall>=45?'中':'低';
+
+  HCLead.gate('tool-01', 'AI 人資成熟度健檢', {score:overall, level:level}, function() {
+    document.getElementById('result-section').style.display = 'block';
+
+    document.getElementById('overall-score').textContent = overall;
+    document.getElementById('overall-level').textContent = levelLabel(overall);
+
+    const grid = document.getElementById('dim-grid');
+    grid.innerHTML = DIMS.map(d => {
+      const s = dimScores[d];
+      return `<div class="dim-card">
+        <div class="dim-card-head">
+          <div class="dim-name">${d}</div>
+          <div class="dim-score ${scoreClass(s)}">${s}</div>
+        </div>
+        <div class="dim-bar-wrap"><div class="dim-bar ${barClass(s)}" data-w="${s}"></div></div>
+        <div class="dim-comment">${COMMENTS[d](s)}</div>
+      </div>`;
+    }).join('');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.dim-bar[data-w]').forEach(el => {
+          el.style.width = el.dataset.w + '%';
+        });
+      });
+    });
+
+    callAI(dimScores, overall);
+  });
+}
+
+async function callAI(dimScores, overall) {
+  const prompt = `企業完成「AI 人資成熟度健檢」結果如下：
+總分：${overall}/100（${levelLabel(overall)}）
+- 招募健全度：${dimScores['招募健全度']}/100
+- 留才健全度：${dimScores['留才健全度']}/100
+- 績效健全度：${dimScores['績效健全度']}/100
+- AI涵蓋度：${dimScores['AI涵蓋度']}/100
+- 法遵風險：${dimScores['法遵風險']}/100
+
+請以策識永續 AI 人資顧問身份，用繁體中文撰寫診斷報告，格式如下：
+
+【整體評語】
+2句針對這個分數的精準評語。
+
+【優先改善維度】
+列出得分最低的 2 個維度，各提供 2-3 條具體可執行的改善建議。
+
+【本月可立即行動的 3 件事】
+1. 行動一
+2. 行動二
+3. 行動三
+
+【結語】
+1句激勵語。
+
+語氣專業、具實戰感，適合企業主與 HR 直接閱讀。`;
+
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tool: 'maturity',
+        system: '你是策識永續 AI 人資顧問，專業、務實、具溫度，回應使用繁體中文。',
+        messages: [{ role: 'user', content: prompt }],
+        sessionId: SESSION,
+        stream: true,
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      document.getElementById('ai-body').innerHTML = err.limitReached
+        ? `<div class="limit-msg">今日健檢次數已達上限，請明日再試。<br>或 <a href="upgrade.html" style="color:var(--navy);font-weight:700;">升級專業版</a> 享無限使用。</div>`
+        : `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
+      return;
+    }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let text = '';
+    document.getElementById('ai-body').innerHTML = '';
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      for (const line of decoder.decode(value, { stream: true }).split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        const d = line.slice(6).trim();
+        if (d === '[DONE]') break;
+        try { text += JSON.parse(d).text || ''; } catch {}
+      }
+      document.getElementById('ai-body').textContent = text;
+    }
+    HCLead.reportDone(text);
+  } catch {
+    document.getElementById('ai-body').textContent = '（AI 分析服務暫時無法連線，請稍後再試）';
+  }
+}
+
+function restart() {
+  cur = 0;
+  answers = new Array(20).fill(null);
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  renderQ();
+}
+
+renderQ();
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

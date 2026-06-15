@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI ?·æ¥­å®‰å…¨è¡›ç?è¨ºæ–· Â· ç­–è?æ°¸ç?</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a;--safe:#1d756f}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#1a2a0a,#2d4a12,#1a3a1a);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,36px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.75);font-size:14px;max-width:560px;margin:0 auto}
+.main{max-width:860px;margin:0 auto;padding:36px clamp(20px,4vw,40px) 80px}
+
+/* setup card */
+.setup-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.setup-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.setup-card p{font-size:13px;color:var(--ink-soft);margin-bottom:18px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{margin-bottom:4px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.field select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s}
+.field select:focus{outline:none;border-color:var(--teal)}
+.btn-start{width:100%;background:linear-gradient(135deg,#2d4a12,var(--teal));color:#fff;border:none;padding:13px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px;transition:opacity .2s}
+.btn-start:hover:not(:disabled){opacity:.85}
+.btn-start:disabled{opacity:.4;cursor:not-allowed}
+
+/* audit section */
+#audit-section{display:none}
+.audit-progress-bar{height:5px;background:rgba(16,36,76,.08);border-radius:999px;overflow:hidden;margin-bottom:20px}
+.audit-progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),#2d4a12);border-radius:999px;transition:width .4s}
+.category-card{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.cat-header:hover{background:rgba(16,36,76,.02)}
+.cat-left{display:flex;align-items:center;gap:12px}
+.cat-icon{font-size:20px}
+.cat-name{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.cat-count{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.cat-score{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(16,36,76,.06);color:var(--ink-soft)}
+.cat-arrow{font-size:16px;color:var(--ink-faded);transition:transform .25s}
+.cat-header.open .cat-arrow{transform:rotate(180deg)}
+.cat-body{display:none;padding:0 20px 16px}
+.cat-body.open{display:block}
+.item-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.item-row:last-child{border-bottom:none}
+.item-top{display:flex;gap:10px;margin-bottom:8px}
+.item-num{font-size:11px;font-weight:800;color:var(--ink-faded);flex-shrink:0;width:20px;padding-top:2px}
+.item-text{font-size:13px;color:var(--ink);line-height:1.65;flex:1}
+.item-law{font-size:11px;color:var(--teal);font-weight:600;margin-top:3px}
+.item-size-tag{display:inline-block;font-size:10px;background:rgba(201,161,93,.15);color:var(--gold);border-radius:3px;padding:1px 6px;margin-left:4px;font-weight:700;vertical-align:middle}
+.item-opts{display:flex;gap:6px;margin-left:30px;flex-wrap:wrap}
+.opt-btn{padding:5px 13px;border-radius:999px;border:1.5px solid var(--line);font:inherit;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--ink-soft);transition:all .2s}
+.opt-btn:hover{border-color:var(--navy)}
+.opt-btn.ok.sel{background:#e8f5f0;border-color:var(--safe);color:var(--safe)}
+.opt-btn.ng.sel{background:#fde8e8;border-color:var(--danger);color:var(--danger)}
+.opt-btn.na.sel{background:rgba(16,36,76,.06);border-color:var(--ink-faded);color:var(--ink-faded)}
+
+/* nav buttons */
+.audit-nav{display:flex;justify-content:space-between;gap:14px;margin-top:20px}
+.btn-prev{background:#fff;border:2px solid var(--line);color:var(--ink-soft);padding:11px 20px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-prev:hover:not(:disabled){border-color:var(--navy);color:var(--navy)}
+.btn-prev:disabled{opacity:.35;cursor:not-allowed}
+.btn-calc{background:var(--teal);color:#fff;padding:11px 26px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:background .2s}
+.btn-calc:hover{background:#155e59}
+
+/* result */
+#result-section{display:none}
+.score-head{border-radius:14px;padding:30px;text-align:center;margin-bottom:18px}
+.rh-a{background:linear-gradient(135deg,#1a3d2b,var(--teal))}
+.rh-b{background:linear-gradient(135deg,#2a3d1a,#4a8020)}
+.rh-c{background:linear-gradient(135deg,#3d2a0a,var(--warning))}
+.rh-d{background:linear-gradient(135deg,#3d0a0a,var(--danger))}
+.score-head h2{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:6px}
+.big-score{font-size:56px;font-weight:900;color:#fff;line-height:1}
+.score-sub{font-size:13px;color:rgba(255,255,255,.75);margin-top:6px}
+.cat-scores{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:18px}
+.cat-score-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+.csc-name{font-size:12px;color:var(--ink-soft);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.csc-bar{height:6px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.csc-fill{height:100%;border-radius:999px;transition:width .8s ease}
+.fill-a{background:var(--teal)}.fill-b{background:#6aab20}.fill-c{background:var(--warning)}.fill-d{background:var(--danger)}
+.csc-pct{font-size:15px;font-weight:800;color:var(--navy)}
+.ng-list{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+.ng-list h3{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px}
+.ng-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:6px}
+.ng-high{background:#fde8e8}.ng-mid{background:#fef3e2}.ng-low{background:#f0f4ff}
+.ng-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.nb-h{background:#f5c0c0;color:var(--danger)}.nb-m{background:#f5daa8;color:var(--warning)}.nb-l{background:#c0d0f5;color:#2040a0}
+.ng-txt{font-size:13px;color:var(--ink);line-height:1.6}
+.ng-law{font-size:11px;color:var(--teal);font-weight:600;margin-top:2px}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ai-icon{width:34px;height:34px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+.source-note{font-size:11px;color:var(--ink-faded);text-align:center;margin-top:16px;line-height:1.7}
+@media(max-width:560px){.row2{grid-template-columns:1fr}.item-opts{margin-left:0}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI äººè??¥æª¢ä¸­å?</span></a>
+  <a href="hr-health-center.html" class="nav-back">???å¥æª¢ä¸­å¿?/a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">?¦º No.09 Â· AI ?·æ¥­å®‰å…¨è¡›ç?è¨ºæ–·</div>
+  <h1>?·æ¥­å®‰å…¨è¡›ç??ªä¸»ç®¡ç?ç¨½æ ¸</h1>
+  <p>ä¾è‡º?—å??å?æª¢æŸ¥?•ã€Œè·æ¥­å??¨è??Ÿè‡ªä¸»ç®¡?†ç¨½?¥è¡¨ï¼?13å¹´åº¦ï¼‰ã€ï?å°ç…§æ³•ä»¤?é?è©•æ ¸</p>
+</div>
+<div class="main">
+
+  <!-- Step 1: ?ºæœ¬è¨­å? -->
+  <div id="setup-section">
+    <div class="setup-card">
+      <h2>è¨­å?äº‹æ¥­?®ä??ºæœ¬è³‡è?</h2>
+      <p>?¡å·¥äººæ•¸?‡ä?æ¥­é??¥å?å½±éŸ¿?©ç”¨?„æ?å®šç¾©?™é??®ï?è«‹æ­£ç¢ºå¡«å¯?/p>
+      <div class="row2">
+        <div class="field">
+          <label>?¡å·¥ç¸½äºº??/label>
+          <select id="s-size" onchange="checkSetup()">
+            <option value="">è«‹é¸??/option>
+            <option value="lt30">?ªæ»¿ 30 äº?/option>
+            <option value="30to49">30??9 äº?/option>
+            <option value="50to99">50??9 äº?/option>
+            <option value="100to199">100??99 äº?/option>
+            <option value="200to299">200??99 äº?/option>
+            <option value="300plus">300 äººä»¥ä¸?/option>
+          </select>
+        </div>
+        <div class="field">
+          <label>äº‹æ¥­é¡åˆ¥ï¼ˆä??å??¨å?é¡ï?</label>
+          <select id="s-type" onchange="checkSetup()">
+            <option value="">è«‹é¸??/option>
+            <option value="1">ç¬¬ä?é¡ï?è£½é€ ã€æ¡ç¤¦ã€ç?? ç?ï¼?/option>
+            <option value="2">ç¬¬ä?é¡ï?è¾²æ?æ¼ç‰§?æ‰¹?¼é›¶?®ç?ï¼?/option>
+            <option value="3">ç¬¬ä?é¡ï??‘è??æ??²ã€è¾¦?¬æ??™ç?ï¼?/option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>?¢æ¥­?¥ï??¨æ–¼ AI ?†æ?ï¼?/label>
+          <select id="s-industry">
+            <option value="ä¸€?¬è¾¦?¬å®¤">ä¸€?¬è¾¦?¬å®¤</option>
+            <option value="è£½é€ æ¥­">è£½é€ æ¥­</option>
+            <option value="?Ÿé€ æ¥­">?Ÿé€ æ¥­</option>
+            <option value="?¶å”®/é¤é£²">?¶å”® / é¤é£²</option>
+            <option value="?«ç?/?§è­·">?«ç? / ?§è­·</option>
+            <option value="?‰å„²/?©æ?">?‰å„² / ?©æ?</option>
+            <option value="è³‡è?/ç§‘æ?">è³‡è? / ç§‘æ?</option>
+            <option value="?¶ä??å?æ¥?>?¶ä??å?æ¥?/option>
+          </select>
+        </div>
+        <div class="field">
+          <label>?¯å¦?‰å?äº‹ç‰¹?¥å±å®³å¥åº·ä?æ¥?/label>
+          <select id="s-hazard">
+            <option value="no">??/option>
+            <option value="yes50">?¯ï?ä¸”æ­¤é¡å?å·???50 äº?/option>
+            <option value="yes">?¯ï?ä½†æ­¤é¡å?å·?&lt; 50 äº?/option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-start" id="btn-start" onclick="startAudit()" disabled>?‹å??é?ç¨½æ ¸ ??/button>
+    </div>
+    <p class="source-note">?¬å·¥?·ä??šã€Œè‡º?—å??å?æª¢æŸ¥??113 å¹´åº¦ä¸€?¬è?æ¥­ä?æ¥­å–®ä½è·æ¥­å??¨è??Ÿè‡ªä¸»ç®¡?†ç¨½?¥è¡¨?è¨­è¨?br>??79 ç¨½æŸ¥?…ç›®ï¼Œæ¶µ?‹æ”¿ç­–ã€è¨­?½ã€å?å­¸å??å¥åº·ä?è­·ã€ç?ç¹”ç®¡?†ã€æ??²è?ç·´ã€ç??¥æ?è®Šç??¢å?</p>
+  </div>
+
+  <!-- Step 2: ç¨½æ ¸è¡?-->
+  <div id="audit-section">
+    <div class="audit-progress-bar"><div class="audit-progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div id="audit-categories"></div>
+    <div class="audit-nav">
+      <button class="btn-prev" onclick="goSetup()">??ä¿®æ”¹è¨­å?</button>
+      <button class="btn-calc" onclick="calcResult()">?¢ç?è¨ºæ–·?±å? ??/button>
+    </div>
+  </div>
+
+  <!-- Step 3: çµæ? -->
+  <div id="result-section">
+    <div class="score-head" id="score-head">
+      <h2 id="res-title"></h2>
+      <div class="big-score" id="big-score"></div>
+      <div class="score-sub" id="score-sub"></div>
+    </div>
+    <div class="cat-scores" id="cat-scores"></div>
+    <div class="ng-list" id="ng-list">
+      <h3>??ä¸å??¼é??????ªå??¹å?æ¸…å–®</h3>
+      <div id="ng-items"></div>
+    </div>
+    <div class="ai-box">
+      <div class="ai-head"><div class="ai-icon">?¦º</div><div><div class="ai-title">AI ?·å?è¡›å?è¦å??è??¹å?è¨ˆç•«</div></div></div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="cta-box">
+      <h3>?€è¦å??©å»ºç½®è·å®‰è?ç®¡ç?ç³»çµ±ï¼?/h3>
+      <p>ç­–è?æ°¸ç??ä? ISO 45001 å°å…¥?è·å®‰è??¶åº¦å»ºç½®?æ?è¦éµå¾ªå¥è¨ºã€æ??²è?ç·´è???/p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">?è²»è«®è©¢ AI é¡§å?</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">?‹æ??™æ–¹æ¡?/a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">?æ–°ç¨½æ ¸</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc9-' + Math.random().toString(36).slice(2);
+
+// ?€?€ ç¨½æŸ¥?…ç›®å®šç¾© ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+// priority: 'H'=é«? 'M'=ä¸? 'L'=ä½?// minSize: äººæ•¸?€æª?('any','30','50','100','200','300')
+// type1only: ?ªé©?¨ç¬¬ä¸€é¡?// type12: ?©ç”¨ç¬¬ä??ä?é¡ï?ä¸é©?¨ç¬¬ä¸‰é?ï¼?const CATS = [
+  {
+    id:'policy', icon:'??', name:'?¿ç??»é¢¨?ªè?ä¼°ãƒ»?±å®³è¾¨è?',
+    items:[
+      { no:1, text:'?‡ä¸»?–æ?é«˜ä¸»ç®¡æ˜¯?¦æ?ç°½ç½²?·æ¥­å®‰å…¨è¡›ç??¿ç??²æ?', law:'ï¼ˆè·å®‰æ?Â§5ï¼?, priority:'H', minSize:'any' },
+      { no:2, text:'?¿ç?ä¸­æ˜¯?¦å??«éµå®ˆå?è¡›æ?è¦ã€é??²è·æ¥­ç½å®³å??ç??¹å?ä¹‹æ‰¿è«?, law:'ï¼ˆè·å®‰æ?Â§5ï¼?, priority:'H', minSize:'any' },
+      { no:3, text:'?¯å¦è¨‚æ??·è??±å®³è¾¨è??é¢¨?ªè?ä¼°å?æ±ºå??§åˆ¶?ªæ–½?„ç›¸?œç?åº?, law:'ï¼ˆè·å®‰æ?Â§5ï¼?, priority:'H', minSize:'any' },
+      { no:4, text:'?·è??±å®³è¾¨è??Šé¢¨?ªè?ä¼°ç?äººå“¡?¯å¦?¥å??å?è¦ä??™è‚²è¨“ç·´', law:'ï¼ˆè?ç·´è??‡ï?', priority:'M', minSize:'any' },
+      { no:5, text:'é¢¨éšª?§åˆ¶?ªæ–½?¯å¦ä¾å„ª?ˆé?åºï?æ¶ˆé™¤?’å?ä»??å·¥ç??§åˆ¶?’æ?ç¤ºç®¡?†â??‹äºº?²è­·??, law:'ï¼ˆè·å®‰æ?Â§5ï¼?, priority:'H', minSize:'any' },
+      { no:6, text:'?¼ç?äº‹ä»¶?–ç??¥ç?æ³å?ï¼Œæ˜¯?¦é??°æª¢è¨å?é¢¨éšªè©•ä¼°ä¸¦æ–¼å¿…è??‚ä¿®æ­?, law:'ï¼ˆè·å®‰æ?Â§5ï¼?, priority:'M', minSize:'any' },
+    ]
+  },
+  {
+    id:'facility', icon:'?­', name:'å·¥ä??´æ?å®‰å…¨è¡›ç?è¨­æ–½',
+    items:[
+      { no:7, text:'å·¥ä??´æ??¯å¦ä¿æ?å®‰å…¨?€?‹ï??¿å??å·¥è·Œå€’ã€æ??’ã€è¸©??, law:'ï¼ˆè¨­è¦Â?1ï¼?, priority:'H', minSize:'any' },
+      { no:8, text:'å®‰å…¨?€?å??¨æ¢¯?¼å·¥ä½œæ??“ä?å¾—ä??–ï??šé?ä¸å??†ç½®?©å?', law:'ï¼ˆè¨­è¦Â?7ï¼?, priority:'H', minSize:'any' },
+      { no:9, text:'å®¤å…§?šé? 2 ?¬å°ºé«˜åº¦?§ç„¡?œç??©ï?ä¸»è?äººè??“å?å®‰å…¨?€?‰æ?é¡¯æ?ç¤?, law:'ï¼ˆè¨­è¦Â?1ï¼?, priority:'H', minSize:'any' },
+      { no:10, text:'æ©Ÿæ¢°?Ÿå?æ©Ÿã€è?è»¸ã€é?è¼ªã€å¸¶è¼ªç??±éšª?¨å??‰è­·ç½©ã€è­·?æ?è·¨æ?ç­‰è¨­??, law:'ï¼ˆè¨­è¦Â?3ï¼?, priority:'H', minSize:'any' },
+      { no:11, text:'?²èƒ´?ç£¨åºŠã€å¸¶?¸ç?é«˜å±æ©Ÿæ¢°?±éšª?¨ä?å·²è¨­ç½®è­·ç½©æ????å®‰å…¨?€', law:'ï¼ˆè¨­è¦Â?8ï¼?, priority:'H', minSize:'any' },
+      { no:12, text:'5?°ä»¥ä¸Šè??ªæ?æ¢°å·²?‡å?ä½œæ¥­ä¸»ç®¡', law:'ï¼ˆè¨­è¦Â?2ï¼?, priority:'H', minSize:'any' },
+      { no:13, text:'?‡é?æ©Ÿå?æ¨“å‡º?¥å£å·²è?ç½®é€??å®‰å…¨è£ç½®ï¼ˆé??‹å³?œï?', law:'ï¼ˆè¨­è¦Â?3ï¼?, priority:'H', minSize:'any' },
+      { no:14, text:'?‡é?æ©Ÿå·²æ¨™ç¤ºç©è??·é??–æ?é«˜ä?è¼‰äºº??, law:'ï¼ˆè¨­è¦Â?4ï¼?, priority:'M', minSize:'any' },
+      { no:16, text:'é«˜å?æ°??å®¹å™¨ä½¿ç”¨?‚å·²?ºå?ï¼Œæº«åº¦ä???40Â°C ä»¥ä?', law:'ï¼ˆè¨­è¦Â?07??08ï¼?, priority:'H', minSize:'any' },
+      { no:17, text:'?·é?ä¸€?¬å™¸ä»¥ä??†é?æ©Ÿï?å·²æ?æ´¾ç‰¹æ®Šä?æ¥­å??¨è??Ÿè?ç·´å??¼äºº?¡æ?ä½?, law:'ï¼ˆè¨­è¦Â?26?è?ç·´Â?4ï¼?, priority:'H', minSize:'any' },
+      { no:18, text:'?¬é??†æ”¾?©æ?å·²æ¡?–ç¹©ç´¢æ?ç¶ã€è­·ç¶²ã€æ?æ¨ç??²å€’å??ªæ–½', law:'ï¼ˆè¨­è¦Â?53ï¼?, priority:'M', minSize:'any' },
+      { no:20, text:'å­˜æ??“ç?æ°???–å¯?ƒç?å¡µä??´æ?ï¼Œå·²?‰é€šé¢¨?æ?æ°?€é™¤å¡µå??»é™¤?œé›»è¨­æ–½', law:'ï¼ˆè¨­è¦Â?88ï¼?, priority:'H', minSize:'any' },
+      { no:22, text:'é«˜åº¦ 2 ?¬å°ºä»¥ä?å·¥ä??´æ??Šç·£?Šé???·²è¨­ç½®?©ç•¶è­·æ??–è­·??, law:'ï¼ˆè¨­è¦Â?24ï¼?, priority:'H', minSize:'any' },
+      { no:23, text:'é«˜å·®è¶…é? 1.5 ?¬å°ºä»¥ä??•æ?å·²è¨­ç½®èƒ½å®‰å…¨ä¸Šä??„è¨­??, law:'ï¼ˆè¨­è¦Â?28ï¼?, priority:'H', minSize:'any' },
+      { no:24, text:'ç§»å?æ¢¯å??ˆæ¢¯ç¬¦å?è¦å?', law:'ï¼ˆè¨­è¦Â?29??30ï¼?, priority:'M', minSize:'any' },
+      { no:25, text:'?»æ°£?¨æ??Šé›»ç·šç¬¦?ˆå?å®¶æ?æº–è???, law:'ï¼ˆè¨­è¦Â?39ï¼?, priority:'H', minSize:'any' },
+      { no:26, text:'?¥è§¸?ç??–é›»æ°?¨­?™è?å·²æ??²æ­¢?Ÿé›»?±å®³ä¹‹è¨­??, law:'ï¼ˆè¨­è¦Â?46ï¼?, priority:'H', minSize:'any' },
+      { no:27, text:'?šè·¯ä¸Šæœªä½¿ç”¨?¨æ??ç??–ç§»?•é›»ç·?, law:'ï¼ˆè¨­è¦Â?53ï¼?, priority:'M', minSize:'any' },
+      { no:28, text:'ä½œæ¥­?‚æ??ä??å·¥?©ç•¶ä¹‹å€‹äºº?²è­·??, law:'ï¼ˆè¨­è¦Â?77??90ï¼?, priority:'H', minSize:'any' },
+      { no:29, text:'?·è?å®¤ã€å†·?å®¤ç­‰å??‰è¨­?½å…§?¨ï??‰å…§?‹é??é€šå ±?–è­¦?±è?ç½?, law:'ï¼ˆç¼ºæ°§Â?ï¼?, priority:'H', minSize:'any' },
+    ]
+  },
+  {
+    id:'chem', icon:'?—ï?', name:'?°å???¸¬?»å?å­¸å?æ¨™ç¤º?»å±?ªæ€§æ?æ¢?,
+    items:[
+      { no:30, text:'å·²ä?æ³•å¯¦?½ä?æ¥­ç’°å¢ƒç›£æ¸?, law:'ï¼ˆç’°???ï¼?, priority:'H', minSize:'any' },
+      { no:31, text:'?±å®³?§å?å­¸å?å·²é€²è??±å®³æ¨™ç¤ºï¼ˆGHSæ¨™ç¤ºï¼?, law:'ï¼ˆå±æ¨™Â?ï¼?, priority:'H', minSize:'any' },
+      { no:32, text:'?±å®³?§å?å­¸å?å­˜æ”¾?¾å ´å·²æ?ä¾›å??¨è??™è¡¨ï¼ˆSDSï¼‰ï?ä¸¦é©?‚æ›´??, law:'ï¼ˆå±æ¨™Â?2??7ï¼?, priority:'H', minSize:'any' },
+      { no:33, text:'å·²è?å®šå±å®³é€šè?è¨ˆç•«ä¸¦ä?è¨ˆç•«?·è?', law:'ï¼ˆå±æ¨™Â?7ï¼?, priority:'H', minSize:'any' },
+      { no:34, text:'å·²è£½ä½œå±å®³æ€§å?å­¸å?æ¸…å–®', law:'ï¼ˆå±æ¨™Â?7ï¼?, priority:'M', minSize:'any' },
+      { no:35, text:'?±éšª?§æ?æ¢°è¨­?™åœ¨ä½¿ç”¨?Ÿé?å·²ç?ä»??æª¢æŸ¥æ©Ÿæ?æª¢æŸ¥?ˆæ ¼', law:'ï¼ˆè·å®‰Â?6ï¼?, priority:'H', minSize:'any' },
+      { no:36, text:'?±éšª?§æ?æ¢°è¨­?™æ?ä½œäºº?¡ç”±å°ˆæ¥­?—è??ˆæ ¼?…æ?ä»»ï?ä¸”æ??ˆç??„æ??§äºº??, law:'ï¼ˆè·å®‰Â?4ï¼?, priority:'H', minSize:'any' },
+      { no:37, text:'?±éšª?§æ?æ¢°è¨­?™å??¨æ??“è??å??¼è??‰æ??Ÿé?ï¼Œå·²?‘æª¢?¥æ?æ§‹å ±??, law:'ï¼ˆå±æ©ŸÂ?64ï¼?, priority:'M', minSize:'any' },
+    ]
+  },
+  {
+    id:'health', icon:'?¥', name:'?¥åº·ä¿è­·',
+    items:[
+      { no:38, text:'?‡ä¸»å·²å??è??§ä?æ¥­ã€è¼ª?­å??­ã€ä?æ³•ä¾µå®³å??¥æ?ç­‰é??®è?å®šé??²æª??, law:'ï¼ˆè·å®‰Â??Â?ï¼?, priority:'H', minSize:'any' },
+      { no:'39a', text:'ï¼?00äººä»¥ä¸Šæ??¹åˆ¥?±å®³?¥åº·ä½œæ¥­??0äººï?å·²åƒ±?¨æ??¹ç??«è­·äººå“¡è¾¦ç??å·¥?¥åº·?å?', law:'ï¼ˆå¥åº·Â?ï¼?, priority:'H', minSize:'300', note:'?©ç”¨ï¼?00äººä»¥ä¸Šæ??¹åˆ¥?±å®³?¥åº·ä½œæ¥­??0äº? },
+      { no:'39b', text:'ï¼?0??99äººï?å·²ä?è¦å?å®‰æ??¹ç??«è­·äººå“¡è¾¦ç??¨å ´?å?', law:'ï¼ˆå¥åº·Â?ï¼?, priority:'H', minSize:'50to299', note:'?©ç”¨ï¼?0??99äº? },
+      { no:40, text:'?«è­·äººå“¡è¨ªè??¾å ´å·²è£½ä½œåŸ·è¡Œç??„è¡¨ï¼Œä¸¦?™å? 3 å¹?, law:'ï¼ˆå¥åº·Â?1??4ï¼?, priority:'M', minSize:'50' },
+      { no:41, text:'å·²å?ç½®è¶³å¤ æ€¥æ??¥å??Šå™¨?ï??–å·²è¨­ç½®?¥æ?äººå“¡', law:'ï¼ˆå¥åº·Â?5ï¼?, priority:'H', minSize:'any' },
+      { no:42, text:'?±ç”¨?å·¥?‚æ–½è¡Œé??¼æª¢?¥ï??¨è·?å·¥å®šæ??½è??¥åº·æª¢æŸ¥', law:'ï¼ˆå¥åº·Â?6??7ï¼?, priority:'H', minSize:'any' },
+      { no:43, text:'?¥åº·æª¢æŸ¥è²»ç”¨?±é?ä¸»è???, law:'ï¼ˆè·å®‰Â?0ï¼?, priority:'H', minSize:'any' },
+      { no:44, text:'å¾ä??¹åˆ¥?±å®³?¥åº·ä½œæ¥­?„å?å·¥ï??‰å??Ÿæ–½è¡Œç‰¹å®šé??®å¥åº·æª¢??, law:'ï¼ˆå¥åº·Â?8ï¼?, priority:'H', minSize:'any' },
+      { no:45, text:'?¹æ??¥åº·æª¢æŸ¥?¸é??§å®¹å·²ç™»?„æ–¼ä¸­å¤®ä¸»ç®¡æ©Ÿé??¬å?ç³»çµ±', law:'ï¼ˆå¥åº·Â?6ï¼?, priority:'M', minSize:'any' },
+    ]
+  },
+  {
+    id:'org', icon:'?¢', name:'å®‰å…¨è¡›ç?çµ„ç??Šäºº??,
+    items:[
+      { no:46, text:'å·²è¨­ç½®è·æ¥­å??¨è??Ÿç®¡?†å–®ä½?, law:'ï¼ˆè·å®‰Â?3ï¼?, priority:'H', minSize:'any' },
+      { no:47, text:'?·æ¥­å®‰å…¨è¡›ç?ç®¡ç??®ä??ºä?æ¥­å…§å°ˆè²¬ä¸€ç´šå–®ä½ï?ç¬¬ä?é¡â‰¥100äººï?ç¬¬ä?é¡â‰¥300äººé©?¨ï?', law:'ï¼ˆå?ç®¡Â?-1ï¼?, priority:'H', minSize:'100', note:'ç¬¬ä?é¡â‰¥100äººæ?ç¬¬ä?é¡â‰¥300äº? },
+      { no:48, text:'?·æ¥­å®‰å…¨è¡›ç?ç®¡ç?äººå“¡?ºå??·ï?å¸¸é?å» å ´ï¼Œä??¼ä»»?¶ä?æ³•ä»¤å°ˆè²¬äººå“¡', law:'ï¼ˆå?ç®¡Â?ï¼?, priority:'H', minSize:'100', note:'ç¬¬ä?é¡â‰¥100äººæ?ç¬¬ä?é¡â‰¥300äº? },
+      { no:49, text:'?·æ¥­å®‰å…¨è¡›ç?äººå“¡ä¾è?å®šåŸ·è¡Œç®¡?†æ¥­?™ï?ä¸¦ç?å­˜ç???, law:'ï¼ˆå?ç®¡Â?-1ï¼?, priority:'M', minSize:'any' },
+      { no:50, text:'å·²å??¶åœ°?å?æª¢æŸ¥æ©Ÿæ??±å?ï¼?0äººä»¥ä¸Šé©?¨ï?', law:'ï¼ˆå?ç®¡Â?6ï¼?, priority:'H', minSize:'30' },
+      { no:51, text:'?·æ¥­å®‰å…¨è¡›ç?äººå“¡ä¸èƒ½?·è??·å??‚ï?å·²ç??³æ?å®šä»£?†äººï¼ˆä»£?†ä?è¶…é?3?‹æ?ï¼?, law:'ï¼ˆå?ç®¡Â?ï¼?, priority:'M', minSize:'any' },
+      { no:52, text:'å·²è¨­ç«‹è·æ¥­å??¨è??Ÿå??¡æ?ï¼Œä¸¦è£½ä?å§”å“¡?å?', law:'ï¼ˆå?ç®¡Â?0??7ï¼?, priority:'H', minSize:'any' },
+      { no:53, text:'?·æ¥­å®‰å…¨è¡›ç?å§”å“¡?ƒæ?ä¸‰å€‹æ??¬é?ä¸€æ¬¡æ?è­?, law:'ï¼ˆå?ç®¡Â?2ï¼?, priority:'H', minSize:'any' },
+    ]
+  },
+  {
+    id:'mgmt', icon:'??', name:'?·æ¥­å®‰å…¨è¡›ç?ç®¡ç??¶åº¦',
+    items:[
+      { no:54, text:'å·²ä?æ³•è?å®šå??¨è??Ÿå·¥ä½œå??‡ï?ä¸¦å ±è«‹å??•æª¢?¥æ?æ§‹å???, law:'ï¼ˆè·å®‰Â?4ï¼?, priority:'H', minSize:'any' },
+      { no:55, text:'å·²ä?äº‹æ¥­è¦æ¨¡?‡ç‰¹?§è?å®šè·æ¥­å??¨è??Ÿç®¡?†è???, law:'ï¼ˆå?ç®¡Â?2-1ï¼?, priority:'H', minSize:'any' },
+      { no:56, text:'å·²è?å®šå?å·¥å??¨è??Ÿç®¡?†è?ç« ï?100äººä»¥ä¸Šé©?¨ï?', law:'ï¼ˆå?ç®¡Â?2-1ï¼?, priority:'H', minSize:'100' },
+      { no:57, text:'å·²å»ºç«‹é©?ˆä?æ¥­å–®ä½ç??·æ¥­å®‰å…¨è¡›ç?ç®¡ç?ç³»çµ±ï¼ˆç¬¬ä¸€é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äººï?', law:'ï¼ˆå?ç®¡Â?2-2ï¼?, priority:'M', minSize:'200', note:'ç¬¬ä?é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äº? },
+      { no:58, text:'å¼•é€²æ?ä¿®æ”¹è£½ç??æ??™ã€è¨­?™å?ï¼Œå·²è©•ä¼°?·æ¥­?½å®³é¢¨éšªä¸¦æ¡?–é??²æª??, law:'ï¼ˆå?ç®¡Â?2-3ï¼?, priority:'M', minSize:'200', note:'ç¬¬ä?é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äº? },
+      { no:59, text:'æ©Ÿæ¢°?é˜²è­·å…·ç­‰æ¡è³¼å?ç´„ä¸­?‰ç¬¦?ˆæ?ä»¤ç?å®‰è?è¦ç?ï¼Œé??¶å?å·²ç¢ºèª?, law:'ï¼ˆå?ç®¡Â?2-4ï¼?, priority:'M', minSize:'200', note:'ç¬¬ä?é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äº? },
+      { no:60, text:'å·²è?å®šæœ¬å¹´åº¦?ªå?æª¢æŸ¥è¨ˆç•«', law:'ï¼ˆå?ç®¡Â?9ï¼?, priority:'H', minSize:'any' },
+      { no:61, text:'?¨é?ä¸»ç®¡ä¾è‡ª?•æª¢?¥è??«æ??‚å¯¦?½è‡ª?•æª¢?¥ï?ä¸¦ç??™ç??„ä?å­?3 å¹?, law:'ï¼ˆå?ç®¡Â?0ï¼?, priority:'H', minSize:'any' },
+      { no:62, text:'å·²è?å®šæ‰¿?¬å??½å·¥å®‰å…¨è¡›ç?ç®¡ç?è¾¦æ?', law:'ï¼ˆè·å®‰Â?6ï¼?, priority:'H', minSize:'any' },
+      { no:63, text:'äº¤ä??¿æ”¬?‚ï?å·²è?æ±‚æ‰¿?¬å??µå??¸é?æ³•è?ï¼Œä¸¦?™å?ç´€??, law:'ï¼ˆè·å®‰Â?6ï¼?, priority:'H', minSize:'any' },
+      { no:64, text:'äº¤ä??¿æ”¬?‚ï?å·²é€²è?å·¥ä??°å??Šå±å®³å?ç´ ç??¸é¢?ŠçŸ¥', law:'ï¼ˆè·å®‰Â?6?ç´°?‡Â?6ï¼?, priority:'H', minSize:'any' },
+      { no:65, text:'?‰å?å·¥è??¿æ”¬?†å…±?Œä?æ¥­æ?ï¼Œå·²è¨­ç??”è­°çµ„ç?', law:'ï¼ˆè·å®‰Â?7?ç´°?‡Â?8ï¼?, priority:'H', minSize:'any' },
+      { no:66, text:'?±å?ä½œæ¥­?‚ï?ä¸å??Ÿå·¡è¦–å·¥ä½œå ´?€ä¸¦ç??™ç???, law:'ï¼ˆè·å®‰Â?7ï¼?, priority:'M', minSize:'any' },
+      { no:78, text:'?„é?å®ˆå??è?ç« ã€è??«ç?å·²æ?ä»¶å?ä¸¦æ??ˆç®¡??, law:'ï¼ˆå?ç®¡Â?2-1ï¼?, priority:'M', minSize:'any' },
+      { no:79, text:'?è¿°?‡ä»¶? æ?ä»¤æ??°å?è®Šæ›´?‚å·²?©æ?ä¿®æ­£', law:'ï¼ˆè·å®‰Â?4ï¼?, priority:'M', minSize:'any' },
+    ]
+  },
+  {
+    id:'training', icon:'??', name:'?™è‚²è¨“ç·´',
+    items:[
+      { no:69, text:'?°åƒ±?å·¥?–è??´å·¥ä½œå?ï¼Œå·²?¥å??©å?è©²å·¥ä½œç?å®‰å…¨è¡›ç??™è‚²è¨“ç·´ï¼Œä¸¦?™å?ç´€??, law:'ï¼ˆè?ç·´Â?7??1ï¼?, priority:'H', minSize:'any' },
+      { no:70, text:'?¨è·?å·¥å®šæ??¥å?å®‰å…¨è¡›ç??¨è·?™è‚²è¨“ç·´ï¼Œä¸¦?™å?ç´€??, law:'ï¼ˆè?ç·´Â?8??1ï¼?, priority:'H', minSize:'any' },
+      { no:71, text:'?·æ¥­å®‰å…¨è¡›ç?ç®¡ç?äººå“¡å®šæ??¥å?è¤‡è?', law:'ï¼ˆè?ç·´Â?8ï¼?, priority:'H', minSize:'any' },
+      { no:72, text:'å®šæ??‰è¾¦ä¼æ¥­?§è·æ¥­å??¨è??Ÿæ??²æ?æ´¾å“¡?ƒå?è¨“ç·´?å®£å°æ?', law:'ï¼ˆè?ç·´è??‡ï?', priority:'M', minSize:'any' },
+      { no:73, text:'?„ç¨®?¹æ?ä½œæ¥­ä¸»ç®¡?Šæ?ä½œäºº?¡å·²å®‰æ??ƒå?å¿…è??„å??¨è??Ÿæ??²è?ç·?, law:'ï¼ˆè?ç·´Â???0??1??4ï¼?, priority:'H', minSize:'any' },
+    ]
+  },
+  {
+    id:'emergency', icon:'?š¨', name:'äº‹æ?èª¿æŸ¥?»ç??¥æ?è®?,
+    items:[
+      { no:74, text:'å·¥ä??´æ??¼ç??·æ¥­?½å®³?‚ï?ç«‹å³?¡å??¥æ??æ¶?‘æª?½ï?ä¸¦å¯¦?½èª¿?¥å??ã€ç?å­˜ç???, law:'ï¼ˆè·å®‰Â?7ï¼?, priority:'H', minSize:'any' },
+      { no:75, text:'?‰æ?å¡«è??·æ¥­?½å®³çµ±è?ï¼?0äººä»¥ä¸Šé©?¨ï?', law:'ï¼ˆè·å®‰Â?8?ç´°?‡Â?1ï¼?, priority:'H', minSize:'50' },
+      { no:76, text:'å·²è?å®šç??¥ç?æ³é??²ã€æ??™å??‰è?è¨ˆç•«ï¼Œä¸¦å®šæ?å¯¦æ–½æ¼”ç·´ï¼ˆç¬¬ä¸€é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äººï?', law:'ï¼ˆå?ç®¡Â?2-6ï¼?, priority:'H', minSize:'200', note:'ç¬¬ä?é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äº? },
+      { no:77, text:'ç·Šæ€¥æ?è®Šè??«æ?ç·´æ?å½¢å·²?™å?ç´€??, law:'ï¼ˆå?ç®¡Â?2-6ï¼?, priority:'M', minSize:'200', note:'ç¬¬ä?é¡â‰¥200äººæ?ç¬¬ä?é¡â‰¥500äº? },
+    ]
+  },
+];
+
+// ?€?€ State ?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€?€
+let responses = {}; // { itemKey: 'ok'|'ng'|'na' }
+let sizeRank = 0, bizType = 1, industry = '', hazardYes = false;
+
+const SIZE_RANK = { lt30:0, '30to49':1, '50to99':2, '100to199':3, '200to299':4, '300plus':5 };
+
+function checkSetup() {
+  const sz = document.getElementById('s-size').value;
+  const tp = document.getElementById('s-type').value;
+  document.getElementById('btn-start').disabled = !(sz && tp);
+}
+document.addEventListener('DOMContentLoaded', checkSetup);
+
+function startAudit() {
+  const szVal = document.getElementById('s-size').value;
+  sizeRank = SIZE_RANK[szVal] || 0;
+  bizType = parseInt(document.getElementById('s-type').value) || 3;
+  industry = document.getElementById('s-industry').value;
+  const haz = document.getElementById('s-hazard').value;
+  hazardYes = haz !== 'no';
+
+  document.getElementById('setup-section').style.display = 'none';
+  document.getElementById('audit-section').style.display = 'block';
+  renderAudit();
+}
+
+function isApplicable(item) {
+  const minMap = { any:0, '30':1, '50':2, '50to299':2, '100':3, '200':4, '300':5 };
+  const min = minMap[item.minSize] ?? 0;
+  if (sizeRank < min) return false;
+  // special: item 39a (300+ or hazard50+), 39b (50-299)
+  if (item.no === '39a') return sizeRank >= 5 || (hazardYes && document.getElementById('s-hazard').value === 'yes50');
+  if (item.no === '39b') return sizeRank >= 2 && sizeRank < 5;
+  if (item.minSize === '50to299') return sizeRank >= 2 && sizeRank < 5;
+  // 200-äººitems: type 1 >= 200, type 2 >= 500 (rank 5)
+  if (item.minSize === '200') {
+    if (bizType === 1) return sizeRank >= 4;
+    if (bizType === 2) return sizeRank >= 5;
+    return false;
+  }
+  return true;
+}
+
+function renderAudit() {
+  const container = document.getElementById('audit-categories');
+  container.innerHTML = '';
+  let totalApplicable = 0;
+  CATS.forEach((cat, ci) => {
+    const applicable = cat.items.filter(isApplicable);
+    totalApplicable += applicable.length;
+    if (applicable.length === 0) return;
+
+    const div = document.createElement('div');
+    div.className = 'category-card';
+    const isOpen = ci === 0;
+    div.innerHTML = `
+      <div class="cat-header${isOpen?' open':''}" onclick="toggleCat(this)">
+        <div class="cat-left">
+          <div class="cat-icon">${cat.icon}</div>
+          <div>
+            <div class="cat-name">${cat.name}</div>
+            <div class="cat-count">??${applicable.length} ?…ç¨½?¸é???/div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="cat-score" id="cscore-${cat.id}">?ªå¡«å¯?/div>
+          <div class="cat-arrow">??/div>
+        </div>
+      </div>
+      <div class="cat-body${isOpen?' open':''}">
+        ${applicable.map(item => `
+          <div class="item-row">
+            <div class="item-top">
+              <div class="item-num">${item.no}</div>
+              <div>
+                <div class="item-text">${item.text}${item.note?`<span class="item-size-tag">${item.note}</span>`:''}</div>
+                <div class="item-law">${item.law}</div>
+              </div>
+            </div>
+            <div class="item-opts">
+              <button class="opt-btn ok" onclick="setResp('${cat.id}-${item.no}','ok',this)">???ˆæ ¼</button>
+              <button class="opt-btn ng" onclick="setResp('${cat.id}-${item.no}','ng',this)">??ä¸å???/button>
+              <button class="opt-btn na" onclick="setResp('${cat.id}-${item.no}','na',this)">??ä¸é©??/button>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function toggleCat(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+function setResp(key, val, btn) {
+  responses[key] = val;
+  const row = btn.closest('.item-opts');
+  row.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  updateCatScore(key.split('-')[0]);
+  updateProgress();
+}
+
+function getCatId(key) { return key.split('-')[0]; }
+
+function updateCatScore(catId) {
+  const cat = CATS.find(c => c.id === catId);
+  if (!cat) return;
+  const applicable = cat.items.filter(isApplicable);
+  let ok=0, ng=0, na=0;
+  applicable.forEach(item => {
+    const v = responses[catId + '-' + item.no];
+    if (v==='ok') ok++;
+    else if (v==='ng') ng++;
+    else if (v==='na') na++;
+  });
+  const answered = ok + ng + na;
+  const el = document.getElementById('cscore-' + catId);
+  if (!el) return;
+  if (answered === 0) { el.textContent='?ªå¡«å¯?; return; }
+  const total = ok + ng;
+  if (total === 0) { el.textContent='?¨éƒ¨ä¸é©??; return; }
+  const pct = Math.round(ok / total * 100);
+  el.textContent = pct + '%';
+  el.style.background = pct>=80?'#e8f5f0':pct>=60?'#fef3e2':'#fde8e8';
+  el.style.color = pct>=80?'var(--safe)':pct>=60?'var(--warning)':'var(--danger)';
+}
+
+function updateProgress() {
+  let allItems = 0, answered = 0;
+  CATS.forEach(cat => {
+    cat.items.filter(isApplicable).forEach(item => {
+      allItems++;
+      if (responses[cat.id + '-' + item.no]) answered++;
+    });
+  });
+  document.getElementById('prog-fill').style.width = Math.round(answered/allItems*100) + '%';
+}
+
+function calcResult() {
+  // Collect all results
+  let totalOk=0, totalNg=0, totalNa=0;
+  const ngItems=[];
+  const catResults=[];
+
+  CATS.forEach(cat => {
+    const applicable = cat.items.filter(isApplicable);
+    if (!applicable.length) return;
+    let cOk=0, cNg=0, cNa=0;
+    applicable.forEach(item => {
+      const v = responses[cat.id+'-'+item.no] || null;
+      if (v==='ok') { cOk++; totalOk++; }
+      else if (v==='ng') {
+        cNg++; totalNg++;
+        ngItems.push({ ...item, catName: cat.name });
+      } else if (v==='na') { cNa++; totalNa++; }
+      else { /* unanswered = treat as ng */ cNg++; totalNg++; ngItems.push({ ...item, catName: cat.name }); }
+    });
+    const scored = cOk + cNg;
+    catResults.push({ id:cat.id, icon:cat.icon, name:cat.name, ok:cOk, ng:cNg, na:cNa, pct: scored>0?Math.round(cOk/scored*100):100 });
+  });
+
+  const total = totalOk + totalNg;
+  const overall = total > 0 ? Math.round(totalOk/total*100) : 100;
+
+  document.getElementById('audit-section').style.display='none';
+  HCLead.gate('tool-09', 'AI ?·å?è¡›å?è¦è¨º??, {score:overall, level:overall>=85?'ä½?:overall>=50?'ä¸?:'é«?}, function() {
+  document.getElementById('result-section').style.display='block';
+
+  const head = document.getElementById('score-head');
+  const big = document.getElementById('big-score');
+  const title = document.getElementById('res-title');
+  const sub = document.getElementById('score-sub');
+  big.textContent = overall + '%';
+  if (overall >= 85) {
+    head.className='score-head rh-a'; title.textContent='?·å?è¡›å?è¦ç?ç´šï??ªè‰¯';
+    sub.textContent=`?ˆæ ¼ ${totalOk} ??/ ä¸å???${totalNg} ??/ ä¸é©??${totalNa} ?…`;
+  } else if (overall >= 70) {
+    head.className='score-head rh-b'; title.textContent='?·å?è¡›å?è¦ç?ç´šï??¯å¥½';
+    sub.textContent=`?ˆæ ¼ ${totalOk} ??/ ä¸å???${totalNg} ??/ ä¸é©??${totalNa} ?…`;
+  } else if (overall >= 50) {
+    head.className='score-head rh-c'; title.textContent='?·å?è¡›å?è¦ç?ç´šï?å¾…æ”¹??;
+    sub.textContent=`?ˆæ ¼ ${totalOk} ??/ ä¸å???${totalNg} ??/ ä¸é©??${totalNa} ?…`;
+  } else {
+    head.className='score-head rh-d'; title.textContent='?·å?è¡›å?è¦ç?ç´šï??´é?ä¸è¶³';
+    sub.textContent=`?ˆæ ¼ ${totalOk} ??/ ä¸å???${totalNg} ??/ ä¸é©??${totalNa} ?…`;
+  }
+
+  // Cat score cards
+  const fillCls = (p) => p>=80?'fill-a':p>=65?'fill-b':p>=50?'fill-c':'fill-d';
+  document.getElementById('cat-scores').innerHTML = catResults.map(c => `
+    <div class="cat-score-card">
+      <div class="csc-name">${c.icon} ${c.name}</div>
+      <div class="csc-bar"><div class="csc-fill ${fillCls(c.pct)}" data-w="${c.pct}" style="width:0"></div></div>
+      <div class="csc-pct">${c.pct}%ï¼ˆå???${c.ok}/${c.ok+c.ng} ?…ï?</div>
+    </div>`).join('');
+
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll('.csc-fill[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%';});
+  }));
+
+  // NG items list (High priority first)
+  const ngEl = document.getElementById('ng-items');
+  if (ngItems.length===0) {
+    ngEl.innerHTML='<div style="padding:12px;color:var(--safe);font-weight:700;font-size:14px">?? ?€?‰é©?¨é??®å?å·²å??¼ï?</div>';
+  } else {
+    const sorted = [...ngItems].sort((a,b)=>{ const m={'H':0,'M':1,'L':2}; return (m[a.priority]||1)-(m[b.priority]||1); });
+    ngEl.innerHTML = sorted.map(item => {
+      const cls = item.priority==='H'?'ng-high':'ng-mid';
+      const bcls = item.priority==='H'?'nb-h':'nb-m';
+      const label = item.priority==='H'?'?ªå?':'?è?';
+      return `<div class="ng-item ${cls}">
+        <div class="ng-badge ${bcls}">${label}</div>
+        <div>
+          <div class="ng-txt">No.${item.no}??{item.catName}??{item.text}</div>
+          <div class="ng-law">${item.law}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  callAI(overall, totalNg, ngItems, catResults, industry);
+  }); // end gate
+}
+
+async function callAI(overall, ngCount, ngItems, catResults, industry) {
+  const ngSummary = ngItems.slice(0,15).map(i => `?»No.${i.no} ${i.text}ï¼?{i.law}ï¼‰`).join('\n');
+  const catSummary = catResults.map(c => `${c.name}ï¼?{c.pct}%`).join('??);
+  const szLabel = document.getElementById('s-size').selectedOptions[0]?.text;
+  const tpLabel = document.getElementById('s-type').selectedOptions[0]?.text;
+
+  const prompt = `ä¼æ¥­?·æ¥­å®‰å…¨è¡›ç??ªä¸»ç¨½æ ¸çµæ?ï¼ˆä??ºå?å¸‚å??•æª¢?¥è?113å¹´åº¦å®˜æ–¹ç¨½æŸ¥è¡¨ï?ï¼?
+ä¼æ¥­è¦æ¨¡ï¼?{szLabel}ï¼?{tpLabel}ï¼Œç”¢æ¥­ï?${industry}
+?´é??ˆè??‡ï?${overall}%
+ä¸å??¼é??®æ•¸ï¼?{ngCount} ??
+?„é??¥å?è¦ç?ï¼?{catSummary}
+
+ä¸å??¼é??®ï??¨å?ï¼‰ï?
+${ngSummary}
+
+è«‹ä»¥ç­–è?æ°¸ç? AI ?·å?è¡›é¡§?èº«ä»½ï?ä¾ã€Šè·æ¥­å??¨è??Ÿæ??‹å??¸é?å­æ?ï¼Œç”¨ç¹é?ä¸­æ??ä?ï¼?
+?ç¨½?¸ç??œæ?è¦ã€‘ï?2???¥ï?èªªæ??´é??ˆè??€æ³è??€å¤§é¢¨?ªï?
+
+?é?åº¦é¢¨?ªç¼ºå¤???ç«‹å³è¡Œå?ï¼?0?¥å…§ï¼‰ã€?ä¾æ?å¾‹è?ç½°é¢¨?ªï??—å‡º?€?€?ªå??•ç???3 ?…ç¼ºå¤±ï?ä¸¦èªª?ï?
+?»é??æ?æ¢??»å¯?½ç?ç½°å??–è?ç½°é?é¡??»å»ºè­°æ”¹?„æ­¥é©?
+?ä¸­?Ÿæ”¹?„è??«ï?1???‹æ?ï¼‰ã€‘ï?æ¢å? 3???…ï?
+
+?é•·?Ÿåˆ¶åº¦å»ºæ§‹å»ºè­°ã€‘ï?1???…ï?
+
+?ISO 45001 / CNS 45001 å»ºç?å»ºè­°?‘ï?å¦‚é©?ˆæ­¤è¦æ¨¡?‡å»ºè­°ï??¦å?èªªæ??¿ä»£?¹æ?ï¼?
+?¼å?å°ˆæ¥­æ¸…æ™°ï¼Œé©?ˆäº¤ä»˜é?ä¸»æ?ç®¡ç??å±¤?±è?ï¼Œä?è¶…é? 600 å­—ã€‚`;
+
+  const bodyEl = document.getElementById('ai-body');
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'safety',
+        system:'ä½ æ˜¯ç­–è?æ°¸ç? AI ?·æ¥­å®‰å…¨è¡›ç?é¡§å?ï¼Œç??‰å°??·æ¥­å??¨è??Ÿæ??Šç›¸?œå?æ³•ï??ä??·é??¯è??„å?è¦å»ºè­°ï??æ?ä½¿ç”¨ç¹é?ä¸­æ???,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:true
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      bodyEl.innerHTML = err.limitReached
+        ? `<div class="limit-msg">ä»Šæ—¥?¥æª¢æ¬¡æ•¸å·²é?ä¸Šé?ï¼Œè??æ—¥?è©¦??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?‡ç?å°ˆæ¥­??/a>??/div>`
+        : `<span style="color:var(--ink-soft)">ï¼ˆAI ?†æ??«æ??¡æ?ä½¿ç”¨ï¼?/span>`;
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    while(true) {
+      const{done,value}=await reader.read(); if(done) break;
+      for(const line of dec.decode(value,{stream:true}).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') break;
+        try{txt+=JSON.parse(d).text||'';}catch{}
+      }
+      bodyEl.textContent=txt;
+    }
+    HCLead.reportDone(txt);
+  } catch { bodyEl.textContent='ï¼ˆAI ?†æ??å??«æ??¡æ????ï¼?; }
+}
+
+function goSetup() {
+  document.getElementById('audit-section').style.display='none';
+  document.getElementById('setup-section').style.display='block';
+}
+
+function restart() {
+  responses={};
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('setup-section').style.display='block';
+  document.getElementById('s-size').value='';
+  document.getElementById('s-type').value='';
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('ai-body').innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

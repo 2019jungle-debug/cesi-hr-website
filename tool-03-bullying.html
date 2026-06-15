@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 職場霸凌風險評估 · 策識永續</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--plum:#4c315f;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a;--safe:#1d756f}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none;color:inherit}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#2d1a3d,var(--plum),#1a1040);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,36px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.72);font-size:14px;max-width:560px;margin:0 auto}
+.law-note{display:inline-block;margin-top:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.8)}
+.main{max-width:800px;margin:0 auto;padding:36px clamp(20px,4vw,40px) 80px}
+.role-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.role-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.role-card .sub{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.role-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.role-item{border:2px solid var(--line);border-radius:10px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .25s}
+.role-item:hover{border-color:var(--gold);transform:translateY(-2px)}
+.role-item.active{border-color:var(--plum);background:rgba(76,49,95,.05)}
+.role-icon{font-size:28px;margin-bottom:8px}
+.role-name{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.role-desc{font-size:11px;color:var(--ink-soft);line-height:1.5}
+.size-row{display:none;margin-bottom:14px}
+.size-row label{font-size:13px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px}
+.size-row select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink)}
+.size-row select:focus{outline:none;border-color:var(--plum)}
+.btn-start{width:100%;background:linear-gradient(135deg,var(--plum),var(--navy));color:#fff;border:none;padding:13px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-start:disabled{opacity:.38;cursor:not-allowed}
+#quiz-section{display:none}
+.prog-wrap{margin-bottom:20px}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.prog-label{font-size:12px;font-weight:700;color:var(--ink-soft)}
+.prog-pct{font-size:12px;font-weight:700;color:var(--plum)}
+.prog-bar{height:5px;background:rgba(16,36,76,.08);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--plum),var(--navy));border-radius:999px;transition:width .4s}
+.section-chip{display:inline-block;background:rgba(76,49,95,.1);color:var(--plum);font-size:11px;font-weight:800;padding:3px 10px;border-radius:4px;margin-bottom:10px}
+.q-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px;margin-bottom:16px}
+.q-num{font-size:12px;color:var(--ink-faded);font-weight:600;margin-bottom:8px}
+.q-text{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--navy);line-height:1.65;margin-bottom:6px}
+.q-law{font-size:11px;color:var(--plum);font-weight:600;margin-bottom:16px}
+.opts{display:grid;gap:7px}
+.opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:all .2s}
+.opt:hover{border-color:var(--gold);background:rgba(201,161,93,.04)}
+.opt.sel{border-color:var(--plum);background:rgba(76,49,95,.04)}
+.opt-dot{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;position:relative;transition:all .2s}
+.opt.sel .opt-dot{border-color:var(--plum);background:var(--plum)}
+.opt.sel .opt-dot::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:4px;height:4px;border-radius:50%;background:#fff}
+.opt-txt{font-size:13px;color:var(--ink)}
+.nav-btns{display:flex;justify-content:space-between;gap:12px}
+.btn-prev{background:#fff;border:2px solid var(--line);color:var(--ink-soft);padding:10px 20px;border-radius:8px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-prev:hover:not(:disabled){border-color:var(--navy);color:var(--navy)}
+.btn-prev:disabled{opacity:.35;cursor:not-allowed}
+.btn-next{background:var(--plum);color:#fff;padding:10px 24px;border-radius:8px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:background .2s}
+.btn-next:hover:not(:disabled){background:var(--navy)}
+.btn-next:disabled{opacity:.4;cursor:not-allowed}
+#result-section{display:none}
+.res-head{border-radius:14px;padding:28px;text-align:center;margin-bottom:16px}
+.rh-low{background:linear-gradient(135deg,#1a3d2b,var(--teal))}
+.rh-mid{background:linear-gradient(135deg,#3d2a0a,var(--warning))}
+.rh-high{background:linear-gradient(135deg,#3d0a20,var(--danger))}
+.res-head h2{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:900;color:#fff;margin-bottom:8px}
+.risk-badge{display:inline-block;font-size:15px;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 20px;margin-bottom:8px}
+.res-head .desc{color:rgba(255,255,255,.75);font-size:13px;line-height:1.7}
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.dim-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+.dc-icon{font-size:18px;margin-bottom:6px}
+.dc-name{font-size:12px;color:var(--ink-soft);margin-bottom:7px}
+.dc-bar{height:6px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:5px}
+.dc-fill{height:100%;border-radius:999px;transition:width .9s ease}
+.fill-safe{background:var(--safe)}.fill-warn{background:var(--warning)}.fill-danger{background:var(--danger)}
+.dc-num{font-size:16px;font-weight:800;color:var(--navy)}
+.compliance-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+.compliance-box h3{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px}
+.comp-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.comp-item:last-child{border-bottom:none}
+.comp-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;margin-top:2px}
+.dot-ok{background:#e8f5f0;color:var(--safe)}.dot-ng{background:#fde8e8;color:var(--danger)}.dot-na{background:#f0f0f0;color:var(--ink-faded)}
+.comp-text{font-size:13px;color:var(--ink);line-height:1.6}
+.comp-law{font-size:11px;color:var(--plum);font-weight:600;margin-top:2px}
+.timeline-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+.timeline-box h3{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.tl-items{display:flex;flex-wrap:wrap;gap:8px}
+.tl-item{background:rgba(76,49,95,.07);border:1px solid rgba(76,49,95,.15);border-radius:8px;padding:10px 14px;flex:1;min-width:140px}
+.tl-time{font-size:18px;font-weight:900;color:var(--plum);margin-bottom:3px}
+.tl-event{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.tl-desc{font-size:11px;color:var(--ink-soft)}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:16px}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ai-icon{width:34px;height:34px;background:var(--plum);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+@media(max-width:520px){.role-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI 人資健檢中心</span></a>
+  <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">🛡️ No.03 · AI 職場霸凌風險評估</div>
+  <h1>職場霸凌風險診斷系統</h1>
+  <p>依《職業安全衛生法》職場霸凌防治專章（第22-1、22-2、22-3條）<br>評估法遵合規、霸凌風險與個人處境，產出 AI 專業建議</p>
+  <div class="law-note">法規依據：職安法第22-1、22-2、22-3、46條 ｜ 2025年版</div>
+</div>
+<div class="main">
+
+  <div id="role-section">
+    <div class="role-card">
+      <h2>選擇評估角色</h2>
+      <div class="sub">不同角色評估面向不同，請選擇最符合您身份的選項</div>
+      <div class="role-grid">
+        <div class="role-item" onclick="selectRole('hr',this)">
+          <div class="role-icon">📋</div>
+          <div class="role-name">雇主 / HR</div>
+          <div class="role-desc">評估企業法遵合規狀態<br>（依規模義務不同）</div>
+        </div>
+        <div class="role-item" onclick="selectRole('mgr',this)">
+          <div class="role-icon">👔</div>
+          <div class="role-name">主管 / 管理者</div>
+          <div class="role-desc">評估管理行為與<br>識別、預防霸凌能力</div>
+        </div>
+        <div class="role-item" onclick="selectRole('emp',this)">
+          <div class="role-icon">🙋</div>
+          <div class="role-name">員工 / 求助者</div>
+          <div class="role-desc">評估是否遭受霸凌<br>及了解自身權益</div>
+        </div>
+      </div>
+      <div class="size-row" id="size-row">
+        <label>事業單位員工人數（影響法定義務層級）</label>
+        <select id="s-size">
+          <option value="any">未滿 10 人</option>
+          <option value="10">10 人以上（需設申訴管道）</option>
+          <option value="30">30 人以上（需訂定防治規範）</option>
+        </select>
+      </div>
+      <button class="btn-start" id="btn-start" onclick="startQuiz()" disabled>開始評估 →</button>
+    </div>
+  </div>
+
+  <div id="quiz-section">
+    <div class="prog-wrap">
+      <div class="prog-top">
+        <span class="prog-label" id="prog-label"></span>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0"></div></div>
+    </div>
+    <div id="q-section-chip"></div>
+    <div class="q-card">
+      <div class="q-num" id="q-num"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-law" id="q-law"></div>
+      <div class="opts" id="q-opts"></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-prev" id="btn-prev" onclick="prevQ()">← 上一題</button>
+      <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>下一題 →</button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="res-head" id="res-head">
+      <h2 id="res-title"></h2>
+      <div class="risk-badge" id="res-badge"></div>
+      <div class="desc" id="res-desc"></div>
+    </div>
+    <div class="dim-grid" id="dim-grid"></div>
+    <div id="compliance-section"></div>
+    <div class="timeline-box">
+      <h3>⏱ 法定處理時程（職安法§22-2；企業管理程序）</h3>
+      <div class="tl-items">
+        <div class="tl-item"><div class="tl-time">3天</div><div class="tl-event">申訴受理確認</div><div class="tl-desc">確認收受、通知申訴人</div></div>
+        <div class="tl-item"><div class="tl-time">10天</div><div class="tl-event">組成調查小組</div><div class="tl-desc">3–5人，外聘≥1/2</div></div>
+        <div class="tl-item"><div class="tl-time">60天</div><div class="tl-event">完成調查</div><div class="tl-desc">必要時延長30天</div></div>
+        <div class="tl-item"><div class="tl-time">10天</div><div class="tl-event">通知調查結果</div><div class="tl-desc">含申復說明</div></div>
+        <div class="tl-item"><div class="tl-time">14天</div><div class="tl-event">申復期限</div><div class="tl-desc">對結果不服可申復</div></div>
+        <div class="tl-item"><div class="tl-time">30天</div><div class="tl-event">申復審議完成</div><div class="tl-desc">外聘≥1/2、原調查組迴避</div></div>
+        <div class="tl-item"><div class="tl-time">3年</div><div class="tl-event">向主管機關申訴</div><div class="tl-desc">行為終了後起算</div></div>
+      </div>
+    </div>
+    <div class="ai-box">
+      <div class="ai-head">
+        <div class="ai-icon">🛡️</div>
+        <div><div class="ai-title">AI 職場霸凌專業分析與建議</div></div>
+      </div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="cta-box">
+      <h3>需要職場霸凌防治制度建置或個案諮詢？</h3>
+      <p>策識永續提供職場霸凌防治規範訂定、調查小組培訓、教育訓練規劃、個案法律諮詢</p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">看服務方案</a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">重新評估</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc3-' + Math.random().toString(36).slice(2);
+
+const QDB = {
+  hr: [
+    { section:'一、政策與規模義務（職安法§22-1第2項）', no:1,
+      text:'貴公司已公告揭示職場霸凌防治政策，並由最高管理階層簽署？',
+      law:'職安法§22-1第2項：所有雇主均須採取必要防治措施',
+      opts:['已公告，且最高主管簽署','已公告，但無主管簽署','正在規劃中','尚未建立'], sc:[0,1,2,3] },
+    { section:'一、政策與規模義務（職安法§22-1第2項）', no:2,
+      text:'（10人以上適用）已在工作場所公開揭示申訴管道資訊？',
+      law:'職安法§22-1第2項：10人以上雇主須訂定並公揭申訴管道',
+      opts:['已公揭且定期更新','已公揭但資訊過時','申訴管道存在但未公揭','尚未建立申訴管道'], sc:[0,1,2,3] },
+    { section:'一、政策與規模義務（職安法§22-1第2項）', no:3,
+      text:'（30人以上適用）已依中央主管機關準則訂定防治措施、申訴及懲處規範？',
+      law:'職安法§22-1第2項：30人以上雇主須訂定完整防治及懲處規範',
+      opts:['已訂定且符合準則','已訂定但內容不完整','正在建立','尚未訂定'], sc:[0,1,2,3] },
+    { section:'二、霸凌樣態識別能力（管理程序第4條）', no:4,
+      text:'HR/管理者是否能辨識「言語霸凌」四種態樣（侮辱貶低、公開嘲諷、威脅恐嚇、散布謠言）？',
+      law:'管理程序§4：言語霸凌為四大樣態之一，含4種行為型態',
+      opts:['完全能辨識，有明確指引','大致了解，但無明確規範','概念模糊','完全不了解'], sc:[0,1,2,3] },
+    { section:'二、霸凌樣態識別能力（管理程序第4條）', no:5,
+      text:'HR/管理者是否能辨識「任務霸凌」（指派不可能完成工作、故意剝奪職責、不提供必要資訊、不合理績效要求）？',
+      law:'管理程序§4：工作任務霸凌需特別識別，易與正常管理混淆',
+      opts:['完全能辨識，有案例教育','大致了解','概念模糊，易與管理混淆','完全不了解'], sc:[0,1,2,3] },
+    { section:'三、申訴制度（職安法§22-3；管理程序第8、10、11條）', no:6,
+      text:'申訴管道設置是否多元（書面、電子郵件、電話、親自申訴）？',
+      law:'§22-3第1項：勞工可向雇主提起申訴；若被申訴人為最高負責人可逕向主管機關',
+      opts:['3種以上管道，均可匿名','2種管道','1種管道','無任何申訴管道'], sc:[0,1,2,3] },
+    { section:'三、申訴制度（職安法§22-3；管理程序第8、10、11條）', no:7,
+      text:'接獲申訴後是否於 3 個工作日內確認受理，並書面通知申訴人？',
+      law:'管理程序§11：收受申訴即日確認，3工作日內通知申訴人',
+      opts:['有，且有書面紀錄','通常有，但未書面化','有時做有時沒做','從未建立此流程'], sc:[0,1,2,3] },
+    { section:'三、申訴制度（職安法§22-3；管理程序第8、10、11條）', no:8,
+      text:'是否已告知員工申訴期限（行為終了起 3 年；離職後 1 年內，從較長者）？',
+      law:'§22-3第2項：申訴期限從較長者計算，離職後1年內或行為終了3年內',
+      opts:['有，且書面告知','口頭告知但未書面化','員工自行查詢','從未告知'], sc:[0,1,2,3] },
+    { section:'四、調查程序（職安法§22-2；管理程序第12–16條）', no:9,
+      text:'是否建立符合「客觀、公正、保密、利益迴避」四原則的調查機制？',
+      law:'§22-2：調查應依客觀公正原則；保密義務；利益迴避原則',
+      opts:['有書面規範，且已演練','有書面規範但未演練','概念上知道但無書面','完全未建立'], sc:[0,1,2,3] },
+    { section:'四、調查程序（職安法§22-2；管理程序第12–16條）', no:10,
+      text:'調查小組成員是否符合：3–5人、外聘成員比例不少於1/2、具備調查專業知識、利害關係者迴避？',
+      law:'§22-2第3項：調查小組達一定規模者需符合外聘1/2以上原則，利害關係者應迴避',
+      opts:['完全符合','部分符合（外聘比例不足）','僅由內部人員調查','未建立調查小組'], sc:[0,1,2,3] },
+    { section:'四、調查程序（職安法§22-2；管理程序第12–16條）', no:11,
+      text:'是否能於受理後 60 日內完成調查，並於完成後 10 個工作日內通知當事人？',
+      law:'管理程序§14：受理後60日完成（必要時延長30日）；完成後10工作日通知',
+      opts:['有，且有時程追蹤機制','通常可達成，無正式追蹤','有時超時','從未設定時程目標'], sc:[0,1,2,3] },
+    { section:'五、知悉後立即有效措施（職安法§22-2）', no:12,
+      text:'【因接獲申訴知悉】能立即採取防止再度發生措施（工作調整/隔離），並提供諮詢協助？',
+      law:'§22-2第1項因申訴知悉：防止再度發生→諮詢協助→展開調查→懲戒行為人',
+      opts:['有標準流程且即可啟動','有流程但執行不確定','臨時應對，無標準流程','不知道有此義務'], sc:[0,1,2,3] },
+    { section:'五、知悉後立即有效措施（職安法§22-2）', no:13,
+      text:'【非因申訴知悉】是否能主動釐清事實、依被霸凌者意願協助申訴或調整工作？',
+      law:'§22-2第2項非申訴知悉：釐清事實→依意願協助申訴→工作調整→諮詢保護',
+      opts:['有，主動介入流程完整','有，但較被動','偶爾處理，無系統','不知道有此義務'], sc:[0,1,2,3] },
+    { section:'六、懲戒處分與後續追蹤（管理程序第19、20條）', no:14,
+      text:'懲戒規定是否涵蓋完整層次（輕微：口頭/書面警告；中度：記過/降職減薪；嚴重：調職/停職/解僱）？',
+      law:'管理程序§19：懲戒依情節輕重，應考量嚴重程度、持續時間、損害程度',
+      opts:['完整涵蓋，且有明確標準','部分涵蓋','僅有概括規定','無明確懲戒規定'], sc:[0,1,2,3] },
+    { section:'六、懲戒處分與後續追蹤（管理程序第19、20條）', no:15,
+      text:'事件處理後是否有後續追蹤機制（持續關注申訴人、防止報復、監督被申訴人行為、環境改善）？',
+      law:'管理程序§20：持續追蹤5項：關注/防報復/行為監督/環境改善/依需協助',
+      opts:['有正式追蹤程序（至少3個月）','有，但不系統','偶爾追蹤','無追蹤機制'], sc:[0,1,2,3] },
+    { section:'七、保密義務與禁止報復（管理程序第23、24條）', no:16,
+      text:'參與申訴、調查、審議的人員是否有書面保密承諾，且規範明確？',
+      law:'管理程序§23：所有參與人員負保密義務，範圍包含申訴內容、調查過程及結果',
+      opts:['有書面保密承諾書','口頭告知','有規定但執行不確定','未建立保密規定'], sc:[0,1,2,3] },
+    { section:'七、保密義務與禁止報復（管理程序第23、24條）', no:17,
+      text:'是否明確禁止對申訴人、證人實施報復（解僱、降職、不當調職、孤立排擠、威脅恐嚇等）？',
+      law:'管理程序§24：禁止報復行為；違反職安法§22-1最高罰鍰100萬元',
+      opts:['有明確書面禁止規定','有口頭規定','員工知道概念但無明文','無禁止報復規定'], sc:[0,1,2,3] },
+    { section:'八、教育訓練與記錄保存（管理程序第7、27條）', no:18,
+      text:'教育訓練是否依對象分層辦理：新進（3個月內）、在職（每年至少1次）、主管（每年1次含管理技巧）、調查人員（專業訓練）？',
+      law:'管理程序§7：教育訓練依對象、頻率、重點分層辦理，缺一不可',
+      opts:['四類均有，依規辦理','3類以上','僅辦理1–2類','從未辦理相關訓練'], sc:[0,1,2,3] },
+    { section:'八、教育訓練與記錄保存（管理程序第7、27條）', no:19,
+      text:'相關文件是否保存至少 7 年（申訴書、調查記錄、報告、申復文件、後續追蹤記錄）？',
+      law:'管理程序§27：申訴書、調查紀錄、報告、申復文件至少保存7年',
+      opts:['有，電子化系統管理','有，紙本保存','部分有保存','無系統性保存'], sc:[0,1,2,3] },
+    { section:'八、教育訓練與記錄保存（管理程序第7、27條）', no:20,
+      text:'接獲申訴時，是否登錄至中央主管機關指定網站，並於處理結果後再次登錄？',
+      law:'§22-2第4項：申訴事件應於主管機關指定網站登錄，結果亦同',
+      opts:['有，每案均登錄','知道需登錄，但未確實執行','不確定如何登錄','不知道有此義務'], sc:[0,1,2,3] },
+  ],
+
+  mgr: [
+    { section:'一、言語與態度（職安法§22-1；管理程序第4條）', no:1,
+      text:'您是否曾在公開場合對員工使用侮辱性、貶低性言詞，或進行人身攻擊？',
+      law:'§22-1：冒犯、侮辱、威脅等言詞持續發生，致身心受害即構成霸凌',
+      opts:['從未','偶爾，事後有道歉','有幾次，認為有道理','經常，認為是激勵方式'], sc:[0,1,2,3] },
+    { section:'一、言語與態度（職安法§22-1；管理程序第4條）', no:2,
+      text:'您是否曾在非必要情況下，對員工使用威脅性語言（如威脅解僱、降薪、不利調動）？',
+      law:'§22-1：威脅性言語恐嚇屬言語霸凌樣態之一',
+      opts:['從未','偶爾，視為強調重要性','有時','經常，視為管理手段'], sc:[0,1,2,3] },
+    { section:'一、言語與態度（職安法§22-1；管理程序第4條）', no:3,
+      text:'您是否曾散布或容許傳播關於特定員工的不實謠言或負面評語？',
+      law:'管理程序§4：散布謠言、破壞名譽屬關係霸凌',
+      opts:['從未，且積極制止','未主動散布，但曾默許','偶爾有過','是，未視為嚴重問題'], sc:[0,1,2,3] },
+    { section:'二、工作任務指派（管理程序第4條）', no:4,
+      text:'您是否曾指派員工明顯超出能力或資源的工作，且不提供必要支援或合理期限？',
+      law:'管理程序§4：指派不可能完成之工作屬任務霸凌',
+      opts:['從未，均考量能力與資源','偶爾，但事後補救','有時，認為能力到了就能做','經常，視為磨練'], sc:[0,1,2,3] },
+    { section:'二、工作任務指派（管理程序第4條）', no:5,
+      text:'您是否曾無正當理由剝奪員工職責，或僅指派瑣碎、懲罰性的工作？',
+      law:'管理程序§4：無故剝奪職責或指派瑣碎懲罰性工作屬任務霸凌',
+      opts:['從未','偶爾，有正當理由','有時，視情況而定','是，作為懲罰手段'], sc:[0,1,2,3] },
+    { section:'二、工作任務指派（管理程序第4條）', no:6,
+      text:'您是否曾故意不提供員工完成工作所需的必要資訊、資源，或給予不合理的績效要求？',
+      law:'管理程序§4：故意不提供必要資訊資源或不合理績效要求屬任務霸凌',
+      opts:['從未','偶爾，是疏忽並非故意','有時','是，認為員工應自己想辦法'], sc:[0,1,2,3] },
+    { section:'三、關係管理（管理程序第4條）', no:7,
+      text:'您是否曾刻意冷落、孤立或排擠特定員工，阻止其建立正常工作關係？',
+      law:'管理程序§4：故意孤立、排擠屬行為霸凌；刻意冷落屬關係霸凌',
+      opts:['從未','偶爾，不自覺','有時','是，認為是管理必要手段'], sc:[0,1,2,3] },
+    { section:'三、關係管理（管理程序第4條）', no:8,
+      text:'您是否曾對員工績效給予非基於客觀事實的負面評價，或在評核上刻意打壓？',
+      law:'管理程序§4：對績效給予不合理負評屬任務霸凌',
+      opts:['從未，均有客觀依據','偶爾，有主觀成分','有時','是，以主觀判斷為主'], sc:[0,1,2,3] },
+    { section:'四、法規認知與義務（職安法§22-1、§22-2）', no:9,
+      text:'您是否了解職場霸凌的 5 個法定構成要件（行為主體、手段要件、行為態樣、結果要件、持續性原則）？',
+      law:'§22-1第1項：利用職務/職勢、持續發生、冒犯等行為、致身心受害（情節重大者不需持續）',
+      opts:['完全了解，能說明各要件','大致了解','有聽過但不清楚','完全不了解'], sc:[0,1,2,3] },
+    { section:'四、法規認知與義務（職安法§22-1、§22-2）', no:10,
+      text:'當您知悉員工遭受霸凌（無論是否申訴），您知道雇主/主管有何立即義務？',
+      law:'§22-2：知悉後應立即採取有效措施（防止再發、協助諮詢、調查、懲戒）',
+      opts:['完全知道，且能指導員工','大致知道流程','知道要處理但不清楚怎麼做','不清楚有義務'], sc:[0,1,2,3] },
+    { section:'四、法規認知與義務（職安法§22-1、§22-2）', no:11,
+      text:'您是否了解主管若為霸凌行為人，可能對公司造成的法律責任（職安法§46罰鍰最高100萬元）？',
+      law:'§46：最高負責人有霸凌行為，處1萬至100萬元罰鍰',
+      opts:['完全了解','知道有罰則但不清楚金額','略知一二','完全不知道'], sc:[0,1,2,3] },
+    { section:'五、預防行動與友善管理（管理程序第5、6、7條）', no:12,
+      text:'您是否定期參加職場霸凌防治教育訓練（每年至少 1 次，含友善管理技巧）？',
+      law:'管理程序§7：主管每年至少1次訓練，含友善管理與識別預防課程',
+      opts:['是，且積極參與','是，但被動參與','偶爾','從未參加'], sc:[0,1,2,3] },
+    { section:'五、預防行動與友善管理（管理程序第5、6、7條）', no:13,
+      text:'您是否定期與員工一對一溝通，主動識別潛在的霸凌問題或職場關係緊張？',
+      law:'管理程序§6：主管應注意員工互動，定期檢視工作環境及管理方式',
+      opts:['是，每月定期','偶爾，1–2個月一次','很少，半年以上才做','從未'], sc:[0,1,2,3] },
+    { section:'五、預防行動與友善管理（管理程序第5、6、7條）', no:14,
+      text:'當部屬向您反映可能的霸凌情事時，您的第一反應是？',
+      law:'§22-2第2項：知悉後應立即釐清事實，依被霸凌者意願協助申訴或調整工作',
+      opts:['立即依程序處理並通報HR','認真傾聽並協助尋求資源','要員工再觀察看看','要員工不要小題大作'], sc:[0,1,2,3] },
+  ],
+
+  emp: [
+    { section:'一、言語霸凌情境（職安法§22-1；管理程序第4條）', no:1,
+      text:'在工作中，是否曾遭受主管或同事持續使用侮辱、貶低或嘲諷的言詞？',
+      law:'§22-1：冒犯、侮辱等言詞持續發生，致身心受危害即構成職場霸凌',
+      opts:['從未發生','偶爾，但屬一般摩擦','有幾次，讓我很不舒服','持續發生，已影響上班意願'], sc:[0,1,2,3] },
+    { section:'一、言語霸凌情境（職安法§22-1；管理程序第4條）', no:2,
+      text:'是否曾遭到威脅性語言（如「再這樣就解僱你」、「敢投訴就讓你好看」）？',
+      law:'管理程序§4：威脅性言語恐嚇屬言語霸凌四態樣之一',
+      opts:['從未','偶爾，認為是說說而已','有幾次，感到恐懼','多次，已嚴重影響心理'], sc:[0,1,2,3] },
+    { section:'一、言語霸凌情境（職安法§22-1；管理程序第4條）', no:3,
+      text:'是否曾在公開場合（如會議）被羞辱、嘲笑，或私下有謠言散布損害您的名譽？',
+      law:'管理程序§4：當眾羞辱屬言語霸凌；散布謠言破壞名譽屬關係霸凌',
+      opts:['從未','偶爾，但我能承受','有過，讓我很難堪','持續發生，已影響工作關係'], sc:[0,1,2,3] },
+    { section:'二、行為霸凌情境（管理程序第4條）', no:4,
+      text:'是否曾被故意孤立、排擠，無法正常參與工作討論、活動或重要資訊共享？',
+      law:'管理程序§4：故意孤立、阻絕正常工作關係屬行為霸凌',
+      opts:['從未','偶爾被忽略，不確定是否故意','有幾次，明顯被排除','長期被孤立，已被邊緣化'], sc:[0,1,2,3] },
+    { section:'二、行為霸凌情境（管理程序第4條）', no:5,
+      text:'是否曾遭受無正當理由剝奪工作機會（拒絕調職、升遷，或重要案件被移走）？',
+      law:'管理程序§4：無正當理由剝奪工作機會屬行為霸凌',
+      opts:['從未','感覺有，但不確定是否針對我','有過，有明確的被針對感','多次，且伴隨其他不當對待'], sc:[0,1,2,3] },
+    { section:'二、行為霸凌情境（管理程序第4條）', no:6,
+      text:'是否曾遭受不當監視（頻繁查看工作、監控行蹤、侵犯隱私）超出合理管理範圍？',
+      law:'管理程序§4：不當監視、跟蹤或侵犯隱私屬行為霸凌',
+      opts:['從未','偶爾有，但尚可接受','有，已感到不舒適','嚴重，已影響工作自主性'], sc:[0,1,2,3] },
+    { section:'三、工作任務霸凌情境（管理程序第4條）', no:7,
+      text:'是否曾被指派明顯超出能力、時間或資源的工作，且主管未給予必要支援？',
+      law:'管理程序§4：指派不可能完成之工作屬任務霸凌',
+      opts:['從未','偶爾，但有溝通空間','有過幾次，感到被刁難','持續發生，完成後仍面臨懲處'], sc:[0,1,2,3] },
+    { section:'三、工作任務霸凌情境（管理程序第4條）', no:8,
+      text:'是否曾遭受績效考核不合理負評（非基於客觀事實），或被給予不公平的工作指責？',
+      law:'管理程序§4：給予不合理績效負評屬任務霸凌',
+      opts:['從未，考評均基於事實','偶爾有主觀成分','明顯不公平，無法提出異議','長期遭受，已影響職涯'], sc:[0,1,2,3] },
+    { section:'四、身心健康影響（職安法§22-1「致身心健康受危害」）', no:9,
+      text:'前述情形對您身心健康造成的影響程度？',
+      law:'§22-1：「致其身心健康遭受危害」為構成職場霸凌的法定結果要件',
+      opts:['幾乎無影響','輕微，偶爾感到不舒適','明顯影響（失眠、焦慮、憂鬱傾向）','嚴重影響，已影響生活或就醫'], sc:[0,1,2,3] },
+    { section:'四、身心健康影響（職安法§22-1「致身心健康受危害」）', no:10,
+      text:'這些不當對待的發生頻率？',
+      law:'§22-1：原則上以「持續發生」為要件，但情節重大者例外不需持續',
+      opts:['幾乎沒有','偶爾（每月1–2次）','頻繁（每週都有）','幾乎每天，已成常態'], sc:[0,1,2,3] },
+    { section:'五、申訴權益認知（職安法§22-3；管理程序第8、13、14條）', no:11,
+      text:'您是否知道公司設有職場霸凌申訴管道（書面、電子郵件、電話、親自申訴等方式）？',
+      law:'§22-3、管理程序§8：雇主應設多元申訴管道（10人以上必須公揭）',
+      opts:['知道，且知道如何使用','知道存在，但不清楚流程','聽說有，但沒看到公告','完全不知道'], sc:[0,1,2,3] },
+    { section:'五、申訴權益認知（職安法§22-3；管理程序第8、13、14條）', no:12,
+      text:'若被申訴人是最高負責人（董事長、總經理），您是否知道可逕向主管機關提出申訴？',
+      law:'§22-3第1項但書：被申訴人為最高負責人時，可逕向直轄市或縣市主管機關申訴',
+      opts:['完全知道','知道有此規定，但不確定流程','不知道這個例外','完全不知道'], sc:[0,1,2,3] },
+    { section:'五、申訴權益認知（職安法§22-3；管理程序第8、13、14條）', no:13,
+      text:'您是否了解向主管機關申訴的期限（行為終了起 3 年；離職後 1 年內，從較長者）？',
+      law:'§22-3第2項：霸凌行為終了3年內；離職後1年內，兩項從較長者',
+      opts:['完全了解','知道有期限，但不清楚細節','不清楚','完全不知道有期限'], sc:[0,1,2,3] },
+    { section:'五、申訴權益認知（職安法§22-3；管理程序第8、13、14條）', no:14,
+      text:'您是否知道申訴後公司禁止對您進行任何形式的報復（解僱、降職、不當調職、威脅等）？',
+      law:'管理程序§24：禁止報復，違者依規懲處；可向主管機關申訴',
+      opts:['完全知道','知道概念，但不清楚保護範圍','聽說過，但不確定','完全不知道'], sc:[0,1,2,3] },
+  ],
+};
+
+const DIMS = {
+  hr: [
+    { name:'政策與規模義務', icon:'📜', qs:[0,1,2] },
+    { name:'申訴制度', icon:'📩', qs:[5,6,7] },
+    { name:'調查程序', icon:'🔍', qs:[8,9,10] },
+    { name:'立即有效措施', icon:'⚡', qs:[11,12] },
+    { name:'懲戒與追蹤', icon:'⚖️', qs:[13,14] },
+    { name:'保密與禁止報復', icon:'🔒', qs:[15,16] },
+    { name:'訓練與記錄', icon:'📚', qs:[17,18,19] },
+  ],
+  mgr: [
+    { name:'言語與態度', icon:'💬', qs:[0,1,2] },
+    { name:'任務指派', icon:'📋', qs:[3,4,5] },
+    { name:'關係管理', icon:'🤝', qs:[6,7] },
+    { name:'法規認知', icon:'⚖️', qs:[8,9,10] },
+    { name:'預防行動', icon:'🛡️', qs:[11,12,13] },
+  ],
+  emp: [
+    { name:'言語霸凌', icon:'💬', qs:[0,1,2] },
+    { name:'行為霸凌', icon:'🚫', qs:[3,4,5] },
+    { name:'任務霸凌', icon:'📋', qs:[6,7] },
+    { name:'身心影響', icon:'💙', qs:[8,9] },
+    { name:'申訴權益認知', icon:'⚖️', qs:[10,11,12,13] },
+  ],
+};
+
+const ROLE_LABEL = { hr:'雇主/HR', mgr:'主管/管理者', emp:'員工/求助者' };
+let role = '', cur = 0, answers = [], sizeVal = 'any';
+
+function selectRole(r, el) {
+  role = r;
+  document.querySelectorAll('.role-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('size-row').style.display = r === 'hr' ? 'block' : 'none';
+  const btn = document.getElementById('btn-start');
+  btn.disabled = false;
+  btn.textContent = '以「' + ROLE_LABEL[r] + '」身份開始評估 →';
+}
+
+function startQuiz() {
+  sizeVal = document.getElementById('s-size').value;
+  answers = new Array(QDB[role].length).fill(null);
+  cur = 0;
+  document.getElementById('role-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  const qs = QDB[role];
+  const q = qs[cur];
+  const total = qs.length;
+  const pct = Math.round((cur / total) * 100);
+  document.getElementById('prog-label').textContent = '（' + ROLE_LABEL[role] + '）第 ' + (cur+1) + ' 題，共 ' + total + ' 題';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-section-chip').innerHTML = '<div class="section-chip">' + q.section + '</div>';
+  document.getElementById('q-num').textContent = '第 ' + (cur+1) + ' 題';
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-law').textContent = '📌 ' + q.law;
+  const optsEl = document.getElementById('q-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach(function(txt, i) {
+    const d = document.createElement('div');
+    d.className = 'opt' + (answers[cur] === i ? ' sel' : '');
+    d.innerHTML = '<div class="opt-dot"></div><div class="opt-txt">' + txt + '</div>';
+    d.onclick = function() {
+      answers[cur] = i;
+      document.querySelectorAll('.opt').forEach(function(el, j) { el.classList.toggle('sel', j === i); });
+      document.getElementById('btn-next').disabled = false;
+    };
+    optsEl.appendChild(d);
+  });
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').disabled = answers[cur] === null;
+  document.getElementById('btn-next').textContent = cur === total - 1 ? '產生報告 →' : '下一題 →';
+}
+
+function prevQ() { if (cur > 0) { cur--; renderQ(); } }
+function nextQ() {
+  if (cur === QDB[role].length - 1) { showResult(); return; }
+  cur++; renderQ();
+}
+
+function showResult() {
+  document.getElementById('quiz-section').style.display = 'none';
+  const qs = QDB[role];
+  const total = answers.reduce(function(s, a, i) { return s + (a !== null ? qs[i].sc[a] : 0); }, 0);
+  const max = qs.length * 3;
+  const pct = Math.round((total / max) * 100);
+  const _lvl = role==='hr' ? (pct<=20?'低':pct<=45?'中':'高') : (pct<=20?'低':pct<=50?'中':'高');
+  HCLead.gate('tool-03', 'AI 職場霸凌風險評估', {score:pct, level:_lvl, role:role}, function() {
+  document.getElementById('result-section').style.display = 'block';
+  const head = document.getElementById('res-head');
+  const badge = document.getElementById('res-badge');
+  const title = document.getElementById('res-title');
+  const desc = document.getElementById('res-desc');
+  let level;
+  if (role === 'hr') {
+    if (pct <= 20) { level='低'; head.className='res-head rh-low'; badge.textContent='✓ 合規優良'; title.textContent='法遵合規評估：優良'; desc.textContent='整體合規狀態良好，建議持續維護並追蹤法令更新。'; }
+    else if (pct <= 45) { level='中'; head.className='res-head rh-mid'; badge.textContent='⚠️ 部分合規'; title.textContent='法遵合規評估：待加強'; desc.textContent='存在若干合規缺口，建議優先補強申訴制度、調查程序等義務面向。'; }
+    else { level='高'; head.className='res-head rh-high'; badge.textContent='🚨 合規嚴重不足'; title.textContent='法遵合規評估：高度風險'; desc.textContent='多項法定義務未落實，面臨主管機關裁罰（最高100萬元）及重新調查之風險，請立即啟動改善計畫。'; }
+  } else if (role === 'mgr') {
+    if (pct <= 20) { level='低'; head.className='res-head rh-low'; badge.textContent='✓ 管理風險低'; title.textContent='管理行為評估：良好'; desc.textContent='整體管理行為符合友善職場標準，持續保持並積極落實防治教育。'; }
+    else if (pct <= 50) { level='中'; head.className='res-head rh-mid'; badge.textContent='⚠️ 管理風險中'; title.textContent='管理行為評估：有改善空間'; desc.textContent='部分管理行為存在霸凌風險，建議積極參加訓練並檢視具體行為模式。'; }
+    else { level='高'; head.className='res-head rh-high'; badge.textContent='🚨 高度霸凌風險'; title.textContent='管理行為評估：高度警示'; desc.textContent='評估結果顯示多項行為已符合職場霸凌的法定要件，強烈建議立即尋求專業諮詢並調整管理方式。'; }
+  } else {
+    if (pct <= 20) { level='低'; head.className='res-head rh-low'; badge.textContent='✓ 低度風險'; title.textContent='職場霸凌風險：低'; desc.textContent='整體工作環境狀況尚佳，建議了解申訴管道，以備不時之需。'; }
+    else if (pct <= 50) { level='中'; head.className='res-head rh-mid'; badge.textContent='⚠️ 中度風險'; title.textContent='職場霸凌風險：中度警示'; desc.textContent='部分情境顯示存在潛在霸凌，建議開始蒐集相關事證並了解申訴程序。'; }
+    else { level='高'; head.className='res-head rh-high'; badge.textContent='🚨 高度疑似霸凌'; title.textContent='職場霸凌風險：高度疑似'; desc.textContent='評估結果顯示您可能正遭受職場霸凌，依法您有申訴保護，建議立即採取行動。'; }
+  }
+  const dims = DIMS[role];
+  function fillCls(p) { return p <= 25 ? 'fill-safe' : p <= 55 ? 'fill-warn' : 'fill-danger'; }
+  document.getElementById('dim-grid').innerHTML = dims.map(function(d) {
+    const dTotal = d.qs.reduce(function(s, qi) { return s + (answers[qi] !== null ? qs[qi].sc[answers[qi]] : 0); }, 0);
+    const dMax = d.qs.length * 3;
+    const dPct = Math.round((dTotal / dMax) * 100);
+    return '<div class="dim-card"><div class="dc-icon">' + d.icon + '</div><div class="dc-name">' + d.name + '</div><div class="dc-bar"><div class="dc-fill ' + fillCls(dPct) + '" data-w="' + dPct + '" style="width:0"></div></div><div class="dc-num">' + (role === 'hr' ? (100-dPct) + '% 合規' : dPct + '% 風險') + '</div></div>';
+  }).join('');
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      document.querySelectorAll('.dc-fill[data-w]').forEach(function(el) { el.style.width = el.dataset.w + '%'; });
+    });
+  });
+  const compEl = document.getElementById('compliance-section');
+  if (role === 'hr') {
+    const szRank = { any:0, '10':1, '30':2 }[sizeVal] || 0;
+    const sizeText = document.getElementById('s-size').selectedOptions[0].text;
+    const obligations = [
+      { text:'採取必要措施防治職場霸凌（基本義務）', law:'職安法§22-1第2項（全體雇主）', minSize:0, ans: answers[0] },
+      { text:'訂定申訴管道並在工作場所公開揭示', law:'職安法§22-1第2項（10人以上）', minSize:1, ans: answers[1] },
+      { text:'訂定防治措施、申訴及懲處規範並公揭', law:'職安法§22-1第2項（30人以上）', minSize:2, ans: answers[2] },
+      { text:'建立多元申訴管道（書面、郵件、電話、親訪）', law:'管理程序§8（10人以上建議）', minSize:1, ans: answers[5] },
+      { text:'3工作日內確認受理並書面通知申訴人', law:'管理程序§11（全體雇主）', minSize:0, ans: answers[6] },
+      { text:'調查小組（外聘≥1/2、3–5人、具專業、利益迴避）', law:'職安法§22-2第3項', minSize:1, ans: answers[9] },
+      { text:'60日內完成調查、10工作日內通知結果', law:'管理程序§14（全體雇主）', minSize:0, ans: answers[10] },
+      { text:'申訴事件登錄中央主管機關指定網站', law:'職安法§22-2第4項（全體雇主）', minSize:0, ans: answers[19] },
+      { text:'教育訓練（新進/在職/主管/調查人員，各依頻率）', law:'管理程序§7（全體雇主）', minSize:0, ans: answers[17] },
+      { text:'相關文件保存至少7年', law:'管理程序§27（全體雇主）', minSize:0, ans: answers[18] },
+      { text:'明確書面禁止報復規定', law:'管理程序§24（全體雇主）', minSize:0, ans: answers[16] },
+    ];
+    compEl.innerHTML = '<div class="compliance-box"><h3>📌 依您的規模（' + sizeText + '）— 法定義務對照檢核</h3>' +
+      obligations.map(function(ob) {
+        if (ob.minSize > szRank) return '<div class="comp-item"><div class="comp-dot dot-na">—</div><div><div class="comp-text" style="color:var(--ink-faded)">' + ob.text + '</div><div class="comp-law">' + ob.law + '（目前規模不適用）</div></div></div>';
+        const sc = ob.ans !== null && ob.ans !== undefined ? ob.ans : 3;
+        const ok = sc <= 1;
+        return '<div class="comp-item"><div class="comp-dot ' + (ok?'dot-ok':'dot-ng') + '">' + (ok?'✓':'✗') + '</div><div><div class="comp-text">' + ob.text + '</div><div class="comp-law">' + ob.law + '</div></div></div>';
+      }).join('') + '</div>';
+  } else {
+    compEl.innerHTML = '';
+  }
+  callAI(pct, level, total, max, qs);
+  }); // end gate
+}
+
+async function callAI(pct, level, total, max, qs) {
+  const roleLabel = ROLE_LABEL[role];
+  const summary = answers.map(function(a, i) {
+    return a !== null ? 'Q' + (i+1) + '：' + qs[i].text.slice(0,28) + '…→【' + qs[i].opts[a] + '】' : 'Q' + (i+1) + '：未作答';
+  }).join('\n');
+  const context = role === 'hr' ? '企業規模：' + document.getElementById('s-size').selectedOptions[0].text : '';
+  let rolePrompt = '';
+  if (role === 'hr') {
+    rolePrompt = '請以策識永續 AI 人資顧問身份，針對「雇主/HR法遵合規」角度，用繁體中文提供：\n\n【合規現況摘要】（2–3句，直接切入最大缺口）\n\n【高度風險義務缺失（依法需立即處理）】\n針對評估中最薄弱的 3 項義務，逐項說明：\n・應遵守的法條依據（職安法§22-1/22-2/22-3）\n・未落實的具體風險（裁罰金額、主管機關要求重新調查等）\n・建議的具體改善步驟\n\n【依企業規模的分級義務提醒】\n（所有雇主→10人以上→30人以上，逐層說明）\n\n【4大霸凌樣態防治重點】\n（言語霸凌4項、行為霸凌4項、任務霸凌4項、關係霸凌4項，各簡要說明識別與防治要點）\n\n【調查程序與時程提醒】（3日→10日→60日→10日→申復14日→30日，含外聘1/2要求）\n\n【中期制度建置清單（1–3個月內完成）】（條列5–7項）\n\n格式清晰專業，不超過750字。';
+  } else if (role === 'mgr') {
+    rolePrompt = '請以策識永續 AI 人資顧問身份，針對「主管/管理者行為」角度，用繁體中文提供：\n\n【評估結果摘要】（2句，直接指出最高風險的管理行為）\n\n【最需改善的管理行為（3項，依法律風險排序）】\n逐項說明：\n・行為描述（對應哪種霸凌樣態）\n・涉及的法律後果（§22-1、§46最高100萬罰鍰）\n・具體改善建議\n\n【職場霸凌法定5要件說明】\n（行為主體、手段要件、行為態樣、結果要件、持續性原則各一段，含情節重大不需持續之例外）\n\n【任務霸凌vs正當管理的界線】\n（這是主管最容易混淆的區域，詳細說明）\n\n【4大霸凌樣態——主管常見雷區】\n（言語/行為/任務/關係各一要點）\n\n【建議行動（30天內）】（3–5項具體行動）\n\n語氣誠懇建設性，不超過650字。';
+  } else {
+    rolePrompt = '請以策識永續 AI 人資顧問身份，針對「員工/求助者」角度，用繁體中文提供：\n\n【評估結果摘要】（2–3句，說明目前情境的嚴重性評估）\n\n【是否符合職場霸凌法定5要件分析】\n（行為主體/手段要件/行為態樣/結果要件/持續性，逐一對照評估結果分析）\n\n【遭受的霸凌樣態辨識】\n（言語/行為/任務/關係四類，根據評估結果指出您最可能遭受的樣態）\n\n【您的法律保護與申訴完整說明】\n1. 申訴對象（向雇主；若為最高負責人可逕向直轄市或縣市主管機關）\n2. 申訴方式（書面、Email、電話、親自，4種管道）\n3. 申訴書應載明6項事項\n4. 申訴期限（行為終了3年；離職後1年；從較長者）\n5. 禁止報復保護（雇主不得因申訴而有任何不利措施）\n6. 調查程序保障（客觀公正保密利益迴避）\n\n【立即可採取的3個行動步驟】（具體可行）\n\n【事證蒐集建議】（記錄什麼、如何保存、7年期間）\n\n語氣溫暖支持，不超過650字。';
+  }
+  const prompt = '職場霸凌診斷評估結果：\n角色：' + roleLabel + '\n' + context + '\n整體風險/合規分數：' + pct + '%（' + level + '度風險）\n原始得分：' + total + '/' + max + '\n\n各題作答摘要：\n' + summary + '\n\n' + rolePrompt;
+  const bodyEl = document.getElementById('ai-body');
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tool: 'bullying', system: '你是策識永續 AI 人資顧問，熟悉台灣《職業安全衛生法》職場霸凌防治專章（第22-1、22-2、22-3、46條）及相關企業管理程序，回應使用繁體中文。', messages: [{ role: 'user', content: prompt }], sessionId: SESSION, stream: true })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(function() { return {}; });
+      bodyEl.innerHTML = err.limitReached
+        ? '<div class="limit-msg">今日健檢次數已達上限，請明日再試或 <a href="upgrade.html" style="color:var(--navy);font-weight:700;">升級專業版</a>。</div>'
+        : '<span style="color:var(--ink-soft)">（AI 分析暫時無法使用）</span>';
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    while (true) {
+      const res = await reader.read(); if (res.done) break;
+      for (const line of dec.decode(res.value, { stream: true }).split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        const d = line.slice(6).trim(); if (d === '[DONE]') break;
+        try { txt += JSON.parse(d).text || ''; } catch(e) {}
+      }
+      bodyEl.textContent = txt;
+    }
+    HCLead.reportDone(txt);
+  } catch(e) { bodyEl.textContent = '（AI 分析服務暫時無法連線）'; }
+}
+
+function restart() {
+  role = ''; cur = 0; answers = [];
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('role-section').style.display = 'block';
+  document.querySelectorAll('.role-item').forEach(function(el) { el.classList.remove('active'); });
+  document.getElementById('size-row').style.display = 'none';
+  const btn = document.getElementById('btn-start');
+  btn.disabled = true; btn.textContent = '開始評估 →';
+  document.getElementById('ai-body').innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

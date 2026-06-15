@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HR 健檢管理後台 · 策識永續</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#10244c;--navy-deep:#07142f;--plum:#4c315f;--teal:#1d756f;--gold:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,.12);--danger:#c34646;--warning:#d4861a;--safe:#1d756f}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:#f0f2f7;color:var(--ink);min-height:100vh}
+
+/* ── Login ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy-deep),var(--plum))}
+.login-card{background:#fff;border-radius:16px;padding:40px 36px;width:min(380px,92vw);text-align:center;box-shadow:0 24px 80px rgba(7,20,47,.4)}
+.login-logo{font-family:'Noto Serif TC',serif;font-size:15px;color:var(--ink-soft);margin-bottom:24px}
+.login-card h1{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:var(--navy);margin-bottom:6px}
+.login-card p{font-size:13px;color:var(--ink-soft);margin-bottom:24px}
+.login-field{text-align:left;margin-bottom:14px}
+.login-field label{font-size:12px;font-weight:700;color:var(--ink);display:block;margin-bottom:5px}
+.login-field input{width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px}
+.login-field input:focus{outline:none;border-color:var(--plum)}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--plum),var(--navy));color:#fff;border:none;padding:13px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn-login:hover{opacity:.88}
+.login-err{color:var(--danger);font-size:13px;margin-top:10px;display:none}
+
+/* ── Layout ── */
+#admin-screen{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--navy-deep);overflow-y:auto;z-index:100}
+.sb-brand{padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-brand h2{font-family:'Noto Serif TC',serif;font-size:14px;color:#fff;font-weight:700;line-height:1.4}
+.sb-brand p{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px}
+.sb-menu{padding:12px 0}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,.65);cursor:pointer;transition:all .2s}
+.sb-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.sb-item.active{background:rgba(226,191,121,.12);color:var(--gold)}
+.sb-icon{font-size:16px;width:20px;text-align:center}
+.sb-logout{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,.08)}
+.btn-logout{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);padding:8px;border-radius:6px;font:inherit;font-size:12px;cursor:pointer}
+.btn-logout:hover{background:rgba(255,255,255,.1);color:#fff}
+.main-area{margin-left:220px;padding:28px 32px;min-height:100vh}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.top-bar h1{font-family:'Noto Serif TC',serif;font-size:20px;font-weight:900;color:var(--navy)}
+.top-bar-right{display:flex;gap:10px;align-items:center}
+.btn-export{background:var(--teal);color:#fff;border:none;padding:8px 16px;border-radius:7px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.btn-export:hover{opacity:.88}
+.btn-refresh{background:#fff;border:1.5px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:7px;font:inherit;font-size:13px;cursor:pointer}
+
+/* ── Stats ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:#fff;border-radius:10px;padding:18px 20px;border-left:4px solid var(--plum)}
+.sc-label{font-size:12px;color:var(--ink-soft);margin-bottom:6px}
+.sc-num{font-size:28px;font-weight:900;color:var(--navy);line-height:1}
+.sc-sub{font-size:11px;color:var(--ink-faded);margin-top:4px}
+.stat-card.c-green{border-color:var(--teal)}.stat-card.c-gold{border-color:var(--gold)}.stat-card.c-red{border-color:var(--danger)}
+
+/* ── Tool chart ── */
+.tool-chart{background:#fff;border-radius:10px;padding:20px;margin-bottom:24px}
+.tc-title{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.tc-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.tc-name{font-size:12px;color:var(--ink-soft);width:140px;flex-shrink:0}
+.tc-bar-wrap{flex:1;background:rgba(16,36,76,.07);border-radius:999px;height:8px;overflow:hidden}
+.tc-bar-fill{height:100%;background:var(--plum);border-radius:999px;transition:width .8s}
+.tc-count{font-size:12px;font-weight:700;color:var(--navy);width:30px;text-align:right}
+
+/* ── Filters ── */
+.filter-row{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.filter-row input,.filter-row select{padding:8px 12px;border:1.5px solid var(--line);border-radius:7px;font:inherit;font-size:13px;color:var(--ink);background:#fff}
+.filter-row input{flex:1;min-width:200px}
+.filter-row input:focus,.filter-row select:focus{outline:none;border-color:var(--plum)}
+.result-count{font-size:12px;color:var(--ink-soft);margin-left:auto}
+
+/* ── Table ── */
+.tbl-wrap{background:#fff;border-radius:10px;overflow:hidden;margin-bottom:16px}
+table{width:100%;border-collapse:collapse}
+th{padding:11px 14px;background:rgba(16,36,76,.04);font-size:12px;font-weight:700;color:var(--ink-soft);text-align:left;white-space:nowrap;border-bottom:2px solid var(--line)}
+td{padding:11px 14px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(76,49,95,.025)}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700}
+.badge-low{background:#e8f5f0;color:var(--teal)}
+.badge-mid{background:#fff3e0;color:var(--warning)}
+.badge-high{background:#fde8e8;color:var(--danger)}
+.badge-tool{background:rgba(76,49,95,.1);color:var(--plum)}
+.btn-view{background:var(--navy);color:#fff;border:none;padding:5px 11px;border-radius:5px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.btn-view:hover{background:var(--plum)}
+.empty-msg{text-align:center;padding:48px 0;color:var(--ink-faded);font-size:14px}
+
+/* ── Detail modal ── */
+.dm-overlay{position:fixed;inset:0;background:rgba(7,20,47,.7);z-index:500;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;backdrop-filter:blur(4px)}
+.dm-overlay.open{display:flex}
+.dm-card{background:#fff;border-radius:14px;width:min(680px,100%);max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(7,20,47,.35)}
+.dm-head{background:linear-gradient(135deg,var(--plum),var(--navy));padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:14px 14px 0 0;position:sticky;top:0;z-index:10}
+.dm-head h2{font-family:'Noto Serif TC',serif;font-size:16px;color:#fff;font-weight:900}
+.dm-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.dm-close:hover{background:rgba(255,255,255,.3)}
+.dm-body{padding:24px}
+.dm-section{margin-bottom:20px}
+.dm-section h3{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.dm-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dm-kv{display:flex;flex-direction:column;gap:2px}
+.dm-key{font-size:11px;color:var(--ink-faded)}
+.dm-val{font-size:14px;font-weight:600;color:var(--ink)}
+.dm-report{background:rgba(16,36,76,.03);border:1px solid var(--line);border-radius:8px;padding:16px;font-size:13px;line-height:2;color:var(--ink);white-space:pre-wrap;max-height:360px;overflow-y:auto}
+.dm-footer{display:flex;gap:10px;padding:16px 24px;border-top:1px solid var(--line);justify-content:flex-end}
+.btn-dm-export{background:var(--teal);color:#fff;border:none;padding:8px 16px;border-radius:7px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.btn-dm-close{background:#fff;border:1.5px solid var(--line);color:var(--ink);padding:8px 16px;border-radius:7px;font:inherit;font-size:13px;cursor:pointer}
+
+/* ── Panel tabs ── */
+.panel{display:none}.panel.active{display:block}
+
+/* ── Settings ── */
+.settings-card{background:#fff;border-radius:10px;padding:24px;margin-bottom:16px;max-width:560px}
+.settings-card h3{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sf{margin-bottom:14px}
+.sf label{display:block;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.sf input{width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:7px;font:inherit;font-size:13px;color:var(--ink)}
+.sf input:focus{outline:none;border-color:var(--plum)}
+.sf .hint{font-size:11px;color:var(--ink-faded);margin-top:4px}
+.btn-save{background:var(--plum);color:#fff;border:none;padding:10px 20px;border-radius:7px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.save-ok{color:var(--teal);font-size:13px;font-weight:700;display:none;margin-left:10px}
+.danger-zone{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:16px;margin-top:16px}
+.danger-zone p{font-size:13px;color:var(--danger);margin-bottom:10px}
+.btn-danger{background:var(--danger);color:#fff;border:none;padding:8px 16px;border-radius:6px;font:inherit;font-size:13px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">策識永續 · Sustainability Expertise</div>
+    <h1>管理後台登入</h1>
+    <p>HR 健檢中心成果管理系統</p>
+    <div class="login-field">
+      <label>管理員密碼</label>
+      <input type="password" id="pwd-input" placeholder="請輸入密碼" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" onclick="doLogin()">登入系統</button>
+    <div class="login-err" id="login-err">密碼錯誤，請重試</div>
+  </div>
+</div>
+
+<!-- Admin -->
+<div id="admin-screen">
+  <div class="sidebar">
+    <div class="sb-brand">
+      <h2>HR 健檢後台</h2>
+      <p>CESI Admin Console</p>
+    </div>
+    <div class="sb-menu">
+      <div class="sb-item active" onclick="switchPanel('dashboard',this)"><span class="sb-icon">📊</span>總覽 Dashboard</div>
+      <div class="sb-item" onclick="switchPanel('leads',this)"><span class="sb-icon">📋</span>健檢紀錄</div>
+      <div class="sb-item" onclick="switchPanel('settings',this)"><span class="sb-icon">⚙️</span>系統設定</div>
+    </div>
+    <div class="sb-logout" style="position:absolute;bottom:0;left:0;right:0">
+      <button class="btn-logout" onclick="doLogout()">← 登出系統</button>
+    </div>
+  </div>
+  <div class="main-area">
+
+    <!-- Dashboard Panel -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="top-bar">
+        <h1>📊 總覽 Dashboard</h1>
+        <div class="top-bar-right">
+          <button class="btn-refresh" onclick="loadAll()">↻ 重新整理</button>
+          <button class="btn-export" onclick="HCLead.exportCSV()">⬇ 匯出 CSV</button>
+        </div>
+      </div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="sc-label">總健檢筆數</div><div class="sc-num" id="st-total">—</div><div class="sc-sub">自建置起累計</div></div>
+        <div class="stat-card c-green"><div class="sc-label">今日新增</div><div class="sc-num" id="st-today">—</div><div class="sc-sub" id="st-today-date">—</div></div>
+        <div class="stat-card c-gold"><div class="sc-label">本週新增</div><div class="sc-num" id="st-week">—</div><div class="sc-sub">近7天</div></div>
+        <div class="stat-card c-red"><div class="sc-label">高風險筆數</div><div class="sc-num" id="st-high">—</div><div class="sc-sub">需優先關注</div></div>
+      </div>
+      <div class="tool-chart">
+        <div class="tc-title">各工具健檢次數分佈</div>
+        <div id="tool-chart-rows"></div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>時間</th><th>姓名</th><th>公司</th><th>工具</th><th>風險等級</th><th>操作</th></tr></thead>
+          <tbody id="recent-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Leads Panel -->
+    <div class="panel" id="panel-leads">
+      <div class="top-bar">
+        <h1>📋 健檢紀錄管理</h1>
+        <div class="top-bar-right">
+          <button class="btn-export" onclick="HCLead.exportCSV()">⬇ 匯出 CSV</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <input type="search" id="search-input" placeholder="搜尋姓名、公司、Email…" oninput="renderTable()">
+        <select id="filter-tool" onchange="renderTable()">
+          <option value="">所有工具</option>
+          <option value="tool-01">01 人資成熟度</option>
+          <option value="tool-02">02 勞動法遵風險</option>
+          <option value="tool-03">03 職場霸凌</option>
+          <option value="tool-04">04 離職風險</option>
+          <option value="tool-05">05 履歷健檢</option>
+          <option value="tool-06">06 面試模擬</option>
+          <option value="tool-07">07 JD 生成器</option>
+          <option value="tool-08">08 招募文案</option>
+          <option value="tool-09">09 職安衛診斷</option>
+        </select>
+        <select id="filter-level" onchange="renderTable()">
+          <option value="">所有風險等級</option>
+          <option value="高">高度風險</option>
+          <option value="中">中度風險</option>
+          <option value="低">低度風險</option>
+        </select>
+        <span class="result-count" id="result-count"></span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>#</th><th>時間</th><th>姓名</th><th>公司</th><th>Email</th><th>電話</th><th>工具</th><th>等級</th><th>分數</th><th>操作</th></tr></thead>
+          <tbody id="leads-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="panel" id="panel-settings">
+      <div class="top-bar"><h1>⚙️ 系統設定</h1></div>
+      <div class="settings-card">
+        <h3>📧 EmailJS 設定（報告自動寄送）</h3>
+        <div class="sf">
+          <label>Public Key</label>
+          <input type="text" id="cfg-ejpk" placeholder="user_xxxxxxxxxxxxxxx">
+          <div class="hint">至 emailjs.com → Account → API Keys 取得</div>
+        </div>
+        <div class="sf">
+          <label>Service ID</label>
+          <input type="text" id="cfg-ejsi" placeholder="service_xxxxxxx">
+        </div>
+        <div class="sf">
+          <label>Template ID</label>
+          <input type="text" id="cfg-ejti" placeholder="template_xxxxxxx">
+          <div class="hint">Template 變數：to_name, to_email, company, job_title, tool_name, result_level, result_score, report_text, report_date</div>
+        </div>
+        <button class="btn-save" onclick="saveSettings()">儲存設定</button>
+        <span class="save-ok" id="save-ok">✓ 已儲存</span>
+      </div>
+      <div class="settings-card">
+        <h3>🔒 密碼設定</h3>
+        <div class="sf">
+          <label>目前密碼</label>
+          <input type="password" id="cfg-oldpwd" placeholder="輸入目前密碼">
+        </div>
+        <div class="sf">
+          <label>新密碼</label>
+          <input type="password" id="cfg-newpwd" placeholder="輸入新密碼（至少8碼）">
+        </div>
+        <div class="sf">
+          <label>確認新密碼</label>
+          <input type="password" id="cfg-newpwd2" placeholder="再次輸入新密碼">
+        </div>
+        <button class="btn-save" onclick="changePwd()">更新密碼</button>
+        <span class="save-ok" id="pwd-ok">✓ 密碼已更新</span>
+        <div id="pwd-err" style="color:var(--danger);font-size:13px;display:none;margin-top:6px"></div>
+      </div>
+      <div class="settings-card">
+        <h3>📊 資料說明</h3>
+        <p style="font-size:13px;color:var(--ink-soft);line-height:1.9">
+          目前健檢資料儲存於 <strong>此瀏覽器 localStorage</strong>。<br>
+          若需跨裝置管理，請將後端 <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">/api/leads</code>（POST）及 <code style="background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px">/api/leads</code>（GET）端點加入後端服務，資料即可集中儲存於雲端資料庫。
+        </p>
+        <div class="danger-zone">
+          <p>⚠️ 危險操作：清除所有本機健檢資料（此操作不可復原）</p>
+          <button class="btn-danger" onclick="confirmClear()">清除所有資料</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="dm-overlay" id="dm-overlay" onclick="closeDetail(event)">
+  <div class="dm-card">
+    <div class="dm-head">
+      <h2 id="dm-title">健檢詳情</h2>
+      <button class="dm-close" onclick="closeDetailBtn()">✕</button>
+    </div>
+    <div class="dm-body">
+      <div class="dm-section">
+        <h3>聯絡人資訊</h3>
+        <div class="dm-info-grid" id="dm-contact"></div>
+      </div>
+      <div class="dm-section">
+        <h3>評估結果</h3>
+        <div class="dm-info-grid" id="dm-result"></div>
+      </div>
+      <div class="dm-section" id="dm-report-section">
+        <h3>AI 診斷報告全文</h3>
+        <div class="dm-report" id="dm-report"></div>
+      </div>
+    </div>
+    <div class="dm-footer">
+      <button class="btn-dm-export" onclick="exportOne()">📄 匯出本筆</button>
+      <button class="btn-dm-close" onclick="closeDetailBtn()">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/hc-lead.js"></script>
+<script>
+const ADMIN_KEY = 'hcl_admin_pwd';
+const CFG_KEY   = 'hcl_admin_cfg';
+let _allLeads = [];
+let _detailRec = null;
+
+// ── Auth ────────────────────────────────────────────────
+function getPwd() { return localStorage.getItem(ADMIN_KEY) || HCL_ADMIN_PWD; }
+
+function doLogin() {
+  const v = document.getElementById('pwd-input').value;
+  if (v === getPwd()) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    loadAll();
+    loadSettings();
+  } else {
+    const err = document.getElementById('login-err');
+    err.style.display = 'block';
+    setTimeout(function() { err.style.display='none'; }, 3000);
+  }
+}
+function doLogout() {
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pwd-input').value = '';
+}
+document.getElementById('pwd-input').addEventListener('keydown', function(e) { if(e.key==='Enter') doLogin(); });
+
+// ── Panel nav ────────────────────────────────────────────
+function switchPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(function(s) { s.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+// ── Data ─────────────────────────────────────────────────
+function loadAll() {
+  _allLeads = HCLead.getAllLeads();
+  renderDashboard();
+  renderTable();
+}
+
+// ── Dashboard ────────────────────────────────────────────
+function renderDashboard() {
+  const all = _allLeads;
+  const today = new Date().toDateString();
+  const weekAgo = new Date(Date.now() - 7 * 86400000);
+
+  document.getElementById('st-total').textContent = all.length;
+  document.getElementById('st-today').textContent = all.filter(function(l) { return new Date(l.ts).toDateString() === today; }).length;
+  document.getElementById('st-today-date').textContent = new Date().toLocaleDateString('zh-TW');
+  document.getElementById('st-week').textContent  = all.filter(function(l) { return new Date(l.ts) >= weekAgo; }).length;
+  document.getElementById('st-high').textContent  = all.filter(function(l) { return l.result && l.result.level === '高'; }).length;
+
+  // Tool chart
+  const toolMap = {};
+  all.forEach(function(l) {
+    const k = l.toolName || l.toolId || '未知';
+    toolMap[k] = (toolMap[k] || 0) + 1;
+  });
+  const maxVal = Math.max(1, ...Object.values(toolMap));
+  document.getElementById('tool-chart-rows').innerHTML = Object.keys(toolMap).length
+    ? Object.entries(toolMap).sort(function(a,b) { return b[1]-a[1]; }).map(function(e) {
+        return '<div class="tc-row"><div class="tc-name">' + esc(e[0]) + '</div><div class="tc-bar-wrap"><div class="tc-bar-fill" style="width:' + Math.round(e[1]/maxVal*100) + '%"></div></div><div class="tc-count">' + e[1] + '</div></div>';
+      }).join('')
+    : '<div style="color:var(--ink-faded);font-size:13px;padding:8px 0">尚無資料</div>';
+
+  // Recent 10
+  const tbody = document.getElementById('recent-tbody');
+  const recent = all.slice(0, 10);
+  tbody.innerHTML = recent.length
+    ? recent.map(function(l, i) { return rowHtml(l, i, true); }).join('')
+    : '<tr><td colspan="6" class="empty-msg">尚無健檢記錄</td></tr>';
+}
+
+// ── Leads table ──────────────────────────────────────────
+function renderTable() {
+  const q     = (document.getElementById('search-input').value || '').toLowerCase();
+  const tool  = document.getElementById('filter-tool').value;
+  const level = document.getElementById('filter-level').value;
+  const filtered = _allLeads.filter(function(l) {
+    const matchQ = !q || [l.lead.name, l.lead.company, l.lead.email].join(' ').toLowerCase().includes(q);
+    const matchT = !tool  || l.toolId === tool;
+    const matchL = !level || (l.result && l.result.level === level);
+    return matchQ && matchT && matchL;
+  });
+  document.getElementById('result-count').textContent = '共 ' + filtered.length + ' 筆';
+  const tbody = document.getElementById('leads-tbody');
+  tbody.innerHTML = filtered.length
+    ? filtered.map(function(l, i) { return rowHtml(l, i, false); }).join('')
+    : '<tr><td colspan="10" class="empty-msg">無符合條件的記錄</td></tr>';
+}
+
+function rowHtml(l, i, compact) {
+  const ts  = new Date(l.ts).toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+  const lvl = l.result && l.result.level;
+  const badge = lvl === '高' ? 'badge-high' : lvl === '中' ? 'badge-mid' : lvl === '低' ? 'badge-low' : '';
+  if (compact) return '<tr><td style="white-space:nowrap;font-size:12px;color:var(--ink-soft)">' + ts + '</td><td><strong>' + esc(l.lead.name) + '</strong></td><td>' + esc(l.lead.company) + '</td><td><span class="badge badge-tool">' + esc(l.toolName||l.toolId) + '</span></td><td>' + (lvl ? '<span class="badge '+badge+'">' + lvl + '度</span>' : '—') + '</td><td><button class="btn-view" onclick="openDetail('+i+')">詳情</button></td></tr>';
+  return '<tr><td style="color:var(--ink-faded)">' + (i+1) + '</td><td style="white-space:nowrap;font-size:12px;color:var(--ink-soft)">' + ts + '</td><td><strong>' + esc(l.lead.name) + '</strong></td><td>' + esc(l.lead.company) + '</td><td><a href="mailto:'+esc(l.lead.email)+'" style="color:var(--navy)">' + esc(l.lead.email) + '</a></td><td>' + esc(l.lead.phone) + '</td><td><span class="badge badge-tool" style="font-size:10px">' + esc(shortTool(l.toolName||l.toolId)) + '</span></td><td>' + (lvl ? '<span class="badge '+badge+'">' + lvl + '度</span>' : '—') + '</td><td>' + ((l.result&&l.result.score!=null) ? l.result.score+'%' : '—') + '</td><td><button class="btn-view" onclick="openDetailAll(\''+l.id+'\')">詳情</button></td></tr>';
+}
+function shortTool(s) { return s ? s.replace(/AI|策識永續/g,'').replace(/（.+）/,'').trim().slice(0,8) : ''; }
+
+// ── Detail modal ─────────────────────────────────────────
+function openDetail(idx) { _openRec(_allLeads[idx]); }
+function openDetailAll(id) { _openRec(_allLeads.find(function(l) { return l.id === id; })); }
+function _openRec(rec) {
+  if (!rec) return;
+  _detailRec = rec;
+  document.getElementById('dm-title').textContent = (rec.toolName||rec.toolId) + ' · 健檢詳情';
+  document.getElementById('dm-contact').innerHTML = kv('姓名', rec.lead.name) + kv('職稱', rec.lead.title||'—') + kv('公司', rec.lead.company||'—') + kv('Email', rec.lead.email) + kv('電話', rec.lead.phone||'—') + kv('健檢時間', new Date(rec.ts).toLocaleString('zh-TW'));
+  document.getElementById('dm-result').innerHTML = kv('工具', rec.toolName||rec.toolId) + kv('角色', (rec.result&&rec.result.role)||'—') + kv('風險等級', (rec.result&&rec.result.level) ? rec.result.level+'度風險' : '—') + kv('分數', (rec.result&&rec.result.score!=null) ? rec.result.score+'%' : '—');
+  const reportEl = document.getElementById('dm-report');
+  if (rec.reportText) {
+    reportEl.textContent = rec.reportText;
+    document.getElementById('dm-report-section').style.display = 'block';
+  } else {
+    document.getElementById('dm-report-section').style.display = 'none';
+  }
+  document.getElementById('dm-overlay').classList.add('open');
+}
+function kv(k, v) { return '<div class="dm-kv"><div class="dm-key">'+esc(k)+'</div><div class="dm-val">'+esc(String(v||''))+'</div></div>'; }
+function closeDetailBtn() { document.getElementById('dm-overlay').classList.remove('open'); }
+function closeDetail(e) { if (e.target === document.getElementById('dm-overlay')) closeDetailBtn(); }
+function exportOne() {
+  if (!_detailRec) return;
+  const l = _detailRec;
+  const text = ['健檢報告 – ' + (l.toolName||l.toolId),'時間：'+new Date(l.ts).toLocaleString('zh-TW'),'','【聯絡人】','姓名：'+l.lead.name,'職稱：'+(l.lead.title||'—'),'公司：'+(l.lead.company||'—'),'Email：'+l.lead.email,'電話：'+(l.lead.phone||'—'),'','【評估結果】','風險等級：'+(l.result&&l.result.level ? l.result.level+'度風險' : '—'),'整體分數：'+(l.result&&l.result.score!=null ? l.result.score+'%' : '—'),'','【AI 診斷報告】',l.reportText||'（報告尚未產生）'].join('\n');
+  const blob = new Blob([text], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'hc-report-'+l.id+'.txt'; a.click();
+}
+
+// ── Settings ─────────────────────────────────────────────
+function loadSettings() {
+  try {
+    const cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{}');
+    if (cfg.ejpk) document.getElementById('cfg-ejpk').value = cfg.ejpk;
+    if (cfg.ejsi) document.getElementById('cfg-ejsi').value = cfg.ejsi;
+    if (cfg.ejti) document.getElementById('cfg-ejti').value = cfg.ejti;
+  } catch(e) {}
+}
+function saveSettings() {
+  const cfg = {
+    ejpk: document.getElementById('cfg-ejpk').value.trim(),
+    ejsi: document.getElementById('cfg-ejsi').value.trim(),
+    ejti: document.getElementById('cfg-ejti').value.trim(),
+  };
+  localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  // Update HCL_EMAILJS runtime values
+  if (typeof HCL_EMAILJS !== 'undefined') {
+    HCL_EMAILJS.publicKey  = cfg.ejpk;
+    HCL_EMAILJS.serviceId  = cfg.ejsi;
+    HCL_EMAILJS.templateId = cfg.ejti;
+  }
+  const ok = document.getElementById('save-ok');
+  ok.style.display = 'inline'; setTimeout(function() { ok.style.display='none'; }, 2500);
+}
+function changePwd() {
+  const old  = document.getElementById('cfg-oldpwd').value;
+  const np   = document.getElementById('cfg-newpwd').value;
+  const np2  = document.getElementById('cfg-newpwd2').value;
+  const errEl = document.getElementById('pwd-err');
+  errEl.style.display = 'none';
+  if (old !== getPwd()) { errEl.textContent='目前密碼錯誤'; errEl.style.display='block'; return; }
+  if (np.length < 8)    { errEl.textContent='新密碼至少需要8個字元'; errEl.style.display='block'; return; }
+  if (np !== np2)       { errEl.textContent='兩次密碼不符'; errEl.style.display='block'; return; }
+  localStorage.setItem(ADMIN_KEY, np);
+  document.getElementById('pwd-ok').style.display = 'inline';
+  ['cfg-oldpwd','cfg-newpwd','cfg-newpwd2'].forEach(function(id) { document.getElementById(id).value = ''; });
+  setTimeout(function() { document.getElementById('pwd-ok').style.display='none'; }, 2500);
+}
+function confirmClear() {
+  if (confirm('確定要清除所有本機健檢資料嗎？此動作不可復原！')) {
+    HCLead.clearLeads(); _allLeads = []; renderDashboard(); renderTable();
+    alert('已清除所有本機健檢資料。');
+  }
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>

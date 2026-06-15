@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 人資健檢中心 · 策識永續</title>
+<meta name="description" content="9 大 AI 人資診斷工具，從成熟度健檢到職業安全衛生診斷，全方位評估企業人資體質。">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --navy-deep: #07142f; --navy: #10244c; --navy-mid: #203764; --plum: #4c315f;
+  --teal: #1d756f; --gold: #c9a15d; --gold-bright: #e2bf79; --gold-deep: #99753d;
+  --ivory: #fbf8ef; --blue-mist: #eef3f7; --ink: #182036; --ink-soft: #5a6377;
+  --ink-faded: #8b94a7; --line: rgba(16,36,76,0.12);
+  --shadow: 0 22px 70px rgba(7,20,47,0.13);
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Noto Sans TC', system-ui, sans-serif; background: var(--ivory); color: var(--ink); font-size: 16px; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; font: inherit; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+nav { background: rgba(255,255,255,0.92); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(16,36,76,0.1); padding: 14px clamp(20px,5vw,72px); display: flex; align-items: center; justify-content: space-between; gap: 28px; position: sticky; top: 0; z-index: 100; box-shadow: 0 10px 34px rgba(16,36,76,0.07); }
+.nav-brand { display: flex; align-items: center; gap: 14px; }
+.nav-brand img { height: 44px; }
+.nav-brand-text h1 { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 800; color: var(--navy); line-height: 1.35; }
+.nav-brand-text p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 11px; color: var(--gold-deep); letter-spacing: 0.08em; }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.nav-back { color: var(--ink-soft); font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--line); transition: all .2s; }
+.nav-back:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
+.nav-cta { background: var(--navy); color: var(--ivory) !important; padding: 9px 18px; border-radius: 6px; font-size: 14px; font-weight: 700; }
+.nav-cta:hover { background: var(--teal); }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 50%, var(--navy-mid) 100%); padding: clamp(60px,8vw,100px) clamp(22px,5vw,72px) clamp(50px,7vw,80px); position: relative; overflow: hidden; text-align: center; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 800px 400px at 50% 0%, rgba(226,191,121,0.12), transparent 60%); pointer-events: none; }
+.hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to top, var(--ivory), transparent); }
+.hero-inner { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(226,191,121,0.15); border: 1px solid rgba(226,191,121,0.35); border-radius: 999px; padding: 6px 18px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--gold-bright); letter-spacing: 0.1em; margin-bottom: 28px; }
+.hero h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(32px,5vw,58px); font-weight: 900; color: var(--ivory); line-height: 1.2; margin-bottom: 18px; }
+.hero h2 .gold { color: var(--gold-bright); }
+.hero-sub { font-size: clamp(15px,2vw,18px); color: rgba(251,248,239,0.76); max-width: 580px; margin: 0 auto 36px; }
+.hero-stats { display: flex; justify-content: center; gap: clamp(20px,4vw,48px); flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat .num { font-family: 'Noto Serif TC', serif; font-size: 28px; font-weight: 900; color: var(--gold-bright); line-height: 1; }
+.hero-stat .lbl { font-size: 12px; color: rgba(251,248,239,0.55); margin-top: 4px; }
+
+/* TOOLS GRID */
+.tools-section { padding: clamp(60px,7vw,100px) clamp(22px,5vw,72px); }
+.tools-section .wrapper { max-width: 1260px; margin: 0 auto; }
+.section-label { display: inline-flex; align-items: center; gap: 8px; background: rgba(29,117,111,0.1); color: var(--teal); font-size: 11px; font-weight: 800; padding: 5px 14px; border-radius: 999px; letter-spacing: .08em; margin-bottom: 14px; }
+.section-title { font-family: 'Noto Serif TC', serif; font-size: clamp(24px,3vw,38px); font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.section-desc { color: var(--ink-soft); font-size: 15px; margin-bottom: 48px; }
+.tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+
+/* TOOL CARD */
+.tool-card { background: #fff; border: 1px solid rgba(16,36,76,0.1); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 16px; transition: box-shadow .3s, transform .3s; position: relative; overflow: hidden; }
+.tool-card:hover { box-shadow: 0 20px 60px rgba(16,36,76,0.13); transform: translateY(-4px); }
+.tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); opacity: 0; transition: opacity .3s; }
+.tool-card:hover::before { opacity: 1; }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.card-icon { width: 52px; height: 52px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.card-num { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 12px; color: var(--ink-faded); font-weight: 600; }
+.card-title { font-family: 'Noto Serif TC', serif; font-size: 17px; font-weight: 700; color: var(--navy); line-height: 1.4; }
+.card-desc { font-size: 13.5px; color: var(--ink-soft); line-height: 1.8; flex: 1; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.card-tag { background: var(--blue-mist); color: var(--navy-mid); font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+.card-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; }
+.card-status { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+.status-ready { background: rgba(29,117,111,0.12); color: var(--teal); }
+.status-dev { background: rgba(201,161,93,0.15); color: var(--gold-deep); }
+.card-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--navy); color: var(--ivory); font-size: 13px; font-weight: 700; padding: 9px 18px; border-radius: 6px; transition: background .2s, transform .2s; white-space: nowrap; }
+.card-btn:hover { background: var(--teal); transform: translateX(2px); }
+.card-btn .arr { font-size: 16px; }
+
+/* color themes per card */
+.ic-green { background: rgba(29,117,111,0.12); }
+.ic-gold { background: rgba(201,161,93,0.14); }
+.ic-red { background: rgba(195,70,70,0.12); }
+.ic-blue { background: rgba(16,36,76,0.1); }
+.ic-purple { background: rgba(76,49,95,0.12); }
+.ic-teal { background: rgba(29,117,111,0.14); }
+
+/* CTA BANNER */
+.cta-banner { background: linear-gradient(135deg, var(--navy-deep), var(--navy)); border-radius: 16px; padding: clamp(40px,5vw,60px) clamp(28px,4vw,60px); display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; margin: 0 clamp(22px,5vw,72px) clamp(60px,7vw,100px); max-width: 1260px; margin-left: auto; margin-right: auto; }
+.cta-banner-left h3 { font-family: 'Noto Serif TC', serif; font-size: clamp(22px,2.5vw,32px); font-weight: 800; color: var(--ivory); margin-bottom: 10px; }
+.cta-banner-left h3 .gold { color: var(--gold-bright); }
+.cta-banner-left p { color: rgba(251,248,239,0.7); font-size: 15px; }
+.cta-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-gold { background: var(--gold-bright); color: var(--navy-deep); padding: 13px 28px; border-radius: 6px; font-weight: 800; font-size: 15px; }
+.btn-gold:hover { background: #f0d38a; }
+.btn-outline { border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); padding: 13px 24px; border-radius: 6px; font-weight: 600; font-size: 14px; }
+.btn-outline:hover { background: rgba(255,255,255,0.08); }
+
+/* FOOTER */
+footer { background: var(--navy-deep); padding: 32px clamp(22px,5vw,72px); text-align: center; }
+footer p { font-size: 13px; color: rgba(251,248,239,0.45); }
+footer a { color: var(--gold); }
+
+@media(max-width:640px) {
+  .tools-grid { grid-template-columns: 1fr; }
+  .cta-banner { flex-direction: column; text-align: center; }
+  .cta-btns { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="landing-page.html" class="nav-brand">
+    <img src="assets/logo.png" alt="策識永續">
+    <div class="nav-brand-text">
+      <h1>策識永續 AI 人資</h1>
+      <p>HR Intelligence Platform</p>
+    </div>
+  </a>
+  <div class="nav-right">
+    <a href="landing-page.html" class="nav-back">← 返回首頁</a>
+    <a href="ai-hr-consultant.html" class="nav-cta">AI 人資顧問</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🏥 AI 人資健檢中心</div>
+    <h2>企業人資體質<br><span class="gold">全方位健康診斷</span></h2>
+    <p class="hero-sub">9 大 AI 診斷工具，從招募到職安，從法遵到離職風險，即時分析企業人資健康狀態，產出專屬報告書。</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">9</div><div class="lbl">診斷工具</div></div>
+      <div class="hero-stat"><div class="num">5</div><div class="lbl">健檢維度</div></div>
+      <div class="hero-stat"><div class="num">AI</div><div class="lbl">即時分析</div></div>
+      <div class="hero-stat"><div class="num">PDF</div><div class="lbl">報告產出</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section class="tools-section">
+  <div class="wrapper">
+    <div class="section-label">🔬 診斷工具列表</div>
+    <h2 class="section-title">選擇您需要的健檢項目</h2>
+    <p class="section-desc">各工具獨立運作，可依需求單獨使用，後續將陸續上線更多診斷模組。</p>
+
+    <div class="tools-grid">
+
+      <!-- 01 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-green">📊</div>
+          <div class="card-num">No. 01</div>
+        </div>
+        <div class="card-title">AI 人資成熟度健檢</div>
+        <div class="card-desc">企業回答 20 題，AI 即時分析招募、留才、績效、AI 涵蓋度及法遵風險五大維度，產出《企業人資健康報告書》。</div>
+        <div class="card-tags">
+          <span class="card-tag">招募健全度</span>
+          <span class="card-tag">留才健全度</span>
+          <span class="card-tag">績效健全度</span>
+          <span class="card-tag">AI涵蓋度</span>
+          <span class="card-tag">法遵風險</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-01-maturity.html" class="card-btn">開始健檢 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 02 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-red">⚖️</div>
+          <div class="card-num">No. 02</div>
+        </div>
+        <div class="card-title">AI 勞動檢查風險檢測</div>
+        <div class="card-desc">輸入員工數、行業別、排班方式，AI 立即產出勞檢風險分數、高風險項目清單與建議改善事項。</div>
+        <div class="card-tags">
+          <span class="card-tag">勞檢風險分數</span>
+          <span class="card-tag">高風險項目</span>
+          <span class="card-tag">改善建議</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-02-labor-risk.html" class="card-btn">立即檢測 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 03 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-purple">🛡️</div>
+          <div class="card-num">No. 03</div>
+        </div>
+        <div class="card-title">AI 職場霸凌風險評估</div>
+        <div class="card-desc">提供主管版、員工版、HR 版三種評估角度，完成後依據勞動部不法侵害預防指引，產出低／中／高風險報告與建議措施。</div>
+        <div class="card-tags">
+          <span class="card-tag">主管版</span>
+          <span class="card-tag">員工版</span>
+          <span class="card-tag">HR版</span>
+          <span class="card-tag">不法侵害指引</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-03-bullying.html" class="card-btn">開始評估 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 04 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-gold">📉</div>
+          <div class="card-num">No. 04</div>
+        </div>
+        <div class="card-title">AI 員工離職風險預測</div>
+        <div class="card-desc">填寫離職率、薪資制度、獎金制度與管理方式，AI 預測 6 個月內離職風險並提供留才對策。最有感的管理工具之一。</div>
+        <div class="card-tags">
+          <span class="card-tag">6個月預測</span>
+          <span class="card-tag">離職風險</span>
+          <span class="card-tag">留才對策</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-04-turnover.html" class="card-btn">開始預測 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 05 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-blue">📄</div>
+          <div class="card-num">No. 05</div>
+        </div>
+        <div class="card-title">AI 求職者履歷健檢</div>
+        <div class="card-desc">求職者貼上履歷內容，AI 即時分析履歷完整度、面試風險、表達能力與修改建議，留下 Email 下載 PDF 報告。</div>
+        <div class="card-tags">
+          <span class="card-tag">完整度分析</span>
+          <span class="card-tag">面試風險</span>
+          <span class="card-tag">AI修改建議</span>
+          <span class="card-tag">PDF下載</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-05-resume.html" class="card-btn">健檢履歷 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 06 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-teal">🎤</div>
+          <div class="card-num">No. 06</div>
+        </div>
+        <div class="card-title">AI 面試模擬器</div>
+        <div class="card-desc">選擇職位後由 AI 進行模擬面試提問，結束後給出面試分數與改善建議。企業與求職者皆可使用。</div>
+        <div class="card-tags">
+          <span class="card-tag">面試題生成</span>
+          <span class="card-tag">即時評分</span>
+          <span class="card-tag">改善建議</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-06-interview.html" class="card-btn">開始模擬 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 07 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-green">📋</div>
+          <div class="card-num">No. 07</div>
+        </div>
+        <div class="card-title">AI 職務說明書產生器</div>
+        <div class="card-desc">輸入職稱、產業、職責等資訊，AI 一鍵產出 JD、KPI、KSA、面試問題、測評工具建議與專業能力考試題目。</div>
+        <div class="card-tags">
+          <span class="card-tag">JD</span>
+          <span class="card-tag">KPI</span>
+          <span class="card-tag">KSA</span>
+          <span class="card-tag">面試問題</span>
+          <span class="card-tag">考試題目</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-07-jd.html" class="card-btn">立即產生 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 08 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-gold">✍️</div>
+          <div class="card-num">No. 08</div>
+        </div>
+        <div class="card-title">AI 招募文案生成器</div>
+        <div class="card-desc">輸入職缺名稱與基本資訊，AI 立即產出適合 104、1111、LinkedIn 三個平台的招募文案，格式精準、一鍵複製。</div>
+        <div class="card-tags">
+          <span class="card-tag">104版</span>
+          <span class="card-tag">1111版</span>
+          <span class="card-tag">LinkedIn版</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-08-recruitment.html" class="card-btn">生成文案 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+      <!-- 09 -->
+      <div class="tool-card">
+        <div class="card-head">
+          <div class="card-icon ic-red">🦺</div>
+          <div class="card-num">No. 09</div>
+        </div>
+        <div class="card-title">AI 職業安全衛生診斷</div>
+        <div class="card-desc">依行業別與作業環境填寫基本資料，AI 診斷職業安全衛生合規風險，產出改善優先順序與法規對應建議。</div>
+        <div class="card-tags">
+          <span class="card-tag">職安衛合規</span>
+          <span class="card-tag">風險分級</span>
+          <span class="card-tag">法規對應</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-status status-ready">✓ 可使用</span>
+          <a href="tool-09-safety.html" class="card-btn">開始診斷 <span class="arr">→</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div style="padding: 0 clamp(22px,5vw,72px) clamp(60px,7vw,100px);">
+  <div class="cta-banner">
+    <div class="cta-banner-left">
+      <h3>健檢結果需要<span class="gold">專業顧問解讀</span>？</h3>
+      <p>策識永續 AI 人資顧問提供全方位法令落地與人資制度建置服務，讓報告真正產生改變。</p>
+    </div>
+    <div class="cta-btns">
+      <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
+      <a href="pricing-and-booking.html" class="btn-outline">看服務方案</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 策識永續人才管理顧問 · <a href="privacy.html">隱私政策</a> · <a href="terms.html">服務條款</a></p>
+</footer>
+
+</body>
+</html>

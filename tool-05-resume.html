@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI æ±‚è·?…å±¥æ­·å¥æª?Â· ç­–è?æ°¸ç?</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#1a3d2b,var(--teal),#0f4a42);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:520px;margin:0 auto}
+.main{max-width:780px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.form-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.form-card p{font-size:13px;color:var(--ink-soft);margin-bottom:18px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--teal)}
+.char-count{font-size:11px;color:var(--ink-faded);text-align:right;margin-top:4px}
+.btn-analyze{width:100%;background:var(--teal);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
+.btn-analyze:hover:not(:disabled){background:#155e59}
+.btn-analyze:disabled{opacity:.4;cursor:not-allowed}
+#result-section{display:none}
+.score-head{background:linear-gradient(135deg,#1a3d2b,var(--teal));border-radius:14px;padding:28px;text-align:center;margin-bottom:18px}
+.score-head h2{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:6px}
+.overall-score{font-size:56px;font-weight:900;color:#fff;line-height:1}
+.overall-label{font-size:14px;color:rgba(255,255,255,.75);margin-top:6px}
+.score-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:18px}
+.score-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.sc-name{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+.sc-bar{height:7px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.sc-fill{height:100%;border-radius:999px;background:var(--teal);transition:width .8s ease}
+.sc-num{font-size:20px;font-weight:800;color:var(--navy)}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ai-icon{width:34px;height:34px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.pdf-box{background:#fff;border:2px dashed var(--gold);border-radius:12px;padding:24px;margin-bottom:18px;text-align:center}
+.pdf-box h3{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.pdf-box p{font-size:13px;color:var(--ink-soft);margin-bottom:14px}
+.email-row{display:flex;gap:8px;max-width:400px;margin:0 auto}
+.email-row input{flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px}
+.btn-pdf{background:var(--gold-bright);color:var(--navy-deep);border:none;padding:10px 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn-pdf:hover{background:var(--gold)}
+.pdf-msg{font-size:13px;color:var(--teal);margin-top:10px}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI äººè??¥æª¢ä¸­å?</span></a>
+  <a href="hr-health-center.html" class="nav-back">???å¥æª¢ä¸­å¿?/a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">?? No.05 Â· AI æ±‚è·?…å±¥æ­·å¥æª?/div>
+  <h1>AI å±¥æ­·?¥æª¢?±å?</h1>
+  <p>è²¼å…¥å±¥æ­·?§å®¹ï¼ŒAI ?†æ?å®Œæ•´åº¦ã€é¢è©¦é¢¨?ªè?è¡¨é??è³ª</p>
+</div>
+<div class="main">
+  <div id="form-section">
+    <div class="form-card">
+      <h2>è²¼å…¥?¨ç?å±¥æ­·?§å®¹</h2>
+      <p>è«‹è²¼ä¸Šå±¥æ­·å…¨?‡ï??…å«?‹äººè³‡æ?ï¼ˆå¯?¿å??–ï??å­¸æ­·ã€å·¥ä½œç?æ­·ã€æ??½è??ªæ?ä»‹ç´¹</p>
+      <div class="field">
+        <label>?®æ??‰å¾µ?·ä?ï¼ˆé¸å¡«ï?</label>
+        <input type="text" id="position" placeholder="ä¾‹ï?äººè?å°ˆå“¡?è??·ä??ƒã€è?é«”å·¥ç¨‹å¸«">
+      </div>
+      <div class="field">
+        <label>å±¥æ­·?¨æ?</label>
+        <textarea id="resume-text" rows="14" placeholder="è«‹å??¨ç?å±¥æ­·?§å®¹è²¼å…¥æ­¤è?...&#10;&#10;å»ºè­°?³å??…å«ï¼?#10;?»åŸº?¬è??™ï??¯åŒ¿?ï?&#10;?»æ??²è???#10;?»å·¥ä½œç?æ­·ï??«å¹´è³‡ã€å…¬?¸ã€è·ç¨±ã€ä¸»è¦è·è²¬ï?&#10;?»æ??½å???#10;?»è‡ª?‘ä?ç´?></textarea>
+        <div class="char-count" id="char-count">0 å­?/div>
+      </div>
+      <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled>?‹å? AI å±¥æ­·?¥æª¢</button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="score-head">
+      <h2>AI å±¥æ­·?¥æª¢?±å?</h2>
+      <div class="overall-score" id="overall-score">--</div>
+      <div class="overall-label">ç¶œå?è©•å?ï¼ˆæ»¿??100ï¼?/div>
+    </div>
+    <div class="score-grid" id="score-grid">
+      <div class="score-card"><div class="sc-name">?? ?§å®¹å®Œæ•´åº?/div><div class="sc-bar"><div class="sc-fill" data-w="0" style="width:0" id="bar-completeness"></div></div><div class="sc-num" id="num-completeness">--</div></div>
+      <div class="score-card"><div class="sc-name">? ï? ?¢è©¦é¢¨éšª?‡æ•¸</div><div class="sc-bar"><div class="sc-fill" data-w="0" style="width:0" id="bar-risk"></div></div><div class="sc-num" id="num-risk">--</div></div>
+      <div class="score-card"><div class="sc-name">?ï? è¡¨é??è³ª</div><div class="sc-bar"><div class="sc-fill" data-w="0" style="width:0" id="bar-expression"></div></div><div class="sc-num" id="num-expression">--</div></div>
+    </div>
+    <div class="ai-box">
+      <div class="ai-head"><div class="ai-icon">??</div><div><div class="ai-title">AI å±¥æ­·?†æ??‡æ”¹?„å»ºè­?/div></div></div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="pdf-box">
+      <h3>?“© ?–å?å®Œæ•´?¥æª¢?±å? PDF</h3>
+      <p>è¼¸å…¥ Emailï¼Œå??´å ±?Šæ•´?†å??å?å°‡å??è‡³?¨ç?ä¿¡ç®±</p>
+      <div class="email-row">
+        <input type="email" id="pdf-email" placeholder="your@email.com">
+        <button class="btn-pdf" onclick="requestPdf()">ç´¢å??±å?</button>
+      </div>
+      <div class="pdf-msg" id="pdf-msg"></div>
+    </div>
+    <div class="cta-box">
+      <h3>?³è? HR ç¬¬ä??¼å°±æ³¨æ??°æ‚¨?„å±¥æ­·ï?</h3>
+      <p>ç­–è?æ°¸ç??ä?å±¥æ­·?¥è¨º?é¢è©¦è?å°ã€æ??·ç??¥è«®è©?/p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">?è²»è«®è©¢ AI é¡§å?</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">?‹æ??™æ–¹æ¡?/a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">?æ–°?¥æª¢</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc5-' + Math.random().toString(36).slice(2);
+
+const textarea = document.getElementById('resume-text');
+textarea.addEventListener('input', () => {
+  const len = textarea.value.length;
+  document.getElementById('char-count').textContent = len + ' å­?;
+  document.getElementById('btn-analyze').disabled = len < 50;
+});
+
+async function analyze() {
+  const resumeText = textarea.value.trim();
+  const position = document.getElementById('position').value.trim();
+  if (resumeText.length < 50) return;
+
+  document.getElementById('form-section').style.display = 'none';
+  HCLead.gate('tool-05', 'AI å±¥æ­·?¥æª¢', {}, async function() {
+  document.getElementById('result-section').style.display = 'block';
+
+  const positionStr = position ? `?®æ??·ä?ï¼?{position}\n\n` : '';
+  const prompt = `${positionStr}ä»¥ä??¯æ??·è€…ç?å±¥æ­·?§å®¹ï¼Œè??²è??¨é¢?¥æª¢?†æ?ï¼?
+---
+${resumeText}
+---
+
+è«‹å?è¼¸å‡ºè©•å? JSONï¼ˆæ ¼å¼å?ä¸‹ï??ªè¼¸??JSONï¼Œä?è¦å…¶ä»–æ?å­—ï?ï¼?{"completeness":XX,"interview_risk":XX,"expression":XX,"overall":XX}
+
+?¶å??›è?ï¼Œç”¨ç¹é?ä¸­æ??ä?å®Œæ•´?¥æª¢?±å?ï¼?
+?å…§å®¹å??´åº¦?†æ??‘ï?ç¼ºå?ä»€éº¼ï??¾æ?ä»€éº¼å€¼å?ä¿ç?ï¼?
+?é¢è©¦é¢¨?ªè­¦?Šã€‘ï??ªä??§å®¹?¯èƒ½?¨é¢è©¦æ?? æ??‘æ…®ï¼?- é¢¨éšª1ï¼?- é¢¨éšª2ï¼?
+?è¡¨?”å?è³ªå»ºè­°ã€‘ï??¥å??æªè¾­ã€é??–æ??œç?ï¼?
+?å?3å¤§æ”¹?„å„ª?ˆé??®ã€?1.
+2.
+3.
+
+?æ•´é«”è?èªã€‘ï?2?¥ï?`;
+
+  const bodyEl = document.getElementById('ai-body');
+  bodyEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'resume',
+        system:'ä½ æ˜¯ç­–è?æ°¸ç? AI å±¥æ­·é¡§å?ï¼Œç??‰å°????·å??´è?äººè?ç¯©é¸æ¨™æ?ï¼Œå??‰ä½¿?¨ç?é«”ä¸­?‡ã€?,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:true
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      bodyEl.innerHTML = err.limitReached
+        ? `<div class="limit-msg">ä»Šæ—¥?¥æª¢æ¬¡æ•¸å·²é?ä¸Šé?ï¼Œè??æ—¥?è©¦??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?‡ç?å°ˆæ¥­??/a>??/div>`
+        : `<span style="color:var(--ink-soft)">ï¼ˆAI ?†æ??«æ??¡æ?ä½¿ç”¨ï¼?/span>`;
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    let scoresSet = false;
+    while(true) {
+      const{done,value}=await reader.read(); if(done) break;
+      for(const line of dec.decode(value,{stream:true}).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') break;
+        try{txt+=JSON.parse(d).text||'';}catch{}
+      }
+      if (!scoresSet) scoresSet = parseScores(txt);
+      const display = txt.replace(/^\{[^}]*\}\n?/,'').trim();
+      bodyEl.textContent = display;
+    }
+    if (!scoresSet) parseScores(txt);
+    HCLead.reportDone(txt.replace(/^\{[^}]*\}\n?/,'').trim());
+  } catch { bodyEl.textContent='ï¼ˆAI ?†æ??å??«æ??¡æ????ï¼?; }
+  }); // end gate
+}
+
+function parseScores(txt) {
+  const m = txt.match(/\{"completeness"\s*:\s*(\d+)\s*,\s*"interview_risk"\s*:\s*(\d+)\s*,\s*"expression"\s*:\s*(\d+)\s*,\s*"overall"\s*:\s*(\d+)\s*\}/);
+  if (!m) return false;
+  const [,c,r,e,o] = m.map(Number);
+  document.getElementById('overall-score').textContent = o;
+  setBar('completeness', c);
+  setBar('risk', r);
+  setBar('expression', e);
+  return true;
+}
+
+function setBar(id, val) {
+  document.getElementById('num-' + id).textContent = val;
+  const bar = document.getElementById('bar-' + id);
+  bar.dataset.w = val;
+  requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = val + '%'; }));
+}
+
+function requestPdf() {
+  const email = document.getElementById('pdf-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('pdf-msg').textContent = 'è«‹è¼¸?¥æ??ˆç? Email ?°å?';
+    return;
+  }
+  document.getElementById('pdf-msg').textContent = '??å·²æ”¶?°ï??±å??´ç?å¾Œå?å¯„é€è‡³ ' + email + 'ï¼ˆå??½å³å°‡ä?ç·šï?';
+}
+
+function restart() {
+  textarea.value = '';
+  document.getElementById('position').value = '';
+  document.getElementById('char-count').textContent = '0 å­?;
+  document.getElementById('btn-analyze').disabled = true;
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('form-section').style.display = 'block';
+  document.getElementById('pdf-email').value = '';
+  document.getElementById('pdf-msg').textContent = '';
+  document.getElementById('ai-body').innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  document.getElementById('overall-score').textContent = '--';
+  ['completeness','risk','expression'].forEach(id => {
+    document.getElementById('num-'+id).textContent='--';
+    const bar = document.getElementById('bar-'+id);
+    bar.style.width='0'; bar.dataset.w='0';
+  });
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

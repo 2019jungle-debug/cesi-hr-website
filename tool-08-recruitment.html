@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI ?õÂ??áÊ??üÊ???¬∑ Á≠ñË?Ê∞∏Á?</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#0a1f3a,var(--navy),#0f3560);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:540px;margin:0 auto}
+.main{max-width:820px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.form-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.form-card p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--navy)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.platform-row{display:flex;gap:10px;flex-wrap:wrap}
+.platform-chip{display:flex;align-items:center;gap:6px;padding:9px 16px;border:2px solid var(--line);border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;color:var(--ink-soft);transition:all .2s;user-select:none}
+.platform-chip:hover{border-color:var(--gold)}
+.platform-chip.on{color:var(--navy);border-color:var(--navy);background:rgba(16,36,76,.04)}
+.chip-dot{width:10px;height:10px;border-radius:50%;border:2px solid currentColor;position:relative;transition:all .2s}
+.platform-chip.on .chip-dot{background:var(--navy);border-color:var(--navy)}
+.btn-gen{width:100%;background:var(--navy);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s}
+.btn-gen:hover:not(:disabled){background:var(--teal)}
+.btn-gen:disabled{opacity:.4;cursor:not-allowed}
+#result-section{display:none}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--line);overflow-x:auto}
+.tab{padding:10px 18px;font-size:13px;font-weight:700;color:var(--ink-soft);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy)}
+.panels{background:#fff;border:1px solid var(--line);border-top:none;border-radius:0 0 12px 12px;margin-bottom:18px}
+.panel{display:none;padding:24px}
+.panel.active{display:block}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.panel-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.btn-copy{background:rgba(16,36,76,.06);border:1px solid var(--line);color:var(--navy);padding:6px 14px;border-radius:6px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-copy:hover{background:var(--navy);color:#fff}
+.panel-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:80px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+@media(max-width:560px){.row2,.row3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI ‰∫∫Ë??•Ê™¢‰∏≠Â?</span></a>
+  <a href="hr-health-center.html" class="nav-back">???ûÂÅ•Ê™¢‰∏≠Âø?/a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">?ì¢ No.08 ¬∑ AI ?õÂ??áÊ??üÊ???/div>
+  <h1>AI ?õÂ?Âª??‰∏Ä?µÁ???/h1>
+  <p>?ùÂ? 104??111?ÅLinkedIn Á≠âÂπ≥?∞Áâπ?ßÔ??™Â??üÊ??∏Â?‰∫∫Ê??ÑÊ??üÊ?Ê°?/p>
+</div>
+<div class="main">
+  <div id="form-section">
+    <div class="form-card">
+      <h2>Â°´ÂØ´?∑‰?Ë≥áË?</h2>
+      <p>Â°´ÂØ´Ë∂äË©≥Á¥∞Ô??üÊ??ÑÊ??üÊ?Ê°àË??∑Ë™™?çÂ?</p>
+      <div class="row2">
+        <div class="field">
+          <label>?∑‰??çÁ®± *</label>
+          <input type="text" id="inp-title" placeholder="‰æãÔ?Ë≥áÊ∑±Ë°åÈä∑‰ºÅÂ?" oninput="checkReady()">
+        </div>
+        <div class="field">
+          <label>?¨Âè∏?çÁ®±</label>
+          <input type="text" id="inp-company" placeholder="‰æãÔ?Á≠ñË?Ê∞∏Á??°‰ªΩ?âÈ??¨Âè∏">
+        </div>
+      </div>
+      <div class="row3">
+        <div class="field">
+          <label>?¢Ê•≠??/label>
+          <select id="inp-industry">
+            <option value="">Ë´ãÈÅ∏??/option>
+            <option>ÁßëÊ?/ËªüÈ?</option><option>Ë£ΩÈÄ†Ê•≠</option><option>?ëË?/‰øùÈö™</option>
+            <option>?∂ÂîÆ/?ªÂ?</option><option>?´Á?/?üÊ?</option><option>È§êÈ£≤/?çÂ?</option>
+            <option>?ôËÇ≤/?πË?</option><option>È°ßÂ?/Â∞àÊ•≠?çÂ?</option><option>?∂‰?</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>?™Ë?ÁØÑÂ?</label>
+          <input type="text" id="inp-salary" placeholder="‰æãÔ??àËñ™ 40,000-60,000">
+        </div>
+        <div class="field">
+          <label>Â∑•‰??∞È?</label>
+          <input type="text" id="inp-location" placeholder="‰æãÔ??∞Â?Â∏Ç‰ø°Áæ©Â?">
+        </div>
+      </div>
+      <div class="field">
+        <label>‰∏ªË??∑Ë≤¨Ôº?-5 ÈªûÔ?</label>
+        <textarea id="inp-duties" rows="3" placeholder="‰æãÔ?Ë¶èÂ?‰∏¶Âü∑Ë°åÂ??åË??∑Á??•„ÄÅÁÆ°?ÜÁ§æÁæ§Â?È´îÂ∏≥?ü„ÄÅÂ??êÂ??¥Êï∏??.."></textarea>
+      </div>
+      <div class="field">
+        <label>?ÄÊ±ÇÊ?‰ª?/label>
+        <textarea id="inp-requirements" rows="2" placeholder="‰æãÔ?3Âπ¥‰ª•‰∏äÁõ∏?úÁ?È©ó„ÄÅÁ???Meta Ads?ÅÂÖ∑?µÊ??ùÁ∂≠..."></textarea>
+      </div>
+      <div class="field">
+        <label>?¨Âè∏Á¶èÂà©‰∫ÆÈ?</label>
+        <textarea id="inp-benefits" rows="2" placeholder="‰æãÔ?ÂΩàÊÄßÂ∑•?Ç„ÄÅÈ?Ë∑ùÂ∑•‰Ωú„ÄÅÂπ¥Áµ?2-4 ?ãÊ??ÅÊ??≤Ë?Á∑¥Ë???.."></textarea>
+      </div>
+      <div class="field">
+        <label>?∏Ê??ºÂ?Âπ≥Âè∞</label>
+        <div class="platform-row">
+          <div class="platform-chip on" id="chip-104" onclick="toggleChip(this)"><div class="chip-dot"></div>104 ‰∫∫Â??ÄË°?/div>
+          <div class="platform-chip on" id="chip-1111" onclick="toggleChip(this)"><div class="chip-dot"></div>1111 ‰∫∫Â??ÄË°?/div>
+          <div class="platform-chip" id="chip-linkedin" onclick="toggleChip(this)"><div class="chip-dot"></div>LinkedIn</div>
+          <div class="platform-chip" id="chip-fb" onclick="toggleChip(this)"><div class="chip-dot"></div>Facebook Á§æÂ?</div>
+        </div>
+      </div>
+      <button class="btn-gen" id="btn-gen" onclick="generate()" disabled>AI ‰∏Ä?µÁ??êÊ??üÊ?Ê°?/button>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="tabs" id="tabs"></div>
+    <div class="panels" id="panels"></div>
+    <div class="cta-box">
+      <h3>?≥Ë??õÂ??¥Ê??àÁ?Ôº?/h3>
+      <p>Á≠ñË?Ê∞∏Á??ê‰??õÂ?ÊµÅÁ??™Â??ÅÈ?‰∏ªÂ??åÁ??•„ÄÅ‰∫∫?çÊ?Â∞ãÂ??ÖÊ???/p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">?çË≤ªË´ÆË©¢ AI È°ßÂ?</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">?ãÊ??ôÊñπÊ°?/a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">?çÊñ∞?üÊ?</button>
+  </div>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc8-' + Math.random().toString(36).slice(2);
+
+function toggleChip(el) { el.classList.toggle('on'); }
+
+function checkReady() {
+  document.getElementById('btn-gen').disabled = !document.getElementById('inp-title').value.trim();
+}
+
+const PLATFORM_PROMPTS = {
+  '104': (info) => `Ë´ãÁÇ∫ 104 ‰∫∫Â??ÄË°åÊí∞ÂØ´„Ä?{info.title}?çÁ?ÂæµÊ?Âª????
+104 Âπ≥Âè∞?πÊÄßÔ??çË?ÁµêÊ?Ê∏ÖÊô∞?ÅÊ??óÂ??ÅÈ??µÂ?Ë±êÂ?ÔºåÊ??∑ËÄÖÁ???ø´?üÁÄèË¶Ω??
+Ë´ãÂ??´Ô?
+?êËÅ∑Áº∫Â?Á®±„Ä?{info.title}
+?êÂÖ¨?∏Â?Á®±„Ä?{info.company}
+?êÂ∑•‰ΩúÂÖßÂÆπ„ÄëÔ?Ê¢ùÂ? 5-8 ÈªûÔ?
+?êËÅ∑?ôË?Ê±Ç„ÄëÔ?Ê¢ùÂ? 4-6 ÈªûÔ?
+?êÊ??ëÊ?‰æõ„ÄëÔ?Á¶èÂà©Ê¢ùÂ?Ôº??êËñ™Ë≥áÂ??á„Ä?{info.salary}
+?êÂ∑•‰ΩúÂú∞Èªû„Ä?{info.location}
+
+Ë™ûÊ∞£Â∞àÊ•≠?ÅÁõ¥?ΩÔ??úÈçµÂ≠óË?ÂØåÔ?Á¨¶Â? 104 ?àÈù¢?ºÂ??ÇÁ?È´î‰∏≠?á„ÄÇ`,
+
+  '1111': (info) => `Ë´ãÁÇ∫ 1111 ‰∫∫Â??ÄË°åÊí∞ÂØ´„Ä?{info.title}?çÁ?ÂæµÊ?Âª????
+1111 Âπ≥Âè∞?πÊÄßÔ??óÁúæËºÉÂª£ÔºåË?Ê∞?èØ?•Ë¶™?áÔ??Ä?∏È°Ø?¨Âè∏?áÂ??áÂì°Â∑•Á??©„Ä?
+Ë´ãÂ??´Ô?
+?êËÅ∑‰Ωç„Ä?{info.title}ÔΩ?{info.company}
+?êÂ??•Ê??ëÁ??ÜÁî±?ëÔ?3ÈªûÔ?Âº∑Ë™ø?áÂ??áÂÉπ?ºÔ?
+?êÊÇ®Â∞áË?Ë≤¨„ÄëÔ?Ê¢ùÂ?Â∑•‰??ßÂÆπÔº??êÊ??ëÂú®?æÁ?‰∫∫„ÄëÔ?Ê¢ùÂ??ÄÊ±ÇÊ?‰ª∂Ô?
+?êÁ??©Âà∂Â∫¶„ÄëÔ?ÂÆåÊï¥Ê¢ùÂ?Ôº??êËñ™?¨„Ä?{info.salary}
+
+Ë™ûÊ∞£?ãÂ?ÔºåÂº∑Ë™øÂÖ¨?∏Ê??ñÔ?ÁπÅÈ?‰∏≠Ê??Ç`,
+
+  'LinkedIn': (info) => `Ë´ãÁÇ∫ LinkedIn ?∞ÂØ´??{info.title}?çÁ??±Ê??õÂ?Ë≤ºÊ?ÔºàÈ?ÁπÅÈ?‰∏≠Ê?Â∞çÁÖßÔºâ„Ä?
+LinkedIn ?πÊÄßÔ??ãÈ??ñ„ÄÅÂ?Ê•≠Á§æÁæ§Ô??Ä?∏Â?‰∏ªÂ??åË¢´?ïÊ??∑ËÄÖÔ?Âº∑Ë™øÂΩ±Èüø?õË??êÈï∑Ê©üÊ???
+?ºÂ?Ôº??? [?∏Â??ºÁ??ÑÈ??¥Âè•]
+[?¨Âè∏‰ΩøÂëΩ/ÂΩ±Èüø?õÊ?Ëø∞Ô?2-3?•]
+
+What you'll do:
+??[?∑Ë≤¨Èªû]
+
+What we're looking for:
+??[?ÄÊ±ÇÈ?]
+
+What we offer:
+??[Á¶èÂà©Èªû]
+
+[CTA ÁµêÂ∞æ?•]
+
+?∑‰?Ôº?{info.title} | ?¨Âè∏Ôº?{info.company} | ?™Ë?Ôº?{info.salary}
+?∂Â??Ñ‰?ÁπÅÈ?‰∏≠Ê?ÂÆåÊï¥?à„ÄÇ`,
+
+  'Facebook': (info) => `Ë´ãÁÇ∫ Facebook Á§æÂ?ÔºàÂ?ÔºöÂè∞??∫∫Ë≥áÁ§æÁæ§„ÄÅË??∑Á§æÁæ§Ô??∞ÂØ´??{info.title}?çÁ?ÂæµÊ?Ë≤ºÊ???
+Facebook ?πÊÄßÔ?Á§æÁæ§?üÂº∑ÔºåÈ??∏Â?Ê≥®Ê?ÔºåÈÅ©?àÂ???emoji?ÅË¶™?áË?Ê∞?ÄÅCTA ?éÁ¢∫??
+?ÖÂê´Ôº??ªÈ??¥Âê∏ÂºïÂè•ÔºàÂê´ emojiÔº??ªÂÖ¨?∏‰??•‰?Á¥??ªËÅ∑Áº∫‰∫ÆÈªûÔ?3ÈªûÔ???emojiÔº??ªÊ?ÂæµÊñπÂºèÔ?Á∞°ÂñÆ?éÁ¢∫Ôº??ªÊà™Ê≠¢Êó•?üÔ??ØÂ??ßÔ?
+
+?∑‰?Ôº?{info.title}ÔºåËñ™Ë≥áÔ?${info.salary}ÔºåÂú∞ÈªûÔ?${info.location}
+Ë™ûÊ∞£Ê¥ªÊ?ÔºåÁ?È´î‰∏≠?áÔ?Á∏ΩÈï∑Á¥?200-300 Â≠ó„ÄÇ`,
+};
+
+async function generate() {
+  const chips = { '104':'chip-104','1111':'chip-1111','LinkedIn':'chip-linkedin','Facebook':'chip-fb' };
+  const selected = Object.entries(chips).filter(([,id]) => document.getElementById(id)?.classList.contains('on')).map(([k])=>k);
+  if (!selected.length) { alert('Ë´ãËá≥Â∞ëÈÅ∏?á‰??ãÁôºÂ∏ÉÂπ≥??); return; }
+
+  const info = {
+    title:        document.getElementById('inp-title').value.trim(),
+    company:      document.getElementById('inp-company').value.trim() || 'ÔºàÂÖ¨?∏Â?Á®±Ô?',
+    industry:     document.getElementById('inp-industry').value || '',
+    salary:       document.getElementById('inp-salary').value.trim() || '?¢Ë≠∞',
+    location:     document.getElementById('inp-location').value.trim() || '?∞ÁÅ£',
+    duties:       document.getElementById('inp-duties').value.trim() || '',
+    requirements: document.getElementById('inp-requirements').value.trim() || '',
+    benefits:     document.getElementById('inp-benefits').value.trim() || '',
+  };
+
+  document.getElementById('form-section').style.display = 'none';
+  HCLead.gate('tool-08', 'AI ?õÂ??áÊ??üÊ???, {}, async function() {
+  document.getElementById('result-section').style.display = 'block';
+
+  const tabsEl = document.getElementById('tabs');
+  const panelsEl = document.getElementById('panels');
+  tabsEl.innerHTML = ''; panelsEl.innerHTML = '';
+
+  selected.forEach((plat, i) => {
+    const isFirst = i === 0;
+    tabsEl.innerHTML += `<div class="tab${isFirst?' active':''}" id="tab-${plat}" onclick="switchTab('${plat}')">${plat}</div>`;
+    panelsEl.innerHTML += `<div class="panel${isFirst?' active':''}" id="panel-${plat}">
+      <div class="panel-head">
+        <div class="panel-title">${plat} ?õÂ??áÊ?</div>
+        <button class="btn-copy" onclick="copyPanel('${plat}')">Ë§áË£Ω</button>
+      </div>
+      <div class="panel-body" id="body-${plat}"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>`;
+  });
+
+  for (const plat of selected) {
+    await generatePanel(plat, PLATFORM_PROMPTS[plat](info));
+  }
+  const _rpt = selected.map(p => { const el = document.getElementById('body-'+p); return p + '?õÂ??áÊ?:\n' + (el ? el.textContent : ''); }).join('\n\n---\n\n');
+  HCLead.reportDone(_rpt);
+  }); // end gate
+}
+
+async function generatePanel(plat, prompt) {
+  const bodyEl = document.getElementById('body-' + plat);
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'recruitment',
+        system:'‰Ω†ÊòØÁ≠ñË?Ê∞∏Á? AI ?õÂ??áÊ?Â∞àÂÆ∂ÔºåÁ??âÂè∞???Â§ßÊ??∑Âπ≥?∞Áâπ?ßË??áÊ??∞ÂØ´ÔºåÂ??â‰Ωø?®Á?È´î‰∏≠?áÔ?LinkedIn ?àÊú¨?ÑËã±?áÔ???,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:true
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      bodyEl.innerHTML = err.limitReached
+        ? `<div class="limit-msg">‰ªäÊó•?•Ê™¢Ê¨°Êï∏Â∑≤È?‰∏äÈ?ÔºåË??éÊó•?çË©¶??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?áÁ?Â∞àÊ•≠??/a>??/div>`
+        : `<span style="color:var(--ink-soft)">ÔºàAI ?üÊ??´Ê??°Ê?‰ΩøÁî®Ôº?/span>`;
+      return;
+    }
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    bodyEl.innerHTML = '';
+    while(true) {
+      const{done,value}=await reader.read(); if(done) break;
+      for(const line of dec.decode(value,{stream:true}).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') break;
+        try{txt+=JSON.parse(d).text||'';}catch{}
+      }
+      bodyEl.textContent = txt;
+    }
+  } catch { bodyEl.textContent = 'ÔºàAI ?üÊ??çÂ??´Ê??°Ê????Ôº?; }
+}
+
+function switchTab(plat) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+plat).classList.add('active');
+  document.getElementById('panel-'+plat).classList.add('active');
+}
+
+function copyPanel(plat) {
+  const text = document.getElementById('body-'+plat).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target; btn.textContent='Â∑≤Ë?Ë£???;
+    setTimeout(()=>btn.textContent='Ë§áË£Ω', 2000);
+  });
+}
+
+function restart() {
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('form-section').style.display='block';
+  document.getElementById('inp-title').value='';
+  document.getElementById('btn-gen').disabled=true;
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>

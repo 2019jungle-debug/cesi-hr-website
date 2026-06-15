@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI ?¢Ë©¶Ê®°Êì¨??¬∑ Á≠ñË?Ê∞∏Á?</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a}
+body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
+a{text-decoration:none}
+nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
+.nav-brand{display:flex;align-items:center;gap:10px}.nav-brand img{height:40px}
+.nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
+.nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
+.nav-back:hover{background:var(--navy);color:#fff}
+.page-header{background:linear-gradient(135deg,#0d1f3c,var(--navy),#1a3060);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
+.page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
+.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:520px;margin:0 auto}
+.main{max-width:780px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+/* setup */
+.setup-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.setup-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.setup-card p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.field input,.field select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--navy)}
+.q-count-row{display:flex;gap:8px}
+.q-count-btn{flex:1;padding:10px;border:2px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-size:14px;font-weight:700;color:var(--ink-soft);cursor:pointer;transition:all .2s;text-align:center}
+.q-count-btn.sel{border-color:var(--navy);color:var(--navy);background:rgba(16,36,76,.04)}
+.btn-start{width:100%;background:var(--navy);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:background .2s}
+.btn-start:hover:not(:disabled){background:var(--teal)}
+.btn-start:disabled{opacity:.4;cursor:not-allowed}
+/* quiz */
+#quiz-section{display:none}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.quiz-progress{font-size:13px;color:var(--ink-soft);font-weight:600}
+.prog-bar{height:5px;background:rgba(16,36,76,.08);border-radius:999px;overflow:hidden;margin-bottom:20px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--teal));border-radius:999px;transition:width .4s}
+.q-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
+.q-tag{display:inline-block;background:rgba(16,36,76,.07);border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.q-text{font-family:'Noto Serif TC',serif;font-size:18px;font-weight:700;color:var(--navy);line-height:1.65;margin-bottom:16px}
+.q-hint{font-size:12px;color:var(--ink-soft);margin-bottom:14px;padding:8px 12px;background:rgba(29,117,111,.06);border-radius:6px;border-left:3px solid var(--teal)}
+.answer-area{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:100px;transition:border-color .2s}
+.answer-area:focus{outline:none;border-color:var(--navy)}
+.q-nav{display:flex;justify-content:space-between;gap:12px;margin-top:14px}
+.btn-prev{background:#fff;border:2px solid var(--line);color:var(--ink-soft);padding:11px 20px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-prev:hover:not(:disabled){border-color:var(--navy);color:var(--navy)}
+.btn-prev:disabled{opacity:.35;cursor:not-allowed}
+.btn-next{background:var(--navy);color:#fff;padding:11px 24px;border-radius:8px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:background .2s}
+.btn-next:hover:not(:disabled){background:var(--teal)}
+.btn-next:disabled{opacity:.4;cursor:not-allowed}
+/* result */
+#result-section{display:none}
+.score-head{background:linear-gradient(135deg,#0d1f3c,var(--navy));border-radius:14px;padding:28px;text-align:center;margin-bottom:18px}
+.score-head h2{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:6px}
+.total-score{font-size:56px;font-weight:900;color:var(--gold-bright);line-height:1}
+.score-sub{font-size:14px;color:rgba(255,255,255,.7);margin-top:6px}
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:18px}
+.dim-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.dc-label{font-size:12px;color:var(--ink-soft);margin-bottom:6px}
+.dc-bar{height:6px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:6px}
+.dc-fill{height:100%;background:var(--teal);border-radius:999px;transition:width .8s ease}
+.dc-num{font-size:20px;font-weight:800;color:var(--navy)}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.ai-icon{width:34px;height:34px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.typing{display:inline-flex;gap:4px;align-items:center}
+.typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
+.cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
+.cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
+.cta-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
+.btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
+.btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.loading-overlay{position:fixed;inset:0;background:rgba(7,20,47,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:200;gap:16px}
+.loading-overlay p{color:#fff;font-size:16px;font-weight:600}
+.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:var(--gold-bright);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.limit-msg{background:#fff0f0;border:1px solid #f5c0c0;border-radius:8px;padding:14px 18px;color:var(--danger);font-size:14px;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+<nav>
+  <a href="hr-health-center.html" class="nav-brand"><img src="assets/logo.png" alt=""><span>AI ‰∫∫Ë??•Ê™¢‰∏≠Â?</span></a>
+  <a href="hr-health-center.html" class="nav-back">???ûÂÅ•Ê™¢‰∏≠Âø?/a>
+</nav>
+<div class="page-header">
+  <div class="tool-badge">?éØ No.06 ¬∑ AI ?¢Ë©¶Ê®°Êì¨??/div>
+  <h1>AI ?¢Ë©¶Ê®°Êì¨ &amp; Ë©ïÂ?Á≥ªÁµ±</h1>
+  <p>Ê®°Êì¨?üÂØ¶?¢Ë©¶?ÖÂ?ÔºåAI ?≥Ê?Ë©ïÂ??áÊîπ?ÑÂª∫Ë≠∞Ô??êÂ??¢Ë©¶?öÈ???/p>
+</div>
+<div class="main">
+
+  <!-- Setup -->
+  <div id="setup-section">
+    <div class="setup-card">
+      <h2>Ë®≠Â??¢Ë©¶?ÖÂ?</h2>
+      <p>Â°´ÂØ´‰ª•‰?Ë≥áË?ÔºåAI Â∞áÁÇ∫?®Áî¢?üÈ?Â∞çÊÄßÁ??¢Ë©¶È°åÁõÆ</p>
+      <div class="field">
+        <label>?âÂæµ?∑‰?</label>
+        <input type="text" id="inp-position" placeholder="‰æãÔ?Ë°åÈä∑‰ºÅÂ??ÅË?È´îÂ∑•Á®ãÂ∏´?Å‰∫∫Ë≥áÂ??? oninput="checkReady()">
+      </div>
+      <div class="field">
+        <label>?¢Ë©¶È°ûÂ?</label>
+        <select id="inp-type" onchange="checkReady()">
+          <option value="">Ë´ãÈÅ∏?áÈù¢Ë©¶È???/option>
+          <option value="behavioral">Ë°åÁÇ∫?¢Ë©¶ÔºàSTAR Ê≥ïÂ?Ôº?/option>
+          <option value="competency">?∑ËÉΩ?¢Ë©¶</option>
+          <option value="situational">?ÖÂ??¢Ë©¶</option>
+          <option value="technical">?ÄË°ìÈù¢Ë©?/option>
+          <option value="comprehensive">Á∂úÂ??¢Ë©¶</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>È°åÊï∏Ë®≠Â?</label>
+        <div class="q-count-row">
+          <div class="q-count-btn sel" id="qc-5" onclick="setQCount(5, this)">5 È°åÔ?Âø´ÈÄüÁ?Ôº?/div>
+          <div class="q-count-btn" id="qc-8" onclick="setQCount(8, this)">8 È°åÔ?Ê®ôÊ??àÔ?</div>
+          <div class="q-count-btn" id="qc-12" onclick="setQCount(12, this)">12 È°åÔ?ÂÆåÊï¥?àÔ?</div>
+        </div>
+      </div>
+      <button class="btn-start" id="btn-start" onclick="startInterview()" disabled>?ãÂ??¢Ë©¶Ê®°Êì¨</button>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div id="quiz-section">
+    <div class="quiz-header">
+      <div class="quiz-progress" id="quiz-progress">Á¨?1 / 5 È°?/div>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:20%"></div></div>
+    <div class="q-card">
+      <div class="q-tag" id="q-tag"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-hint" id="q-hint"></div>
+      <textarea class="answer-area" id="answer-area" placeholder="Ë´ãÂú®Ê≠§Ëº∏?•ÊÇ®?ÑÂ?Á≠?.." oninput="checkAnswer()"></textarea>
+      <div class="q-nav">
+        <button class="btn-prev" id="btn-prev" onclick="prevQ()" disabled>??‰∏ä‰?È°?/button>
+        <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>‰∏ã‰?È°???/button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="result-section">
+    <div class="score-head">
+      <h2>?¢Ë©¶Ê®°Êì¨Ë©ïÂ??±Â?</h2>
+      <div class="total-score" id="total-score">--</div>
+      <div class="score-sub">Á∂úÂ?Ë©ïÂ?ÔºàÊªø??100Ôº?/div>
+    </div>
+    <div class="dim-grid" id="dim-grid"></div>
+    <div class="ai-box">
+      <div class="ai-head"><div class="ai-icon">?éØ</div><div><div class="ai-title">AI ?¢Ë©¶Ë°®Áèæ?ÜÊ??áÂª∫Ë≠?/div></div></div>
+      <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="cta-box">
+      <h3>?≥ÈÄ≤‰?Ê≠•Ê??áÈù¢Ë©¶Ë°®?æÔ?</h3>
+      <p>Á≠ñË?Ê∞∏Á??ê‰?‰∏ÄÂ∞ç‰??¢Ë©¶ËºîÂ??ÅÂ±•Ê≠∑‰øÆ?π„ÄÅËÅ∑Ê∂ØË´ÆË©¢Ê???/p>
+      <div class="cta-row">
+        <a href="ai-hr-consultant.html" class="btn-gold">?çË≤ªË´ÆË©¢ AI È°ßÂ?</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">?ãÊ??ôÊñπÊ°?/a>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restart()">?çÊñ∞Ê®°Êì¨</button>
+  </div>
+</div>
+
+<div class="loading-overlay" id="loading" style="display:none">
+  <div class="spinner"></div>
+  <p id="loading-msg">AI Ê≠?ú®?¢Á??¢Ë©¶È°åÁõÆ...</p>
+</div>
+
+<script>
+const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
+const SESSION = 'hc6-' + Math.random().toString(36).slice(2);
+
+let totalQ = 5, questions = [], answers = [], cur = 0;
+
+const TYPE_LABEL = {
+  behavioral:'Ë°åÁÇ∫?¢Ë©¶',competency:'?∑ËÉΩ?¢Ë©¶',
+  situational:'?ÖÂ??¢Ë©¶',technical:'?ÄË°ìÈù¢Ë©?,comprehensive:'Á∂úÂ??¢Ë©¶'
+};
+
+function setQCount(n, el) {
+  totalQ = n;
+  document.querySelectorAll('.q-count-btn').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function checkReady() {
+  const pos = document.getElementById('inp-position').value.trim();
+  const typ = document.getElementById('inp-type').value;
+  document.getElementById('btn-start').disabled = !(pos && typ);
+}
+
+async function startInterview() {
+  const position = document.getElementById('inp-position').value.trim();
+  const type = document.getElementById('inp-type').value;
+  const typeLabel = TYPE_LABEL[type];
+
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('loading-msg').textContent='AI Ê≠?ú®?¢Á??¢Ë©¶È°åÁõÆ...';
+
+  const prompt = `Ë´ãÁÇ∫??{position}?çËÅ∑‰ΩçÁî¢??${totalQ} ??{typeLabel}?¢Ë©¶È°å„Ä?
+ÊØèÈ??ºÂ?Ôº?Q: [È°åÁõÆ]
+HINT: [‰ΩúÁ??êÁ§∫Ôº?0Â≠ó‰ª•?ß]
+TAG: [È°åÂ?Ê®ôÁ±§ÔºåÂ?ÔºöÁ?È©óÈ?/?ÖÂ?È°?Ë°åÁÇ∫È°??ïÊ?È°??ΩÂ?È°å]
+
+?™Ëº∏?∫È??ÆÔ?‰∏çÈ?Ë¶ÅË?Ë™ûÊ??∂‰?Ë™™Ê??Ç`;
+
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'interview',
+        system:'‰Ω†ÊòØÂ∞àÊ•≠?¢Ë©¶ÂÆòÔ??üÊ??∞ÁÅ£?∑Â†¥?áÂ?ÔºåË??¥Êé•Ëº∏Âá∫?¢Ë©¶È°åÁõÆÔºå‰??ÄË¶ÅÈ?Â§ñË™™?é„Ä?,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:false
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      document.getElementById('loading').style.display='none';
+      alert(err.limitReached ? '‰ªäÊó•‰ΩøÁî®Ê¨°Êï∏Â∑≤È?‰∏äÈ?ÔºåË??éÊó•?çË©¶?? : 'AI ?çÂ??´Ê??°Ê?‰ΩøÁî®ÔºåË?Á®çÂ??çË©¶??);
+      return;
+    }
+    const data = await resp.json();
+    parseQuestions(data.text || '', position, typeLabel);
+  } catch {
+    document.getElementById('loading').style.display='none';
+    alert('?°Ê??????AI ?çÂ?ÔºåË?Á®çÂ??çË©¶??);
+    return;
+  }
+
+  document.getElementById('loading').style.display='none';
+  answers = new Array(questions.length).fill('');
+  cur = 0;
+  document.getElementById('setup-section').style.display='none';
+  document.getElementById('quiz-section').style.display='block';
+  renderQ();
+}
+
+function parseQuestions(text, position, typeLabel) {
+  questions = [];
+  const blocks = text.split(/\n(?=Q:)/);
+  for (const block of blocks) {
+    const qm = block.match(/Q:\s*(.+)/);
+    const hm = block.match(/HINT:\s*(.+)/);
+    const tm = block.match(/TAG:\s*(.+)/);
+    if (qm) questions.push({
+      text: qm[1].trim(),
+      hint: hm ? hm[1].trim() : 'Ë´ãÂÖ∑È´îÊ?Ëø∞ÊÇ®?ÑÁ?È©óË??öÊ?',
+      tag: tm ? tm[1].trim() : typeLabel
+    });
+  }
+  if (questions.length < totalQ) {
+    const fallback = [
+      {text:`Ë´ã‰?Á¥π‰?‰∏ãÊÇ®?âÂæµ??{position}?çÁ??ïÊ??áÁõ∏?úË??Ø„ÄÇ`,hint:'Ë™™Ê??®Á??∑Ê∂ØË¶èÂ??áÊ≠§?∑‰??ÑÈÄ??',tag:'?ïÊ?È°?},
+      {text:`Ë´ãÊ?Ëø∞‰??ãÊÇ®?®È??ªÂ∑•‰Ωú‰∏≠?áÂà∞?ÑÊ?Â§ßÊ??∞Ô?‰ª•Â??®Â?‰ΩïËß£Ê±∫Á??Ç`,hint:'‰ΩøÁî® STAR Ê≥ïÂ?ÔºöÊ?Â¢É‚?‰ªªÂ??íË??ï‚?ÁµêÊ?',tag:'Ë°åÁÇ∫È°?},
+      {text:`?®Â???{position}?çÈÄôÂÄãËÅ∑‰ΩçÊ??çË??ÑÊ†∏ÂøÉËÉΩ?õÊòØ‰ªÄÈ∫ºÔ??®Â?‰ΩïÂÖ∑?ôÈÄô‰??ΩÂ?Ôºü`,hint:'ÁµêÂ?ÂØ¶È?Â∑•‰?Á∂ìÊ≠∑Ë™™Ê?',tag:'?ΩÂ?È°?},
+      {text:`Ë´ãÊ?Ëø∞‰?Ê¨°ÊÇ®?áÂ??äÁôº?üÊ?Ë¶ãË?Á™ÅÁ?Á∂ìÈ?Ôºå‰ª•?äÊÇ®Â¶Ç‰??ïÁ??Ñ„ÄÇ`,hint:'?óÈ??®Ê??öÊñπÂºèË?ÁµêÊ?',tag:'?ÖÂ?È°?},
+      {text:`?®Êú™‰æ?3-5 Âπ¥Á??∑Ê∂Ø?ºÂ?Ë¶èÂ??Ø‰?È∫ºÔ?`,hint:'Ë™™Ê??∑È??ÆÊ??áÈ??êË???,tag:'Ë¶èÂ?È°?},
+      {text:`Â¶ÇÊ??®Âú®Â∑•‰?‰∏≠ÁäØ‰∫Ü‰??ãÈåØË™§Ô??®Ê?Â¶Ç‰??ïÁ?Ôºü`,hint:'Â±ïÁèæË≤¨‰ªª?üË?Â≠∏Á??ãÂ∫¶',tag:'?ÖÂ?È°?},
+      {text:`?®Ë??∫Ëá™Â∑±Ê?Â§ßÁ??™È??áÁº∫ÈªûÂ??Ø‰?È∫ºÔ?`,hint:'Ë™†ÂØ¶‰∏îÊ??™Ê?Ë¶∫Â??∞Â?Á≠?,tag:'?™Ê?Ë™çÁü•'},
+      {text:`?®Â?‰ΩïÂú®È´òÂ??ÅÁ?Ëø´Á??™Ê≠¢?•Ê?‰∏ã‰??ÅÂ∑•‰ΩúÊ??áÔ?`,hint:'?Ü‰∫´?∑È??ÑÊ??ìÁÆ°?ÜÊñπÊ≥?,tag:'Â£ìÂ?È°?},
+    ];
+    while (questions.length < totalQ) {
+      questions.push(fallback[questions.length % fallback.length]);
+    }
+  }
+  questions = questions.slice(0, totalQ);
+}
+
+function renderQ() {
+  const q = questions[cur];
+  document.getElementById('quiz-progress').textContent = `Á¨?${cur+1} / ${questions.length} È°å`;
+  document.getElementById('prog-fill').style.width = Math.round(((cur+1)/questions.length)*100) + '%';
+  document.getElementById('q-tag').textContent = q.tag;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('q-hint').textContent = '?í° ' + q.hint;
+  document.getElementById('answer-area').value = answers[cur] || '';
+  document.getElementById('btn-prev').disabled = cur === 0;
+  document.getElementById('btn-next').textContent = cur === questions.length-1 ? '?ê‰∫§Ë©ïÂ? ?? : '‰∏ã‰?È°???;
+  document.getElementById('btn-next').disabled = !(answers[cur] && answers[cur].trim().length > 5);
+}
+
+function checkAnswer() {
+  const val = document.getElementById('answer-area').value;
+  answers[cur] = val;
+  document.getElementById('btn-next').disabled = val.trim().length < 5;
+}
+
+function prevQ() { if(cur>0){cur--;renderQ();} }
+function nextQ() {
+  answers[cur] = document.getElementById('answer-area').value;
+  if (cur === questions.length-1) { evaluate(); return; }
+  cur++; renderQ();
+}
+
+async function evaluate() {
+  HCLead.gate('tool-06', 'AI ?¢Ë©¶Ê®°Êì¨Ë®ìÁ∑¥', {}, async function() {
+  document.getElementById('loading').style.display='flex';
+  document.getElementById('loading-msg').textContent='AI Ê≠?ú®Ë©ïÂ?ÔºåË?Á®çÂÄ?..';
+
+  const qa = questions.map((q,i) => `?êÈ???{i+1}??{q.text}\n?êÂ?Á≠î„Ä?{answers[i]||'ÔºàÊú™‰ΩúÁ?Ôº?}`).join('\n\n');
+  const position = document.getElementById('inp-position').value.trim();
+
+  const prompt = `Ë´ãË?‰º∞‰ª•‰∏ã„Ä?{position}?çËÅ∑‰ΩçÁ??¢Ë©¶‰ΩúÁ?Ë°®Áèæ??
+${qa}
+
+Ë´ãÂ?Ëº∏Âá∫Ë©ïÂ? JSONÔºàÂè™Ëº∏Âá∫ JSONÔºå‰?Ë¶ÅÂÖ∂‰ªñÊ?Â≠óÔ?Ôº?{"total":XX,"content":XX,"structure":XX,"specificity":XX,"impression":XX}
+Ôºàtotal=Á∂úÂ?, content=?ßÂÆπ?∏È??? structure=Ë°®È?ÁµêÊ?, specificity=?∑È?Á®ãÂ∫¶, impression=?¥È??∞Ë±°ÔºåÂ??ÖÊªø??00Ôº?
+?∂Â??õË?ÔºåÁî®ÁπÅÈ?‰∏≠Ê??ê‰??¢Ë©¶Ë°®Áèæ?ÜÊ?Ôº?
+?êÊï¥È´îË°®?æÊ?Ë¶Å„ÄëÔ?2?•Ô?
+
+?êÂº∑?ÖË°®?æ„ÄëÔ?2-3ÈªûÔ?
+
+?êÂ??πÂ??¢Â??ëÔ?2-3ÈªûÔ??∑È?Ë™™Ê?Ôº?
+?êÊ?È°åÈ?ÈªûÂª∫Ë≠∞„ÄëÔ??ùÂ??ÄÂº±Á? 2-3 È°åÔ?
+
+?êÊ??áÈù¢Ë©¶ÈÄöÈ??áÁ??úÈçµÂª∫Ë≠∞?ëÔ?3ÈªûÔ?
+
+?ºÂ?Ê∏ÖÊô∞Ê¢ùÂ?Ôºå‰?Ë∂ÖÈ? 600 Â≠ó„ÄÇ`;
+
+  try {
+    const resp = await fetch(API + '/api/hr-health-check', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        tool:'interview',
+        system:'‰Ω†ÊòØÂ∞àÊ•≠?¢Ë©¶Ë©ïÂØ©ÔºåÁ??âÂè∞??Å∑?¥Ê?Ê∫ñÔ?Ë´ãÁµ¶‰∫àÂÆ¢ËßÄ?∑È??ÑÈù¢Ë©¶Ë??ÜË?Âª∫Ë≠∞ÔºåÂ??â‰Ωø?®Á?È´î‰∏≠?á„Ä?,
+        messages:[{role:'user',content:prompt}],
+        sessionId:SESSION, stream:true
+      })
+    });
+
+    document.getElementById('loading').style.display='none';
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('result-section').style.display='block';
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      document.getElementById('ai-body').innerHTML = err.limitReached
+        ? `<div class="limit-msg">‰ªäÊó•?•Ê™¢Ê¨°Êï∏Â∑≤È?‰∏äÈ?ÔºåË??éÊó•?çË©¶??<a href="upgrade.html" style="color:var(--navy);font-weight:700;">?áÁ?Â∞àÊ•≠??/a>??/div>`
+        : `<span style="color:var(--ink-soft)">ÔºàAI Ë©ïÂ??´Ê??°Ê?‰ΩøÁî®Ôº?/span>`;
+      return;
+    }
+
+    const reader = resp.body.getReader(); const dec = new TextDecoder(); let txt = '';
+    const bodyEl = document.getElementById('ai-body');
+    bodyEl.innerHTML = '';
+    let scoresSet = false;
+    while(true) {
+      const{done,value}=await reader.read(); if(done) break;
+      for(const line of dec.decode(value,{stream:true}).split('\n')) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') break;
+        try{txt+=JSON.parse(d).text||'';}catch{}
+      }
+      if (!scoresSet) scoresSet = parseEvalScores(txt);
+      bodyEl.textContent = txt.replace(/^\{[^}]*\}\n?/,'').trim();
+    }
+    if (!scoresSet) parseEvalScores(txt);
+    HCLead.reportDone(txt.replace(/^\{[^}]*\}\n?/,'').trim());
+  } catch {
+    document.getElementById('loading').style.display='none';
+    document.getElementById('quiz-section').style.display='none';
+    document.getElementById('result-section').style.display='block';
+    document.getElementById('ai-body').textContent='ÔºàAI Ë©ïÂ??çÂ??´Ê??°Ê????Ôº?;
+  }
+  }); // end gate
+}
+
+function parseEvalScores(txt) {
+  const m = txt.match(/\{"total"\s*:\s*(\d+)\s*,\s*"content"\s*:\s*(\d+)\s*,\s*"structure"\s*:\s*(\d+)\s*,\s*"specificity"\s*:\s*(\d+)\s*,\s*"impression"\s*:\s*(\d+)\s*\}/);
+  if (!m) return false;
+  const [,total,content,structure,specificity,impression] = m.map(Number);
+  document.getElementById('total-score').textContent = total;
+  const dims = [
+    {label:'?ßÂÆπ?∏È???,val:content},{label:'Ë°®È?ÁµêÊ?',val:structure},
+    {label:'?∑È?Á®ãÂ∫¶',val:specificity},{label:'?¥È??∞Ë±°',val:impression}
+  ];
+  document.getElementById('dim-grid').innerHTML = dims.map(d => `
+    <div class="dim-card">
+      <div class="dc-label">${d.label}</div>
+      <div class="dc-bar"><div class="dc-fill" data-w="${d.val}" style="width:0"></div></div>
+      <div class="dc-num">${d.val}</div>
+    </div>`).join('');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll('.dc-fill[data-w]').forEach(el=>{el.style.width=el.dataset.w+'%';});
+  }));
+  return true;
+}
+
+function restart() {
+  questions=[]; answers=[]; cur=0;
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('setup-section').style.display='block';
+  document.getElementById('inp-position').value='';
+  document.getElementById('inp-type').value='';
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('total-score').textContent='--';
+  document.getElementById('ai-body').innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+}
+</script>
+<script src="assets/hc-lead.js"></script>
+</body>
+</html>
