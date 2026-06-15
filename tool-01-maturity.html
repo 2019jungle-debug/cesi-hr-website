@@ -580,20 +580,11 @@ async function callAI(dimScores, overall) {
     const resp = await fetch(API + '/api/hr-health-check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        tool: 'maturity',
-        system: '你是策識永續 AI 人資顧問，專業、務實、具溫度，回應使用繁體中文。',
-        messages: [{ role: 'user', content: prompt }],
-        sessionId: SESSION,
-        stream: true,
-      })
+      body: JSON.stringify({ message: prompt, sessionId: SESSION })
     });
 
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      document.getElementById('ai-body').innerHTML = err.limitReached
-        ? `<div class="limit-msg">今日健檢次數已達上限，請明日再試。</div>`
-        : `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
+    if (!resp.ok || !resp.body) {
+      document.getElementById('ai-body').innerHTML = `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
       return;
     }
 
@@ -605,10 +596,10 @@ async function callAI(dimScores, overall) {
       const { done, value } = await reader.read();
       if (done) break;
       for (const line of decoder.decode(value, { stream:true }).split('\n')) {
-        if (!line.startsWith('data: ')) continue;
-        const d = line.slice(6).trim();
+        if (!line.startsWith('data:')) continue;
+        const d = line.slice(5).trim();
         if (d === '[DONE]') break;
-        try { text += JSON.parse(d).text || ''; } catch {}
+        try { text += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch {}
       }
       document.getElementById('ai-body').textContent = text;
     }
