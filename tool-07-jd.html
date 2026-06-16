@@ -77,7 +77,7 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 <div class="page-header">
   <div class="tool-badge">📋 No.07 · AI 職缺文件生成器</div>
   <h1>AI 職缺文件一鍵產出</h1>
-  <p>輸入職位資料，自動生成 JD、KPI、KSA、面試題庫等完整人才管理文件</p>
+  <p>輸入職位資料，自動生成 JD、KPI、KSA 等完整人才管理文件</p>
 </div>
 <div class="main">
   <div id="form-section">
@@ -123,7 +123,6 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
           <div class="out-item on" data-doc="JD" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">📄 職務說明書（JD）</div></div>
           <div class="out-item on" data-doc="KPI" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">📊 KPI 績效指標</div></div>
           <div class="out-item on" data-doc="KSA" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">🎯 KSA 職能要件</div></div>
-          <div class="out-item on" data-doc="面試題庫" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">💬 面試題庫</div></div>
           <div class="out-item" data-doc="Onboarding" onclick="toggleDoc(this)"><div class="out-check"></div><div class="out-label">🚀 新人報到計畫</div></div>
         </div>
       </div>
@@ -163,7 +162,6 @@ function buildPrompt(doc, title, dept, industry, exp, duties) {
   if(doc==='JD') return '請為以下職位撰寫專業的職務說明書（JD），包含：職位概述、主要職責（6-8條）、任職資格（必要與加分條件）、工作條件。用繁體中文，語氣正式專業。\n\n'+base;
   if(doc==='KPI') return '請為以下職位設計 KPI 績效指標框架，包含：核心 KPI（4-6個，含計算方式與目標值）、輔助指標（2-3個）、追蹤頻率建議、評分標準。用繁體中文。\n\n'+base;
   if(doc==='KSA') return '請為以下職位設計 KSA 職能要件（知識、技能、能力），包含：必要知識（4-6項）、核心技能（4-6項）、關鍵能力（3-5項）、加分職能（2-3項）。用繁體中文，具體可評估。\n\n'+base;
-  if(doc==='面試題庫') return '請為以下職位設計結構化面試題庫，包含：暖身題（2題）、行為面試STAR（4題含評分重點）、情境題（2題含理想回答方向）、動機題（2題）、專業驗證（2題）、壓力測試（1題）。用繁體中文，符合法規。\n\n'+base;
   if(doc==='Onboarding') return '請為以下職位設計 90 天新人報到計畫，涵蓋第一週、第一月、第二月、第三月，每階段列出目標、關鍵任務（3-4項）、評估方式。用繁體中文，實際可執行。\n\n'+base;
   return '';
 }
