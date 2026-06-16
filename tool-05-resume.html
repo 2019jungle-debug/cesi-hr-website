@@ -293,8 +293,37 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
         <span class="chip" onclick="toggleChip(this,'Holland 輪碼')">Holland 輪碼</span>
         <span class="chip" onclick="toggleChip(this,'其他測評')">其他測評</span>
       </div>
-      <div class="chip-hint">點選已完成的測評類型，再貼入結果文字（如：DISC 結果 D-型主導、MBTI 結果 ENTJ）</div>
+      <div class="chip-hint">點選已完成的測評類型，再上傳截圖或貼入結果文字</div>
+
+      <!-- 測評上傳區 -->
+      <div class="upload-zone" id="assess-upload-zone" style="margin-bottom:10px"
+           ondragover="handleAssessDragOver(event)" ondragleave="handleAssessDragLeave(event)" ondrop="handleAssessDrop(event)">
+        <input type="file" id="assess-file" accept="image/*,.pdf,.docx,.doc,.txt"
+               onchange="handleAssessFileChange(event)">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-title">上傳測評截圖或報告檔案</div>
+        <div class="upload-sub">AI 自動辨識文字並填入下方欄位</div>
+        <div class="upload-types">
+          <span class="upload-type">截圖（JPG/PNG）</span>
+          <span class="upload-type">PDF</span>
+          <span class="upload-type">Word</span>
+          <span class="upload-type">TXT</span>
+        </div>
+      </div>
+      <div class="upload-status" id="assess-upload-status">
+        <div class="upload-spinner"></div>
+        <span id="assess-upload-msg">辨識中…</span>
+      </div>
+      <!-- 預覽圖 -->
+      <div id="assess-img-preview" style="display:none;margin-bottom:10px;text-align:center">
+        <img id="assess-preview-img" style="max-width:100%;max-height:220px;border-radius:8px;border:1px solid var(--line)">
+      </div>
+
       <div class="field">
+        <label style="display:flex;justify-content:space-between;align-items:center">
+          <span>測評結果文字</span>
+          <button type="button" onclick="clearAssess()" style="font-size:11px;color:var(--ink-faded);background:none;border:none;cursor:pointer;font:inherit">✕ 清除</button>
+        </label>
         <textarea id="assessment-text" rows="4" placeholder="例：
 DISC 結果：D 型主導（積極主動、目標導向、決策迅速，較不擅長耐心溝通）
 MBTI 結果：ENTJ（外向決策型、善於領導、系統性思考，偏好高效執行）"></textarea>
@@ -524,9 +553,10 @@ function restart() {
 }
 </script>
 <script src="assets/hc-lead.js"></script>
-<!-- PDF.js & mammoth.js for client-side resume parsing -->
+<!-- PDF.js, mammoth.js, Tesseract.js for client-side parsing -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
 if (typeof pdfjsLib !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -611,6 +641,107 @@ function handleDrop(e) {
   document.getElementById('upload-zone').classList.remove('drag-over');
   const file = e.dataTransfer.files[0];
   if (file) parseFile(file);
+}
+
+// ── 測評區上傳 ──────────────────────────────────────────
+function setAssessStatus(type, msg) {
+  const el = document.getElementById('assess-upload-status');
+  el.className = 'upload-status ' + type;
+  document.getElementById('assess-upload-msg').textContent = msg;
+}
+
+function fillAssess(text) {
+  const ta = document.getElementById('assessment-text');
+  ta.value = text.trim();
+}
+
+function clearAssess() {
+  document.getElementById('assessment-text').value = '';
+  document.getElementById('assess-file').value = '';
+  document.getElementById('assess-upload-status').className = 'upload-status';
+  document.getElementById('assess-img-preview').style.display = 'none';
+}
+
+async function parseAssessFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  const isImage = file.type.startsWith('image/');
+
+  setAssessStatus('loading', '處理中：' + file.name);
+
+  try {
+    if (isImage) {
+      // 顯示預覽圖
+      const previewBox = document.getElementById('assess-img-preview');
+      const previewImg = document.getElementById('assess-preview-img');
+      previewImg.src = URL.createObjectURL(file);
+      previewBox.style.display = 'block';
+
+      setAssessStatus('loading', '🔍 OCR 辨識中，請稍候（約 10–20 秒）…');
+
+      if (typeof Tesseract === 'undefined') throw new Error('OCR 引擎未載入，請重新整理後再試');
+
+      const result = await Tesseract.recognize(file, 'chi_tra+eng', {
+        logger: m => {
+          if (m.status === 'recognizing text') {
+            setAssessStatus('loading', '🔍 OCR 辨識中 ' + Math.round(m.progress * 100) + '%…');
+          }
+        }
+      });
+      const text = result.data.text.trim();
+      if (!text) throw new Error('未能辨識出文字，請確認圖片清晰度');
+      fillAssess(text);
+      setAssessStatus('success', '✅ 截圖辨識完成（' + text.length + ' 字），請確認內容是否正確');
+
+    } else if (ext === 'txt') {
+      const text = await file.text();
+      fillAssess(text);
+      setAssessStatus('success', '✅ 已讀取 TXT（' + text.length + ' 字）');
+
+    } else if (ext === 'pdf') {
+      if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js 未載入');
+      const ab = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+      let txt = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        txt += content.items.map(x => x.str).join(' ') + '\n';
+      }
+      if (!txt.trim()) throw new Error('PDF 為掃描圖片，建議改上傳截圖（JPG/PNG）以使用 OCR');
+      fillAssess(txt);
+      setAssessStatus('success', '✅ 已解析 PDF（' + pdf.numPages + ' 頁，' + txt.length + ' 字）');
+
+    } else if (ext === 'docx' || ext === 'doc') {
+      if (typeof mammoth === 'undefined') throw new Error('mammoth.js 未載入');
+      const ab = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer: ab });
+      fillAssess(result.value);
+      setAssessStatus('success', '✅ 已解析 Word 文件（' + result.value.length + ' 字）');
+
+    } else {
+      throw new Error('不支援的格式，請上傳 JPG、PNG、PDF、Word 或 TXT');
+    }
+  } catch (e) {
+    setAssessStatus('error', '❌ ' + (e.message || '解析失敗，請改為手動貼入'));
+  }
+}
+
+function handleAssessFileChange(e) {
+  const file = e.target.files[0];
+  if (file) parseAssessFile(file);
+}
+function handleAssessDragOver(e) {
+  e.preventDefault();
+  document.getElementById('assess-upload-zone').classList.add('drag-over');
+}
+function handleAssessDragLeave(e) {
+  document.getElementById('assess-upload-zone').classList.remove('drag-over');
+}
+function handleAssessDrop(e) {
+  e.preventDefault();
+  document.getElementById('assess-upload-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) parseAssessFile(file);
 }
 </script>
 </body>
