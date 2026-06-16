@@ -70,6 +70,22 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .chip:hover{border-color:var(--indigo);color:var(--indigo)}
 .chip.active{border-color:var(--indigo);background:var(--indigo);color:#fff}
 .chip-hint{font-size:11.5px;color:var(--ink-faded);margin-bottom:8px}
+
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:2px dashed rgba(45,60,166,.25);border-radius:10px;padding:22px 18px;text-align:center;cursor:pointer;transition:all .25s;background:rgba(45,60,166,.02);margin-bottom:12px;position:relative}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--indigo);background:rgba(45,60,166,.05)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:28px;margin-bottom:8px}
+.upload-title{font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--ink-faded);line-height:1.6}
+.upload-types{display:flex;justify-content:center;gap:6px;margin-top:8px}
+.upload-type{font-size:11px;font-weight:700;padding:2px 9px;border-radius:4px;border:1px solid var(--line);color:var(--ink-soft)}
+.upload-status{display:none;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:10px}
+.upload-status.loading{display:flex;background:rgba(45,60,166,.07);color:var(--indigo)}
+.upload-status.success{display:flex;background:rgba(29,117,111,.08);color:var(--success)}
+.upload-status.error{display:flex;background:rgba(195,70,70,.08);color:var(--danger)}
+.upload-spinner{width:16px;height:16px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 .btn-analyze{width:100%;background:linear-gradient(135deg,var(--navy),var(--indigo-soft));color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
 .btn-analyze:hover:not(:disabled){opacity:.88}
 .btn-analyze:disabled{opacity:.35;cursor:not-allowed}
@@ -221,10 +237,34 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
         <div class="form-card-icon icon-green">📄</div>
         <div>
           <div class="form-card-title">求職者履歷內容</div>
-          <div class="form-card-sub">貼入候選人履歷全文（可去識別化，建議保留學歷、年資、職稱、主要職責）</div>
+          <div class="form-card-sub">上傳履歷檔案自動解析，或直接貼入文字內容</div>
         </div>
       </div>
+
+      <!-- 上傳區 -->
+      <div class="upload-zone" id="upload-zone"
+           ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <input type="file" id="resume-file" accept=".pdf,.docx,.doc,.txt"
+               onchange="handleFileChange(event)">
+        <div class="upload-icon">📎</div>
+        <div class="upload-title">點擊上傳，或將檔案拖曳至此</div>
+        <div class="upload-sub">系統將自動解析履歷內容並填入下方欄位</div>
+        <div class="upload-types">
+          <span class="upload-type">PDF</span>
+          <span class="upload-type">Word (.docx)</span>
+          <span class="upload-type">TXT</span>
+        </div>
+      </div>
+      <div class="upload-status" id="upload-status">
+        <div class="upload-spinner"></div>
+        <span id="upload-msg">解析中…</span>
+      </div>
+
       <div class="field">
+        <label style="display:flex;justify-content:space-between;align-items:center">
+          <span>履歷文字內容<span class="req">*</span></span>
+          <button type="button" onclick="clearResume()" style="font-size:11px;color:var(--ink-faded);background:none;border:none;cursor:pointer;font:inherit">✕ 清除</button>
+        </label>
         <textarea id="resume-text" rows="12" placeholder="請將求職者的履歷內容貼入此處...
 
 建議保留：
@@ -484,6 +524,95 @@ function restart() {
 }
 </script>
 <script src="assets/hc-lead.js"></script>
+<!-- PDF.js & mammoth.js for client-side resume parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+function setUploadStatus(type, msg) {
+  const el = document.getElementById('upload-status');
+  const msgEl = document.getElementById('upload-msg');
+  el.className = 'upload-status ' + type;
+  msgEl.textContent = msg;
+}
+
+function fillResume(text) {
+  const ta = document.getElementById('resume-text');
+  ta.value = text.trim();
+  ta.dispatchEvent(new Event('input'));
+  ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function clearResume() {
+  document.getElementById('resume-text').value = '';
+  document.getElementById('resume-text').dispatchEvent(new Event('input'));
+  document.getElementById('resume-file').value = '';
+  document.getElementById('upload-status').className = 'upload-status';
+}
+
+async function parseFile(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  setUploadStatus('loading', '📄 解析中：' + file.name);
+
+  try {
+    if (ext === 'txt') {
+      const text = await file.text();
+      fillResume(text);
+      setUploadStatus('success', '✅ 已成功解析：' + file.name + '（' + text.length + ' 字）');
+
+    } else if (ext === 'pdf') {
+      if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js 未載入');
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items.map(item => item.str).join(' ');
+        fullText += pageText + '\n';
+      }
+      if (!fullText.trim()) throw new Error('PDF 為掃描圖片，無法直接擷取文字');
+      fillResume(fullText);
+      setUploadStatus('success', '✅ 已解析 PDF（共 ' + pdf.numPages + ' 頁，' + fullText.length + ' 字）');
+
+    } else if (ext === 'docx' || ext === 'doc') {
+      if (typeof mammoth === 'undefined') throw new Error('mammoth.js 未載入');
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      if (!result.value.trim()) throw new Error('Word 文件無法讀取文字內容');
+      fillResume(result.value);
+      setUploadStatus('success', '✅ 已解析 Word 文件（' + result.value.length + ' 字）');
+
+    } else {
+      throw new Error('不支援的檔案格式，請上傳 PDF、Word 或 TXT');
+    }
+  } catch (e) {
+    setUploadStatus('error', '❌ ' + (e.message || '解析失敗，請改為手動貼入文字'));
+  }
+}
+
+function handleFileChange(e) {
+  const file = e.target.files[0];
+  if (file) parseFile(file);
+}
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.add('drag-over');
+}
+function handleDragLeave(e) {
+  document.getElementById('upload-zone').classList.remove('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) parseFile(file);
+}
+</script>
 </body>
 </html>
 
