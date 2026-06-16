@@ -208,6 +208,7 @@ async function generate() {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ message: prompt, sessionId: SESSION+'-'+idx })
         });
+        if (!res.ok || !res.body) throw new Error('HTTP '+res.status);
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let txt = '';
