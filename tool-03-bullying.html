@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -601,7 +601,7 @@ async function callAI(pct, level, total, max, qs) {
   const prompt = '職場霸凌診斷評估結果：\n角色：' + roleLabel + '\n' + context + '\n整體風險/合規分數：' + pct + '%（' + level + '度風險）\n原始得分：' + total + '/' + max + '\n\n各題作答摘要：\n' + summary + '\n\n' + rolePrompt;
   const bodyEl = document.getElementById('ai-body');
   try {
-    const resp = await fetch(API + '/api/hr-health-check', {
+    const resp = await fetch(API + '/api/chat', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tool: 'bullying', system: '你是策識永續 AI 人資顧問，熟悉台灣《職業安全衛生法》職場霸凌防治專章（第22-1、22-2、22-3、46條）及相關企業管理程序，回應使用繁體中文。', messages: [{ role: 'user', content: prompt }], sessionId: SESSION, stream: true })
     });
@@ -641,3 +641,4 @@ function restart() {
 <script src="assets/hc-lead.js"></script>
 </body>
 </html>
+

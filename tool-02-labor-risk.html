@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -632,10 +632,10 @@ ${partItems.length ? partItems.map(x=>`・${x}`).join('\n') : '無'}
 
   const bodyEl = document.getElementById('ai-body');
   try {
-    const resp = await fetch(API + '/api/hr-health-check', {
+    const resp = await fetch(API + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: prompt, sessionId: SESSION })
+      body: JSON.stringify({ messages:[{role:"user",content:prompt}], sessionId:SESSION , stream:true })
     });
     if (!resp.ok || !resp.body) {
       bodyEl.innerHTML = `<span style="color:var(--ink-soft)">（AI 分析暫時無法使用，請稍後再試）</span>`;
@@ -680,3 +680,4 @@ function restart() {
 <script src="assets/hc-lead.js"></script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -577,10 +577,10 @@ async function callAI(dimScores, overall) {
 語氣專業、具實戰感，適合企業主與 HR 直接閱讀。`;
 
   try {
-    const resp = await fetch(API + '/api/hr-health-check', {
+    const resp = await fetch(API + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: prompt, sessionId: SESSION })
+      body: JSON.stringify({ messages:[{role:"user",content:prompt}], sessionId:SESSION , stream:true })
     });
 
     if (!resp.ok || !resp.body) {
@@ -626,3 +626,4 @@ function restart() {
 <script src="assets/hc-lead.js"></script>
 </body>
 </html>
+

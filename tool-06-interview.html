@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -399,10 +399,10 @@ ${catsArr.join('、')}
     output.innerHTML = '<div class="ai-box"><div class="ai-head"><div class="ai-icon">✨</div><div class="ai-title">AI 正在設計面試問題…</div></div><div class="ai-body"><div class="typing"><span></span><span></span><span></span></div></div></div>';
 
     try {
-      const res = await fetch(API + '/api/hr-health-check', {
+      const res = await fetch(API + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: prompt, sessionId: SESSION })
+        body: JSON.stringify({ messages:[{role:"user",content:prompt}], sessionId:SESSION , stream:true })
       });
       if (!res.ok || !res.body) throw new Error('API error');
       const reader = res.body.getReader();
@@ -526,3 +526,4 @@ function restart() {
 <script src="assets/hc-lead.js"></script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -719,10 +719,10 @@ ${signal && signal!=='未發現異常' ? `\n⚠️ 額外觀察到的異常信�
   const aiBody = document.getElementById('ai-body');
   aiBody.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
   try {
-    const res = await fetch(API + '/api/hr-health-check', {
+    const res = await fetch(API + '/api/chat', {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ message: prompt, sessionId: SESSION })
+      body: JSON.stringify({ messages:[{role:"user",content:prompt}], sessionId:SESSION , stream:true })
     });
     if(!res.ok||!res.body) throw new Error('API error');
     const reader = res.body.getReader();
@@ -763,3 +763,4 @@ function restart() {
 <script src="assets/hc-lead.js"></script>
 </body>
 </html>
+

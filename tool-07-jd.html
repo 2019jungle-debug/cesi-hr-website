@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -204,9 +204,9 @@ async function generate() {
       const bodyEl = document.getElementById('body-'+idx);
       bodyEl.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
       try {
-        const res = await fetch(API+'/api/hr-health-check', {
+        const res = await fetch(API+'/api/chat', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ message: prompt, sessionId: SESSION+'-'+idx })
+          body: JSON.stringify({ messages:[{role:"user",content:prompt}], sessionId:SESSION+'-'+idx , stream:true })
         });
         if (!res.ok || !res.body) throw new Error('HTTP '+res.status);
         const reader = res.body.getReader();
@@ -220,7 +220,7 @@ async function generate() {
             if(line.startsWith('data:')) {
               const d = line.slice(5).trim();
               if(d==='[DONE]') break;
-              try { const t=JSON.parse(d).choices?.[0]?.delta?.content||''; txt+=t; bodyEl.textContent=txt; } catch(e){}
+              try { const t=JSON.parse(d).text||''; txt+=t; bodyEl.textContent=txt; } catch(e){}
             }
           }
         }
@@ -253,3 +253,4 @@ function restart() {
 <script src="assets/hc-lead.js"></script>
 </body>
 </html>
+
