@@ -4,11 +4,17 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 求職者履歷健檢 · 策識永續</title>
+<title>AI 求職者履歷分析 · 策識永續</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;--gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;--ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;--line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a}
+:root{
+  --navy-deep:#07142f;--navy:#10244c;--teal:#1d756f;
+  --indigo:#2d3ca6;--indigo-soft:#3f51c1;
+  --gold:#c9a15d;--gold-bright:#e2bf79;--ivory:#fbf8ef;
+  --ink:#182036;--ink-soft:#5a6377;--ink-faded:#8b94a7;
+  --line:rgba(16,36,76,0.12);--danger:#c34646;--warning:#d4861a;--success:#1d756f;
+}
 body{font-family:'Noto Sans TC',system-ui,sans-serif;background:var(--ivory);color:var(--ink);min-height:100vh}
 a{text-decoration:none}
 nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding:14px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(16,36,76,.07)}
@@ -16,42 +22,94 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .nav-brand span{font-family:'Noto Serif TC',serif;font-size:14px;font-weight:700;color:var(--navy)}
 .nav-back{color:var(--ink-soft);font-size:13px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--line);transition:all .2s}
 .nav-back:hover{background:var(--navy);color:#fff}
-.page-header{background:linear-gradient(135deg,#1a3d2b,var(--teal),#0f4a42);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
+.page-header{background:linear-gradient(135deg,#07142f,#10244c,#2d3ca6);padding:48px clamp(20px,4vw,60px) 44px;text-align:center}
 .tool-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,191,121,.15);border:1px solid rgba(226,191,121,.3);border-radius:999px;padding:5px 16px;font-size:12px;color:var(--gold-bright);font-weight:600;margin-bottom:16px}
 .page-header h1{font-family:'Noto Serif TC',serif;font-size:clamp(22px,3.5vw,38px);font-weight:900;color:#fff;margin-bottom:10px}
-.page-header p{color:rgba(255,255,255,.75);font-size:15px;max-width:520px;margin:0 auto}
-.main{max-width:780px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
-.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;margin-bottom:18px}
-.form-card h2{font-family:'Noto Serif TC',serif;font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px}
-.form-card p{font-size:13px;color:var(--ink-soft);margin-bottom:18px}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px}
-.field input,.field textarea,.field select{width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s;resize:vertical}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--teal)}
+.header-tags{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:6px}
+.header-tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.7);background:rgba(255,255,255,.1);padding:4px 12px;border-radius:999px}
+.main{max-width:860px;margin:0 auto;padding:40px clamp(20px,4vw,40px) 80px}
+
+/* ── FREE TOOLS BANNER ── */
+.tools-banner{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:22px}
+.tools-banner-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.tools-banner-title{font-family:'Noto Serif TC',serif;font-size:16px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:8px}
+.tools-banner-sub{font-size:12px;color:var(--ink-soft)}
+.tool-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+.tool-card{border:1px solid var(--line);border-radius:10px;padding:14px 16px;transition:all .2s;background:var(--ivory)}
+.tool-card:hover{border-color:var(--indigo);box-shadow:0 4px 14px rgba(45,60,166,.1);transform:translateY(-2px)}
+.tool-card-badge{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;padding:2px 8px;border-radius:4px;display:inline-block}
+.badge-shicai{background:rgba(45,60,166,.1);color:var(--indigo)}
+.badge-mbti{background:rgba(201,161,93,.15);color:#8a5c00}
+.badge-disc{background:rgba(29,117,111,.1);color:var(--teal)}
+.badge-holland{background:rgba(192,74,26,.1);color:#8b3a1a}
+.tool-card-name{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:4px}
+.tool-card-desc{font-size:12px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+.tool-links{display:flex;flex-direction:column;gap:4px}
+.tool-link{font-size:12px;color:var(--indigo);font-weight:600;display:flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(45,60,166,.05);border-radius:5px;transition:background .2s}
+.tool-link:hover{background:rgba(45,60,166,.12)}
+
+/* ── INPUT FORM ── */
+.form-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:26px;margin-bottom:16px}
+.form-card-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.form-card-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.icon-blue{background:rgba(45,60,166,.1)}
+.icon-green{background:rgba(29,117,111,.1)}
+.icon-gold{background:rgba(201,161,93,.15)}
+.form-card-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:3px}
+.form-card-sub{font-size:12px;color:var(--ink-soft);line-height:1.65}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.req{color:var(--danger);margin-left:2px}
+.opt{color:var(--ink-faded);font-weight:400;font-size:11px;margin-left:4px}
+.field input,.field textarea,.field select{width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:14px;color:var(--ink);background:#fff;transition:border-color .2s;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--indigo)}
 .char-count{font-size:11px;color:var(--ink-faded);text-align:right;margin-top:4px}
-.btn-analyze{width:100%;background:var(--teal);color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s}
-.btn-analyze:hover:not(:disabled){background:#155e59}
-.btn-analyze:disabled{opacity:.4;cursor:not-allowed}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.assessment-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.chip{font-size:12px;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);cursor:pointer;font-weight:600;transition:all .2s;color:var(--ink-soft)}
+.chip:hover{border-color:var(--indigo);color:var(--indigo)}
+.chip.active{border-color:var(--indigo);background:var(--indigo);color:#fff}
+.chip-hint{font-size:11.5px;color:var(--ink-faded);margin-bottom:8px}
+.btn-analyze{width:100%;background:linear-gradient(135deg,var(--navy),var(--indigo-soft));color:#fff;border:none;padding:14px;border-radius:8px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.btn-analyze:hover:not(:disabled){opacity:.88}
+.btn-analyze:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── RESULT ── */
 #result-section{display:none}
-.score-head{background:linear-gradient(135deg,#1a3d2b,var(--teal));border-radius:14px;padding:28px;text-align:center;margin-bottom:18px}
-.score-head h2{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:6px}
-.overall-score{font-size:56px;font-weight:900;color:#fff;line-height:1}
-.overall-label{font-size:14px;color:rgba(255,255,255,.75);margin-top:6px}
-.score-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:18px}
-.score-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
-.sc-name{font-size:13px;color:var(--ink-soft);margin-bottom:8px}
-.sc-bar{height:7px;background:rgba(16,36,76,.07);border-radius:999px;overflow:hidden;margin-bottom:6px}
-.sc-fill{height:100%;border-radius:999px;background:var(--teal);transition:width .8s ease}
-.sc-num{font-size:20px;font-weight:800;color:var(--navy)}
-.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:18px}
+.result-header{background:linear-gradient(135deg,#07142f,#10244c,#2d3ca6);border-radius:14px;padding:30px;text-align:center;margin-bottom:18px}
+.result-header h2{font-family:'Noto Serif TC',serif;font-size:18px;color:#fff;font-weight:900;margin-bottom:4px}
+.result-meta{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:14px}
+.match-score{font-family:'Noto Serif TC',serif;font-size:72px;font-weight:900;color:var(--gold-bright);line-height:1}
+.match-label{font-size:15px;font-weight:700;margin:8px 0 4px;color:#fff}
+.match-sub{font-size:12.5px;color:rgba(255,255,255,.65)}
+.dim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:18px}
+.dim-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.dim-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.dim-name{font-size:13px;font-weight:700;color:var(--navy)}
+.dim-score{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900}
+.score-h{color:var(--success)}.score-m{color:var(--warning)}.score-l{color:var(--danger)}
+.dim-bar{height:7px;background:rgba(16,36,76,.08);border-radius:999px;overflow:hidden;margin-bottom:8px}
+.dim-fill{height:100%;border-radius:999px;transition:width 1s ease;width:0}
+.fill-h{background:linear-gradient(90deg,var(--teal),#3aaf8a)}
+.fill-m{background:linear-gradient(90deg,var(--warning),#f0a832)}
+.fill-l{background:linear-gradient(90deg,var(--danger),#e05a5a)}
+.dim-comment{font-size:12px;color:var(--ink-soft);line-height:1.7}
+.ai-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-bottom:16px}
 .ai-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-.ai-icon{width:34px;height:34px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.ai-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--navy),var(--indigo-soft));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
 .ai-title{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:700;color:var(--navy)}
-.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:60px}
+.ai-sub{font-size:12px;color:var(--ink-faded);margin-top:2px}
+.ai-body{font-size:14px;color:var(--ink);line-height:2;white-space:pre-wrap;min-height:80px}
 .typing{display:inline-flex;gap:4px;align-items:center}
 .typing span{width:6px;height:6px;background:var(--navy);border-radius:50%;animation:bounce .9s infinite}
 .typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+
+/* 測評工具 in result */
+.tool-reco{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px;margin-bottom:16px}
+.tool-reco-head{font-family:'Noto Serif TC',serif;font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.tool-reco-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px}
+
 .cta-box{background:linear-gradient(135deg,var(--navy-deep),var(--navy));border-radius:12px;padding:24px;text-align:center}
 .cta-box h3{font-family:'Noto Serif TC',serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:6px}
 .cta-box p{color:rgba(255,255,255,.7);font-size:13px;margin-bottom:16px}
@@ -59,6 +117,7 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .btn-gold{background:var(--gold-bright);color:var(--navy-deep);padding:10px 22px;border-radius:8px;font-weight:800;font-size:14px}
 .btn-ghost{border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);padding:10px 18px;border-radius:8px;font-size:13px}
 .btn-restart{display:block;margin:14px auto 0;background:#fff;border:2px solid var(--line);color:var(--ink);padding:10px 22px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+@media(max-width:560px){.field-row{grid-template-columns:1fr}.tool-cards{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -70,55 +129,177 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
   <a href="hr-health-center.html" class="nav-back">← 回健檢中心</a>
 </nav>
 <div class="page-header">
-  <div class="tool-badge">📄 No.05 · AI 求職者履歷健檢</div>
-  <h1>AI 履歷診斷報告</h1>
-  <p>貼入履歷內容，AI 評估完整度、面試風險與表達品質</p>
+  <div class="tool-badge">🔍 No.05 · AI 求職者履歷分析</div>
+  <h1>求職者人才分析與職務匹配</h1>
+  <div class="header-tags">
+    <span class="header-tag">✦ 職務匹配度評估</span>
+    <span class="header-tag">✦ 人才特質深度分析</span>
+    <span class="header-tag">✦ 測評結果整合解讀</span>
+    <span class="header-tag">✦ 面試問題建議</span>
+  </div>
 </div>
-<div class="main">
-  <div id="form-section">
-    <div class="form-card">
-      <h2>貼入您的履歷內容</h2>
-      <p>請貼上履歷全文，包含個人資料（可去識別化）、學歷、工作經歷、技能與自我介紹</p>
-      <div class="field">
-        <label>應徵職位（選填）</label>
-        <input type="text" id="position" placeholder="例：人資專員、行銷企劃、軟體工程師">
-      </div>
-      <div class="field">
-        <label>履歷內容</label>
-        <textarea id="resume-text" rows="14" placeholder="請將您的履歷內容貼入此處...
 
-建議包含：
-・基本資料（可匿名化）
-・學歷背景
-・工作經歷（含年資、公司、職稱、主要職責）
-・技能與專長
-・自我介紹"></textarea>
-        <div class="char-count" id="char-count">0 字</div>
+<div class="main">
+
+  <!-- ── 免費測評工具推薦 ── -->
+  <div class="tools-banner">
+    <div class="tools-banner-head">
+      <div class="tools-banner-title">🧪 免費測評工具推薦</div>
+      <div class="tools-banner-sub">可先請求職者完成測評，再將結果貼入下方，由 AI 整合解讀</div>
+    </div>
+    <div class="tool-cards">
+      <div class="tool-card">
+        <div class="tool-card-badge badge-shicai">識才學</div>
+        <div class="tool-card-name">識才學測評</div>
+        <div class="tool-card-desc">全面評估求職者的特質傾向與職涯適配性，適合人資篩選初階使用</div>
+        <div class="tool-links">
+          <a href="https://www.wjx.cn/vm/hBmjIv4.aspx" target="_blank" class="tool-link">↗ 測評卷 A</a>
+          <a href="https://www.wjx.cn/vm/Qcj5spd.aspx" target="_blank" class="tool-link">↗ 測評卷 B</a>
+        </div>
       </div>
-      <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled>🔍 開始 AI 履歷分析</button>
+      <div class="tool-card">
+        <div class="tool-card-badge badge-mbti">MBTI</div>
+        <div class="tool-card-name">64 Personality</div>
+        <div class="tool-card-desc">評估認知偏好與人格類型，了解候選人的溝通風格與決策傾向</div>
+        <div class="tool-links">
+          <a href="https://64personality.com/" target="_blank" class="tool-link">↗ 前往測評</a>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-card-badge badge-disc">DISC</div>
+        <div class="tool-card-name">DISC 行為風格</div>
+        <div class="tool-card-desc">評估 D/I/S/C 四大行為傾向，適合主管相容性評估與團隊配置</div>
+        <div class="tool-links">
+          <a href="https://www.disc.com.tw/" target="_blank" class="tool-link">↗ 前往測評</a>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-card-badge badge-holland">輪碼 Holland</div>
+        <div class="tool-card-name">Holland 職業性向</div>
+        <div class="tool-card-desc">評估候選人的六種職業興趣代碼，協助判斷職涯傾向與工作適配性</div>
+        <div class="tool-links">
+          <a href="https://www.yory.school/holland" target="_blank" class="tool-link">↗ 前往測評</a>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div id="result-section">
-    <div class="score-head">
-      <h2>履歷健檢報告</h2>
-      <div class="overall-score" id="overall-score">—</div>
-      <div class="overall-label">綜合履歷分數（滿分 100）</div>
+  <!-- ── INPUT ── -->
+  <div id="form-section">
+    <!-- 職缺資訊 -->
+    <div class="form-card">
+      <div class="form-card-head">
+        <div class="form-card-icon icon-blue">🎯</div>
+        <div>
+          <div class="form-card-title">職缺基本資訊</div>
+          <div class="form-card-sub">填寫越完整，AI 職務匹配分析越精準</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>應徵職位<span class="req">*</span></label>
+          <input type="text" id="position" placeholder="例：業務專員、人資主任、軟體工程師">
+        </div>
+        <div class="field">
+          <label>部門 ／ 團隊<span class="opt">選填</span></label>
+          <input type="text" id="dept" placeholder="例：業務部、人力資源部">
+        </div>
+      </div>
+      <div class="field">
+        <label>職缺核心要求<span class="opt">選填，貼入 JD 或條列說明</span></label>
+        <textarea id="jd-text" rows="4" placeholder="例：
+・需具備 3 年以上業務開發經驗
+・熟悉 B2B 客戶關係管理
+・具備良好溝通協調能力
+・有帶領小型團隊經驗者佳"></textarea>
+      </div>
     </div>
-    <div class="score-grid" id="score-grid"></div>
+
+    <!-- 履歷內容 -->
+    <div class="form-card">
+      <div class="form-card-head">
+        <div class="form-card-icon icon-green">📄</div>
+        <div>
+          <div class="form-card-title">求職者履歷內容</div>
+          <div class="form-card-sub">貼入候選人履歷全文（可去識別化，建議保留學歷、年資、職稱、主要職責）</div>
+        </div>
+      </div>
+      <div class="field">
+        <textarea id="resume-text" rows="12" placeholder="請將求職者的履歷內容貼入此處...
+
+建議保留：
+・學歷背景（科系、學校等級）
+・歷任公司規模與產業
+・職稱與任職時間
+・主要職責與成就（KPI、獎項、專案）
+・技能與證照"></textarea>
+        <div class="char-count" id="char-count">0 字</div>
+      </div>
+    </div>
+
+    <!-- 測評結果（選填） -->
+    <div class="form-card">
+      <div class="form-card-head">
+        <div class="form-card-icon icon-gold">🧪</div>
+        <div>
+          <div class="form-card-title">測評結果整合<span class="opt" style="font-size:13px;font-weight:400">（選填）</span></div>
+          <div class="form-card-sub">貼入上方任一工具的測評結果，AI 將整合至人才分析報告</div>
+        </div>
+      </div>
+      <div class="assessment-chips">
+        <span class="chip" onclick="toggleChip(this,'識才學')">識才學</span>
+        <span class="chip" onclick="toggleChip(this,'MBTI')">MBTI</span>
+        <span class="chip" onclick="toggleChip(this,'DISC')">DISC</span>
+        <span class="chip" onclick="toggleChip(this,'Holland 輪碼')">Holland 輪碼</span>
+        <span class="chip" onclick="toggleChip(this,'其他測評')">其他測評</span>
+      </div>
+      <div class="chip-hint">點選已完成的測評類型，再貼入結果文字（如：DISC 結果 D-型主導、MBTI 結果 ENTJ）</div>
+      <div class="field">
+        <textarea id="assessment-text" rows="4" placeholder="例：
+DISC 結果：D 型主導（積極主動、目標導向、決策迅速，較不擅長耐心溝通）
+MBTI 結果：ENTJ（外向決策型、善於領導、系統性思考，偏好高效執行）"></textarea>
+      </div>
+    </div>
+
+    <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled>🔍 開始 AI 人才分析與職務匹配</button>
+  </div>
+
+  <!-- ── RESULT ── -->
+  <div id="result-section">
+    <div class="result-header">
+      <h2>求職者人才分析報告</h2>
+      <div class="result-meta" id="result-meta"></div>
+      <div class="match-score" id="match-score">—</div>
+      <div class="match-label" id="match-label"></div>
+      <div class="match-sub">職務匹配度評分（0–100）</div>
+    </div>
+
+    <div class="dim-grid" id="dim-grid"></div>
+
     <div class="ai-box">
       <div class="ai-head">
         <div class="ai-icon">🤖</div>
-        <div class="ai-title">AI 詳細履歷診斷報告</div>
+        <div>
+          <div class="ai-title">AI 人才深度分析報告</div>
+          <div class="ai-sub">融合履歷、職缺要求與測評結果，由 AI 生成專業評估</div>
+        </div>
       </div>
       <div class="ai-body" id="ai-body"><div class="typing"><span></span><span></span><span></span></div></div>
     </div>
+
+    <!-- 測評工具推薦（結果頁） -->
+    <div class="tool-reco" id="tool-reco-box">
+      <div class="tool-reco-head">🧪 建議進一步使用的測評工具</div>
+      <div class="tool-reco-sub">若尚未完成以下測評，建議於面試前邀請候選人填寫，以強化評估信效度</div>
+      <div class="tool-cards" id="tool-reco-cards"></div>
+    </div>
+
     <div class="cta-box">
-      <h3>想讓履歷更有競爭力？</h3>
-      <p>策識永續提供履歷優化、面試準備與職涯諮詢服務</p>
+      <h3>需要更深入的人才評估？</h3>
+      <p>策識永續提供人才評鑑設計、職務說明書建置與面試官訓練服務</p>
       <div class="cta-row">
         <a href="ai-hr-consultant.html" class="btn-gold">免費諮詢 AI 顧問</a>
-        <a href="pricing-and-booking.html" class="btn-ghost">顧問服務方案</a>
+        <a href="pricing-and-booking.html" class="btn-ghost">人才評鑑方案</a>
       </div>
     </div>
     <button class="btn-restart" onclick="restart()">重新分析</button>
@@ -129,87 +310,158 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 const API = 'https://cesi-hr-api-626216288020.asia-east1.run.app';
 const SESSION = 'hc5-' + Math.random().toString(36).slice(2);
 
-const textarea = document.getElementById('resume-text');
-textarea.addEventListener('input', () => {
-  const len = textarea.value.length;
+const TOOLS_DATA = [
+  { key:'識才學', badge:'badge-shicai', label:'識才學', name:'識才學測評', desc:'全面評估求職者的特質傾向與職涯適配性', links:[{label:'測評卷 A',url:'https://www.wjx.cn/vm/hBmjIv4.aspx'},{label:'測評卷 B',url:'https://www.wjx.cn/vm/Qcj5spd.aspx'}] },
+  { key:'MBTI',   badge:'badge-mbti',   label:'MBTI',   name:'64 Personality（MBTI）', desc:'評估認知偏好與人格類型，了解溝通風格與決策傾向', links:[{label:'前往測評',url:'https://64personality.com/'}] },
+  { key:'DISC',   badge:'badge-disc',   label:'DISC',   name:'DISC 行為風格', desc:'評估 D/I/S/C 四大行為傾向，適合主管相容性分析', links:[{label:'前往測評',url:'https://www.disc.com.tw/'}] },
+  { key:'Holland 輪碼', badge:'badge-holland', label:'Holland', name:'Holland 職業性向（輪碼）', desc:'評估職業興趣代碼，協助判斷職涯傾向與工作適配', links:[{label:'前往測評',url:'https://www.yory.school/holland'}] },
+];
+
+let selectedChips = new Set();
+
+function toggleChip(el, val) {
+  el.classList.toggle('active');
+  if (selectedChips.has(val)) selectedChips.delete(val);
+  else selectedChips.add(val);
+}
+
+const resumeTA = document.getElementById('resume-text');
+resumeTA.addEventListener('input', () => {
+  const len = resumeTA.value.length;
   document.getElementById('char-count').textContent = len + ' 字';
-  document.getElementById('btn-analyze').disabled = len < 50;
+  const pos = document.getElementById('position').value.trim();
+  document.getElementById('btn-analyze').disabled = len < 50 || !pos;
+});
+document.getElementById('position').addEventListener('input', () => {
+  const pos = document.getElementById('position').value.trim();
+  const len = resumeTA.value.length;
+  document.getElementById('btn-analyze').disabled = len < 50 || !pos;
 });
 
 function analyze() {
-  const resumeText = textarea.value.trim();
   const position = document.getElementById('position').value.trim();
-  if(resumeText.length < 50) return;
+  const dept = document.getElementById('dept').value.trim();
+  const jd = document.getElementById('jd-text').value.trim();
+  const resumeText = resumeTA.value.trim();
+  const assessText = document.getElementById('assessment-text').value.trim();
+  if (!position || resumeText.length < 50) return;
 
-  HCLead.gate('tool-05', 'AI 求職者履歷健檢', {}, async function() {
+  HCLead.gate('tool-05', 'AI 求職者履歷分析', { position }, async function() {
     document.getElementById('form-section').style.display = 'none';
     document.getElementById('result-section').style.display = 'block';
+    document.getElementById('result-meta').textContent =
+      `應徵職位：${position}${dept ? ' ／ ' + dept : ''}${assessText ? '　｜　已含測評結果' : ''}`;
 
-    const dimensions = ['內容完整度','工作經歷表達','技能匹配度','版面與格式','整體印象'];
-    const grid = document.getElementById('score-grid');
-    grid.innerHTML = '';
-    dimensions.forEach(d => {
-      const card = document.createElement('div');
-      card.className = 'score-card';
-      card.innerHTML = '<div class="sc-name">'+d+'</div><div class="sc-bar"><div class="sc-fill" id="bar-'+d+'" style="width:0%"></div></div><div class="sc-num" id="num-'+d+'">—</div>';
-      grid.appendChild(card);
-    });
+    const DIMS = ['職務匹配度','能力與經歷深度','穩定性與職涯軌跡','學習成長潛力','溝通表達品質'];
+    const grid = document.getElementById('dim-grid');
+    grid.innerHTML = DIMS.map(d =>
+      `<div class="dim-card">
+        <div class="dim-head"><span class="dim-name">${d}</span><span class="dim-score" id="ds-${d}">—</span></div>
+        <div class="dim-bar"><div class="dim-fill" id="df-${d}"></div></div>
+        <div class="dim-comment" id="dc-${d}">分析中…</div>
+      </div>`
+    ).join('');
 
-    const prompt = '你是資深人資顧問，請分析以下求職者的履歷，給出詳細的健檢報告。\n\n'
-      + (position ? '應徵職位：'+position+'\n' : '')
-      + '履歷內容：\n' + resumeText
-      + '\n\n請以 JSON 格式回覆，格式如下（之後加上詳細文字分析）：\n'
-      + '{"overall":75,"scores":{"內容完整度":80,"工作經歷表達":70,"技能匹配度":75,"版面與格式":72,"整體印象":78}}\n\n'
-      + '然後換行開始詳細文字分析，包含：\n'
-      + '1. 履歷優勢亮點（3點）\n2. 需要改善的問題（3-5點，具體說明）\n'
-      + '3. 針對每個問題的具體修改建議\n4. 面試官可能追問的問題預測\n5. 提升競爭力的行動建議\n\n'
-      + '請用繁體中文，語氣專業友善，約 500-600 字。';
+    // 推薦尚未完成的測評
+    const doneKeys = [...selectedChips];
+    const reco = TOOLS_DATA.filter(t => !doneKeys.includes(t.key));
+    const recoBox = document.getElementById('tool-reco-box');
+    if (reco.length > 0) {
+      document.getElementById('tool-reco-cards').innerHTML = reco.map(t =>
+        `<div class="tool-card">
+          <div class="tool-card-badge ${t.badge}">${t.label}</div>
+          <div class="tool-card-name">${t.name}</div>
+          <div class="tool-card-desc">${t.desc}</div>
+          <div class="tool-links">${t.links.map(l=>`<a href="${l.url}" target="_blank" class="tool-link">↗ ${l.label}</a>`).join('')}</div>
+        </div>`
+      ).join('');
+      recoBox.style.display = 'block';
+    } else {
+      recoBox.style.display = 'none';
+    }
+
+    const prompt =
+`你是資深人資顧問（具備人才評鑑、職能分析專業），請以企業 HR 或用人主管角度，對以下求職者進行深度人才分析。
+
+【職缺資訊】
+應徵職位：${position}${dept ? `（${dept}）` : ''}
+${jd ? '職缺要求：\n' + jd : '（未提供職缺說明書）'}
+
+【求職者履歷】
+${resumeText}
+${assessText ? '\n【測評結果】\n已完成：' + [...selectedChips].join('、') + '\n' + assessText : '（未提供測評結果）'}
+
+請以 JSON 格式先輸出分項評分，格式如下：
+{"match":75,"scores":{"職務匹配度":78,"能力與經歷深度":72,"穩定性與職涯軌跡":80,"學習成長潛力":70,"溝通表達品質":76},"match_level":"高度匹配","comments":{"職務匹配度":"說明文字（30字內）","能力與經歷深度":"說明文字","穩定性與職涯軌跡":"說明文字","學習成長潛力":"說明文字","溝通表達品質":"說明文字"}}
+
+然後換行輸出詳細分析報告，包含：
+
+【人才亮點與競爭優勢】（3點，具體說明候選人的核心價值）
+
+【職務匹配分析】
+・符合要求的具體面向
+・可能的落差或風險點
+
+【人才特質評估】${assessText ? '\n（請整合測評結果進行解讀）' : ''}
+・工作風格與行為模式推估
+・適合的工作環境與管理風格
+
+【建議面試追問問題】（3–5題，針對風險點或驗證重點）
+
+【錄用建議】
+給主管一個明確的建議：強力推薦 ／ 建議面試 ／ 需再觀察 ／ 不建議，並說明主要依據。
+
+請用繁體中文，語氣專業直接，約 600–750 字。`;
 
     const aiBody = document.getElementById('ai-body');
     aiBody.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
 
     try {
-      const res = await fetch(API+'/api/hr-health-check', {
+      const res = await fetch(API + '/api/hr-health-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: prompt, sessionId: SESSION })
       });
-      if(!res.ok || !res.body) throw new Error('API error');
+      if (!res.ok || !res.body) throw new Error('API error');
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let txt = '';
       aiBody.textContent = '';
-      while(true) {
-        const {done, value} = await reader.read();
-        if(done) break;
-        const chunk = decoder.decode(value, {stream:true});
-        for(const line of chunk.split('\n')) {
-          if(line.startsWith('data:')) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        for (const line of decoder.decode(value, { stream: true }).split('\n')) {
+          if (line.startsWith('data:')) {
             const d = line.slice(5).trim();
-            if(d === '[DONE]') break;
-            try { const t=JSON.parse(d).choices?.[0]?.delta?.content||''; txt+=t; aiBody.textContent=txt; } catch(e){}
+            if (d === '[DONE]') break;
+            try { txt += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch(e) {}
           }
         }
+        aiBody.textContent = txt;
       }
 
+      // Parse JSON block
       try {
-        const match = txt.match(/\{[\s\S]*?"overall"[\s\S]*?\}/);
-        if(match) {
+        const match = txt.match(/\{[\s\S]*?"match"[\s\S]*?\}/);
+        if (match) {
           const data = JSON.parse(match[0]);
-          document.getElementById('overall-score').textContent = data.overall || '—';
-          if(data.scores) {
-            Object.entries(data.scores).forEach(([k,v]) => {
-              const bar = document.getElementById('bar-'+k);
-              const num = document.getElementById('num-'+k);
-              if(bar) bar.style.width = v+'%';
-              if(num) num.textContent = v;
-            });
-          }
-          aiBody.textContent = txt.replace(/^\{[^}]*\}\n?/,'').trim();
+          const ms = data.match || 0;
+          document.getElementById('match-score').textContent = ms;
+          document.getElementById('match-label').textContent = data.match_level || (ms >= 75 ? '高度匹配' : ms >= 50 ? '部分匹配' : '匹配度偏低');
+          DIMS.forEach(d => {
+            const v = data.scores?.[d] || 0;
+            const scoreEl = document.getElementById('ds-' + d);
+            const fillEl = document.getElementById('df-' + d);
+            const commentEl = document.getElementById('dc-' + d);
+            if (scoreEl) { scoreEl.textContent = v; scoreEl.className = 'dim-score ' + (v>=70?'score-h':v>=45?'score-m':'score-l'); }
+            if (fillEl) { fillEl.className = 'dim-fill ' + (v>=70?'fill-h':v>=45?'fill-m':'fill-l'); setTimeout(()=>{ fillEl.style.width = v+'%'; }, 100); }
+            if (commentEl && data.comments?.[d]) commentEl.textContent = data.comments[d];
+          });
+          aiBody.textContent = txt.replace(/^\{[\s\S]*?\}\n?/, '').trim();
         }
-      } catch(e){}
+      } catch(e) {}
 
-      HCLead.reportDone(txt.replace(/^\{[^}]*\}\n?/,'').trim());
+      HCLead.reportDone(txt.replace(/^\{[\s\S]*?\}\n?/, '').trim());
     } catch(e) {
       aiBody.textContent = 'AI 分析暫時無法取得，請稍後再試。';
     }
@@ -219,9 +471,16 @@ function analyze() {
 function restart() {
   document.getElementById('result-section').style.display = 'none';
   document.getElementById('form-section').style.display = 'block';
-  textarea.value = '';
+  resumeTA.value = '';
+  document.getElementById('assessment-text').value = '';
+  document.getElementById('position').value = '';
+  document.getElementById('dept').value = '';
+  document.getElementById('jd-text').value = '';
   document.getElementById('char-count').textContent = '0 字';
   document.getElementById('btn-analyze').disabled = true;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  selectedChips.clear();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
 <script src="assets/hc-lead.js"></script>
