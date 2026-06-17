@@ -235,11 +235,11 @@ const QDB = {
     { section:'一、政策與規模義務（職安法§22-1第2項）', no:2,
       text:'（10人以上適用）已在工作場所公開揭示申訴管道資訊？',
       law:'職安法§22-1第2項：10人以上雇主須訂定並公揭申訴管道',
-      opts:['已公揭且定期更新','已公揭但資訊過時','申訴管道存在但未公揭','尚未建立申訴管道'], sc:[0,1,2,3] },
+      opts:['已公揭且定期更新','已公揭但資訊過時','申訴管道存在但未公揭','尚未建立申訴管道','不適用（未滿10人，免除此義務）'], sc:[0,1,2,3,0], minSize:1 },
     { section:'一、政策與規模義務（職安法§22-1第2項）', no:3,
       text:'（30人以上適用）已依中央主管機關準則訂定防治措施、申訴及懲處規範？',
       law:'職安法§22-1第2項：30人以上雇主須訂定完整防治及懲處規範',
-      opts:['已訂定且符合準則','已訂定但內容不完整','正在建立','尚未訂定'], sc:[0,1,2,3] },
+      opts:['已訂定且符合準則','已訂定但內容不完整','正在建立','尚未訂定','不適用（未滿30人，免除此義務）'], sc:[0,1,2,3,0], minSize:2 },
     { section:'二、霸凌樣態識別能力（管理程序第4條）', no:4,
       text:'HR/管理者是否能辨識「言語霸凌」四種態樣（侮辱貶低、公開嘲諷、威脅恐嚇、散布謠言）？',
       law:'管理程序§4：言語霸凌為四大樣態之一，含4種行為型態',
@@ -471,6 +471,15 @@ function selectRole(r, el) {
 function startQuiz() {
   sizeVal = document.getElementById('s-size').value;
   answers = new Array(QDB[role].length).fill(null);
+  // Auto-select "不適用" for size-restricted HR questions
+  if (role === 'hr') {
+    const szRank = { any:0, '10':1, '30':2 }[sizeVal] || 0;
+    QDB.hr.forEach((q, i) => {
+      if (q.minSize && szRank < q.minSize) {
+        answers[i] = q.opts.length - 1; // last option = "不適用"
+      }
+    });
+  }
   cur = 0;
   document.getElementById('role-section').style.display = 'none';
   document.getElementById('quiz-section').style.display = 'block';

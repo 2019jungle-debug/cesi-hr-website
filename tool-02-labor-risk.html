@@ -81,6 +81,7 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
 .opt-ok.chosen{background:#1d756f;border-color:#1d756f;color:#fff}
 .opt-partial.chosen{background:var(--warning);border-color:var(--warning);color:#fff}
 .opt-no.chosen{background:var(--danger);border-color:var(--danger);color:#fff}
+.opt-na.chosen{background:#8b94a7;border-color:#8b94a7;color:#fff}
 
 .progress-bar-wrap{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:18px}
 .pb-top{display:flex;justify-content:space-between;margin-bottom:8px}
@@ -451,6 +452,7 @@ function buildQuestionnaire() {
           <button class="comp-opt opt-ok"   onclick="answer('${cat.id}',${idx},'ok')"      data-key="${cat.id}-${idx}-ok">✅ 已落實</button>
           <button class="comp-opt opt-partial" onclick="answer('${cat.id}',${idx},'partial')" data-key="${cat.id}-${idx}-partial">⚠️ 部分落實</button>
           <button class="comp-opt opt-no"   onclick="answer('${cat.id}',${idx},'no')"      data-key="${cat.id}-${idx}-no">❌ 尚未落實</button>
+          <button class="comp-opt opt-na"   onclick="answer('${cat.id}',${idx},'na')"      data-key="${cat.id}-${idx}-na">🔘 不適用</button>
         </div>
       </div>`).join('');
     card.innerHTML = `
@@ -472,7 +474,7 @@ function answer(catId, idx, val) {
   // update UI
   const ci = document.getElementById(`ci-${catId}-${idx}`);
   ci.querySelectorAll('.comp-opt').forEach(b => b.classList.remove('chosen'));
-  const map = { ok:'opt-ok', partial:'opt-partial', no:'opt-no' };
+  const map = { ok:'opt-ok', partial:'opt-partial', no:'opt-no', na:'opt-na' };
   ci.querySelector(`.${map[val]}`).classList.add('chosen');
   updateProgress();
 }
@@ -491,12 +493,14 @@ function updateProgress() {
 // ── 計分 ────────────────────────────────────────────────────
 function calcCatRisk(cat) {
   const vals = { ok:0, partial:1, no:2 };
-  let sum = 0;
+  let sum = 0, count = 0;
   cat.items.forEach((_, idx) => {
     const key = `${cat.id}_${idx}`;
-    sum += vals[answers[key]] || 0;
+    const val = answers[key];
+    if (val && val !== 'na') { sum += vals[val] || 0; count++; }
   });
-  return Math.round(sum / (cat.items.length * 2) * 100);
+  if (count === 0) return 0;
+  return Math.round(sum / (count * 2) * 100);
 }
 
 function calcOverall() {
@@ -652,7 +656,7 @@ ${partItems.length ? partItems.map(x=>`・${x}`).join('\n') : '無'}
         if (!line.startsWith('data:')) continue;
         const d = line.slice(5).trim();
         if (d==='[DONE]') break;
-        try { txt += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch {}
+        try { txt += JSON.parse(d).text || ''; } catch {}
       }
       bodyEl.textContent = txt;
     }

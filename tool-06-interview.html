@@ -415,7 +415,7 @@ ${catsArr.join('、')}
           if (line.startsWith('data:')) {
             const d = line.slice(5).trim();
             if (d === '[DONE]') break;
-            try { txt += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch(e) {}
+            try { txt += JSON.parse(d).text || ''; } catch(e) {}
           }
         }
       }

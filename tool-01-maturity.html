@@ -599,7 +599,7 @@ async function callAI(dimScores, overall) {
         if (!line.startsWith('data:')) continue;
         const d = line.slice(5).trim();
         if (d === '[DONE]') break;
-        try { text += JSON.parse(d).choices?.[0]?.delta?.content || ''; } catch {}
+        try { text += JSON.parse(d).text || ''; } catch {}
       }
       document.getElementById('ai-body').textContent = text;
     }

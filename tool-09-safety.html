@@ -331,7 +331,7 @@ async function callAI(overall, level, dimScores) {
           if(d==='[DONE]') break;
           try{
             const j=JSON.parse(d);
-            const t=j.choices?.[0]?.delta?.content||'';
+            const t=j.text||'';
             txt+=t; aiBody.textContent=txt;
           }catch(e){}
         }

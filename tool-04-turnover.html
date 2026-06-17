@@ -229,16 +229,9 @@ nav{background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);padding
           <option value="其他">其他</option>
         </select></div>
       </div>
-      <div class="ctx-field">
-        <label>近期異常現象（可複選，請以逗號分隔手動記錄）</label>
-        <div class="sw"><select id="ctx-signal">
-          <option value="">未發現異常</option>
-          <option value="最近工作投入度明顯下降">投入度明顯下降</option>
-          <option value="近期頻繁請假或遲到早退">頻繁請假/遲到早退</option>
-          <option value="已知在外積極求職">已知在外積極求職</option>
-          <option value="與主管或同事有明顯衝突">與主管/同事有衝突</option>
-          <option value="近期未獲晉升或調薪後情緒低落">未獲晉升/調薪後情緒低落</option>
-        </select></div>
+      <div class="ctx-field" style="grid-column:1/-1">
+        <label>近期異常現象（可自由填寫，多項請以逗號分隔）</label>
+        <textarea id="ctx-signal" rows="2" placeholder="例：投入度明顯下降、頻繁請假、已知在外積極求職、與主管有衝突…（無異常可留空）" style="width:100%;padding:10px 13px;border:1.5px solid var(--line);border-radius:8px;font:inherit;font-size:13.5px;color:var(--ink);background:#fff;resize:vertical;transition:border-color .2s"></textarea>
       </div>
     </div>
   </div>
@@ -665,11 +658,11 @@ function getContext() {
   const role = document.getElementById('ctx-role').value;
   const tenure = document.getElementById('ctx-tenure').value;
   const industry = document.getElementById('ctx-industry').value;
-  const signal = document.getElementById('ctx-signal').value;
+  const signal = document.getElementById('ctx-signal').value.trim();
   if (role) parts.push(role);
   if (tenure) parts.push(tenure.split('（')[0]);
   if (industry) parts.push(industry);
-  if (signal && signal !== '未發現異常') parts.push('⚠️ ' + signal);
+  if (signal) parts.push('⚠️ ' + signal);
   return parts.join(' ／ ') || '未填寫背景資訊';
 }
 
@@ -682,7 +675,7 @@ async function callAI(pct, level, dimData) {
     return `${d}：${dpct}/100${d===INTENTION_DIM?'（加重維度）':''}`;
   }).join('\n');
   const ctx = getContext();
-  const signal = document.getElementById('ctx-signal').value;
+  const signal = document.getElementById('ctx-signal').value.trim();
 
   const prompt = `員工離職風險評估報告（${modeLabel[mode]}）
 
@@ -691,7 +684,7 @@ async function callAI(pct, level, dimData) {
 
 七大維度分項：
 ${dimText}
-${signal && signal!=='未發現異常' ? `\n⚠️ 額外觀察到的異常信號：${signal}` : ''}
+${signal ? `\n⚠️ 額外觀察到的異常信號：${signal}` : ''}
 
 請以資深 HR 顧問身份，融合 Mercer 員工體驗研究框架，用繁體中文撰寫分析報告：
 
@@ -736,7 +729,7 @@ ${signal && signal!=='未發現異常' ? `\n⚠️ 額外觀察到的異常信�
         if(line.startsWith('data:')){
           const d = line.slice(5).trim();
           if(d==='[DONE]') break;
-          try{ txt += JSON.parse(d).choices?.[0]?.delta?.content || ''; }catch(e){}
+          try{ txt += JSON.parse(d).text || ''; }catch(e){}
         }
       }
       aiBody.textContent = txt;
