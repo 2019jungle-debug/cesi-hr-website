@@ -635,7 +635,7 @@ body {
   <div class="arrow">▸</div>
   <div class="step">
     <div class="num">3</div>
-    <div>綠界結帳</div>
+    <div>官網結帳</div>
   </div>
   <div class="arrow">▸</div>
   <div class="step">
@@ -692,37 +692,10 @@ body {
 <section class="order-section">
   <div class="order-card">
 
-    <h3>訂購資訊</h3>
-    <p class="order-card-sub">付款成功後，Access Code 與電子發票將自動寄至您填寫的 Email</p>
+    <h3>確認方案</h3>
+    <p class="order-card-sub">點擊結帳後將前往官網，姓名、Email 及發票資訊請於官網結帳時填寫</p>
 
     <form id="upgrade-form">
-
-      <div class="field-row">
-        <div class="field">
-          <label>姓名 <span class="req">*</span></label>
-          <input type="text" name="name" required placeholder="王小明">
-        </div>
-        <div class="field">
-          <label>聯絡電話 <span class="req">*</span></label>
-          <input type="tel" name="phone" required placeholder="0912-345-678">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Email <span class="req">*</span><span class="opt">（用於收 Access Code 與發票）</span></label>
-        <input type="email" name="email" required placeholder="example@your-company.com">
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label>公司名稱<span class="opt">（選填）</span></label>
-          <input type="text" name="company" placeholder="○○股份有限公司">
-        </div>
-        <div class="field">
-          <label>統一編號<span class="opt">（公司戶發票用）</span></label>
-          <input type="text" name="taxId" placeholder="8 碼數字" maxlength="8" pattern="\d{8}">
-        </div>
-      </div>
 
       <label class="checkbox-row">
         <input type="checkbox" id="agree-terms" required>
@@ -752,10 +725,10 @@ body {
       </div>
 
       <div class="submit-area">
-        <button type="submit" class="btn-pay" id="pay-btn">前 往 綠 界 結 帳</button>
+        <button type="submit" class="btn-pay" id="pay-btn">前 往 官 網 結 帳</button>
 
         <div class="trust-row">
-          <div class="trust-item"><span class="trust-icon">✓</span> 綠界金流</div>
+          <div class="trust-item"><span class="trust-icon">✓</span> WooCommerce 官網</div>
           <div class="trust-item"><span class="trust-icon">✓</span> SSL 加密</div>
           <div class="trust-item"><span class="trust-icon">✓</span> 自動電子發票</div>
           <div class="trust-item"><span class="trust-icon">✓</span> 隨時可取消</div>
@@ -820,57 +793,17 @@ body {
     document.getElementById('sm-total').textContent = `NT$ ${info.amount.toLocaleString()}`;
   }
 
-  // 提交：跳轉綠界
-  document.getElementById('upgrade-form').addEventListener('submit', async (e) => {
+  // 提交：導向官網 WooCommerce 結帳
+  const CHECKOUT_URLS = {
+    basic_monthly: 'https://new.cctmcoach.com.tw/?add-to-cart=133',
+    basic_yearly:  'https://new.cctmcoach.com.tw/?add-to-cart=134',
+  };
+
+  document.getElementById('upgrade-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const btn = document.getElementById('pay-btn');
-    btn.disabled = true; btn.textContent = '準 備 中 . . .';
-
-    const fd = new FormData(e.target);
-    const taxId = (fd.get('taxId') || '').trim();
-    if (taxId && !/^\d{8}$/.test(taxId)) {
-      alert('統一編號需為 8 碼數字');
-      btn.disabled = false; btn.textContent = '前 往 綠 界 結 帳';
-      return;
-    }
-
-    const payload = {
-      plan: selectedPlan,
-      name: fd.get('name'),
-      phone: fd.get('phone'),
-      email: fd.get('email'),
-      company: fd.get('company') || '',
-      taxId: taxId,
-    };
-
-    try {
-      const res = await fetch(BACKEND_URL + '/api/ecpay-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || '結帳失敗');
-      }
-      const data = await res.json();
-      // 自動 submit 到綠界（用 form post）
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = data.actionUrl;
-      Object.entries(data.params).forEach(([k, v]) => {
-        const i = document.createElement('input');
-        i.type = 'hidden';
-        i.name = k;
-        i.value = v;
-        form.appendChild(i);
-      });
-      document.body.appendChild(form);
-      form.submit();
-    } catch (err) {
-      alert('結帳失敗：' + err.message + '\n\n請致電 07-9753559 協助處理');
-      btn.disabled = false; btn.textContent = '前 往 綠 界 結 帳';
-    }
+    btn.disabled = true; btn.textContent = '前 往 中 . . .';
+    window.location.href = CHECKOUT_URLS[selectedPlan];
   });
 
   // init
