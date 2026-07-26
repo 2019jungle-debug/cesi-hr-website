@@ -200,6 +200,9 @@ body {
 }
 .featured .plan-name { font-size: 30px; color: #1a2855; }
 
+/* === 隱藏價格 === */
+.plan-price, .plan-price-sub, .entry-price, .entry-price-sub, .price-note { display: none !important; }
+
 .plan-price {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 700; color: #1a2855;
@@ -475,8 +478,8 @@ footer a:hover { color:var(--gold-bright); }
       <div class="badge-popular">⭐ MOST POPULAR · 中小企業首選</div>
       <div class="plan-tag">Growth · 主推方案</div>
       <div class="plan-name">企業成長<br>陪跑計畫</div>
-      <div class="plan-price" style="font-size:32px;line-height:1.4;">NT$188,000 起</div>
-      <div class="plan-price-sub">或診斷後視客戶需求專案處理</div>
+      <div class="plan-price" style="font-size:32px;line-height:1.4;display:none;">NT$188,000 起</div>
+      <div class="plan-price-sub" style="display:none;">或診斷後視客戶需求專案處理</div>
 
       <div class="plan-divider" style="opacity:.6;"></div>
 
@@ -566,9 +569,8 @@ footer a:hover { color:var(--gold-bright); }
         <li>✅ 降低法令資訊落差</li>
       </ul>
 
-      <a href="https://new.cctmcoach.com.tw/checkout/?add-to-cart=135" class="plan-cta outline-btn" style="margin-bottom:8px;">🛒 訂購一年方案 NT$36,000</a>
-      <a href="https://new.cctmcoach.com.tw/checkout/?add-to-cart=136" class="plan-cta outline-btn">🛒 訂購二年方案 NT$60,000</a>
-      <p style="margin-top:10px;text-align:center;font-size:11px;color:rgba(245,240,225,0.3);letter-spacing:0.5px;">以上報價皆為未稅</p>
+      <a href="https://new.cctmcoach.com.tw/checkout/?add-to-cart=135" class="plan-cta outline-btn" style="margin-bottom:8px;">🛒 訂購一年方案</a>
+      <a href="https://new.cctmcoach.com.tw/checkout/?add-to-cart=136" class="plan-cta outline-btn">🛒 訂購二年方案</a>
     </div>
 
   </div>
@@ -591,7 +593,7 @@ footer a:hover { color:var(--gold-bright); }
         一次診斷，快速找出企業管理盲點，評估後續導入優先順序。
       </div>
       <a href="https://new.cctmcoach.com.tw/checkout/?add-to-cart=137" class="entry-cta">🛒 立即線上訂購</a>
-      <p style="margin-top:10px;font-size:11px;color:rgba(245,240,225,0.3);letter-spacing:0.5px;">以上報價皆為未稅</p>
+      <p style="display:none;margin-top:10px;font-size:11px;color:rgba(245,240,225,0.3);letter-spacing:0.5px;">以上報價皆為未稅</p>
     </div>
 
     <div class="entry-right">
@@ -671,7 +673,7 @@ footer a:hover { color:var(--gold-bright); }
 
 <!-- ── Footer ── -->
 <footer>
-  ※ 本頁所列方案為參考定價，實際合作內容依企業需求調整。
+  <span style="display:none;">※ 本頁所列方案為參考定價，實際合作內容依企業需求調整。</span>
   <div class="footer-links">
     <a href="landing-page.html">🌐 官網首頁</a>
     <span style="color:rgba(212,175,110,0.25);">|</span>
