@@ -22,28 +22,32 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --bg: #f7f2e8;
-    --bg-card: #fffdf8;
-    --ink: #1c2541;
-    --ink-soft: #5a6378;
-    --ink-faded: #8a8d9a;
+    --bg: #eef1f8;
+    --bg-card: #ffffff;
+    --ink: #1a2240;
+    --ink-soft: #4a5572;
+    --ink-faded: #8a90a8;
     --accent: #b08642;
     --accent-deep: #8a6730;
-    --accent-soft: #ead7b3;
-    --line: #e3d8be;
-    --line-soft: #ede2c9;
-    --ai-bubble: #f3ead7;
-    --success: #6b8e23;
-    --locked: rgba(28, 37, 65, 0.4);
+    --accent-soft: #f0deb4;
+    --line: #dde3ef;
+    --line-soft: #e8edf6;
+    --ai-bubble: #f0f4ff;
+    --success: #3aaa6a;
+    --locked: rgba(26, 34, 64, 0.4);
+    --shadow: 0 2px 12px rgba(26,34,64,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,34,64,0.12);
+    --radius: 6px;
   }
 
   /* === HR Function 樹狀導航（會員功能） === */
   .hr-functions {
     background: var(--bg-card);
-    border: 1px solid var(--ink);
+    border: 1px solid var(--line);
     margin-bottom: 24px;
     position: relative;
     overflow: hidden;
+    box-shadow: var(--shadow);
   }
 
   .hr-functions-header {
@@ -368,14 +372,19 @@
   }
   .upgrade-banner a:hover { background: var(--accent-soft); }
 
-  html, body { height: 100%; }
+  html, body { height: 100%; overflow-x: hidden; max-width: 100%; }
 
   body {
-    font-family: 'Noto Sans TC', sans-serif;
+    font-family: 'Microsoft JhengHei', '微軟正黑體', 'Noto Sans TC', sans-serif;
+    font-size: 17px;
     background: var(--bg);
     color: var(--ink);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+  }
+
+  *, *::before, *::after {
+    font-family: 'Microsoft JhengHei', '微軟正黑體', 'Noto Sans TC', sans-serif !important;
   }
 
   body::before {
@@ -383,8 +392,9 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse at 15% 0%, rgba(176,134,66,0.08), transparent 55%),
-      radial-gradient(ellipse at 90% 100%, rgba(28,37,65,0.05), transparent 55%);
+      radial-gradient(ellipse at 10% 0%, rgba(176,134,66,0.07), transparent 50%),
+      radial-gradient(ellipse at 85% 100%, rgba(26,34,64,0.05), transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(120,140,200,0.03), transparent 70%);
     pointer-events: none;
     z-index: 0;
   }
@@ -406,7 +416,7 @@
     gap: 20px;
     padding-bottom: 28px;
     margin-bottom: 36px;
-    border-bottom: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--line);
     position: relative;
   }
 
@@ -527,109 +537,173 @@
 
   /* === Categories === */
   .categories {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 0;
-    border: 1px solid var(--ink);
+    border-right: 1px solid var(--line);
     background: var(--bg-card);
-    margin-bottom: 36px;
     overflow: hidden;
-  }
-
-  @media (max-width: 1100px) {
-    .categories { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 600px) {
-    .categories { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 360px) {
-    .categories { grid-template-columns: 1fr; }
+    min-width: 160px;
+    width: 160px;
+    flex-shrink: 0;
   }
 
   .cat {
-    padding: 22px 20px;
-    border-right: 1px solid var(--line);
+    padding: 14px 12px 12px;
     border-bottom: 1px solid var(--line);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--bg-card);
     text-align: left;
     font-family: inherit;
     color: var(--ink);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
   }
 
-  .cat:last-child { border-right: none; }
+  .cat:last-child { border-bottom: none; }
 
   .cat::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--ink);
-    transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, var(--ink) 0%, #2d3b6e 100%);
+    transform: translateY(102%);
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 0;
+  }
+
+  .cat::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.28s ease;
+    z-index: 2;
+    transform-origin: bottom;
   }
 
   .cat > * { position: relative; z-index: 1; }
 
   .cat:hover::before { transform: translateY(0); }
-  .cat:hover { color: var(--bg); }
+  .cat:hover::after { transform: scaleY(1); }
+  .cat:hover { color: #fff; }
   .cat:hover .cat-num { color: var(--accent-soft); }
-  .cat:hover .cat-desc { color: rgba(247,242,232,0.7); }
+  .cat:hover .cat-desc { color: rgba(230,238,255,0.72); }
+  .cat:hover .cat-icon { filter: brightness(1.4) saturate(0.8); }
 
   .cat.active::before { transform: translateY(0); }
-  .cat.active { color: var(--bg); }
+  .cat.active::after { transform: scaleY(1); }
+  .cat.active { color: #fff; }
   .cat.active .cat-num { color: var(--accent-soft); }
-  .cat.active .cat-desc { color: rgba(247,242,232,0.75); }
+  .cat.active .cat-desc { color: rgba(230,238,255,0.75); }
+
+  .cat-icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background: var(--line-soft);
+    border-radius: 6px;
+    transition: filter 0.28s, background 0.28s;
+    line-height: 1;
+  }
+
+  .cat:hover .cat-icon, .cat.active .cat-icon {
+    background: rgba(255,255,255,0.12);
+  }
+
+  .cat-text { flex: 1; min-width: 0; }
 
   .cat-num {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
+    font-size: 10px;
     color: var(--accent);
     letter-spacing: 3px;
-    margin-bottom: 10px;
-    transition: color 0.3s;
+    margin-bottom: 4px;
+    transition: color 0.28s;
+    display: block;
   }
 
   .cat-title {
     font-family: 'Noto Serif TC', serif;
-    font-size: 17px;
+    font-size: 13px;
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 3px;
     letter-spacing: 0.5px;
   }
 
   .cat-desc {
-    font-size: 11.5px;
+    font-size: 9.5px;
     color: var(--ink-soft);
-    line-height: 1.55;
-    transition: color 0.3s;
+    line-height: 1.45;
+    transition: color 0.28s;
   }
 
   /* === Workspace === */
   .workspace {
-    display: grid;
-    grid-template-columns: 1fr 300px;
+    display: flex;
+    flex-direction: row;
     gap: 0;
-    border: 1px solid var(--ink);
+    border: 1px solid var(--line);
     background: var(--bg-card);
     min-height: 540px;
+    box-shadow: var(--shadow-lg);
   }
 
   @media (max-width: 900px) {
-    .workspace { grid-template-columns: 1fr; }
+    .workspace { flex-direction: column; }
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      flex-direction: unset;
+      flex-wrap: unset;
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .cat { flex: unset; align-items: center; padding: 10px 10px 8px; }
+    .cat-desc { display: none; }
+    .cat-icon { width: 28px; height: 28px; font-size: 16px; flex-shrink: 0; }
+    .cat-num { font-size: 9px; letter-spacing: 2px; margin-bottom: 2px; }
+    .cat-title { font-size: 12px; margin-bottom: 0; }
+  }
+  @media (max-width: 480px) {
+    .categories { grid-template-columns: repeat(2, 1fr); }
   }
 
   .chat {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-width: 0;
     border-right: 1px solid var(--line);
   }
 
   @media (max-width: 900px) {
     .chat { border-right: none; border-bottom: 1px solid var(--line); }
+    .sidebar {
+      width: 100% !important;
+      flex-shrink: 1;
+      max-height: none;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 24px;
+      padding: 20px 16px;
+    }
+    .sidebar-section { margin-bottom: 20px; }
+    .sidebar-section:last-child { grid-column: 1 / -1; }
   }
 
   .chat-header {
@@ -716,14 +790,16 @@
   }
 
   .msg.user .msg-bubble {
-    background: var(--ink);
-    color: var(--bg);
+    background: linear-gradient(135deg, var(--ink) 0%, #2d3b6e 100%);
+    color: #fff;
+    border-radius: 14px 14px 4px 14px;
   }
 
   .msg.ai .msg-bubble {
     background: var(--ai-bubble);
     color: var(--ink);
     border-left: 3px solid var(--accent);
+    border-radius: 4px 14px 14px 14px;
   }
 
   .empty-state {
@@ -776,9 +852,9 @@
 
   .input-area textarea {
     flex: 1;
-    padding: 12px 14px;
-    border: 1px solid var(--line);
-    background: var(--bg-card);
+    padding: 12px 16px;
+    border: 1.5px solid var(--line);
+    background: var(--bg);
     font-family: inherit;
     font-size: 14px;
     color: var(--ink);
@@ -786,16 +862,17 @@
     min-height: 46px;
     max-height: 140px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    border-radius: var(--radius);
   }
 
-  .input-area textarea:focus { border-color: var(--accent); }
+  .input-area textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(176,134,66,0.12); }
   .input-area textarea:disabled { opacity: 0.6; cursor: not-allowed; }
 
   .input-area button {
     padding: 0 28px;
-    background: var(--ink);
-    color: var(--bg);
+    background: linear-gradient(135deg, var(--ink) 0%, #2d3b6e 100%);
+    color: #fff;
     border: none;
     font-family: 'Noto Serif TC', serif;
     font-size: 14px;
@@ -834,6 +911,8 @@
     background: var(--bg);
     overflow-y: auto;
     max-height: 700px;
+    width: 280px;
+    flex-shrink: 0;
   }
 
   .sidebar-section { margin-bottom: 32px; }
@@ -846,7 +925,7 @@
     color: var(--ink);
     margin-bottom: 14px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--ink);
+    border-bottom: 1px solid var(--line);
     position: relative;
     font-weight: 600;
   }
@@ -886,8 +965,9 @@
 
   .suggested-q:hover {
     border-color: var(--accent);
-    background: var(--accent-soft);
-    transform: translateX(2px);
+    background: linear-gradient(90deg, var(--accent-soft) 0%, #fff 100%);
+    transform: translateX(3px);
+    box-shadow: 2px 0 0 var(--accent);
   }
 
   .doc-item {
@@ -1357,7 +1437,7 @@
   <div class="container">
     <header>
       <div class="brand">
-        <a href="landing-page.html" style="display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;">
+        <a href="https://new.cctmcoach.com.tw/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;text-decoration:none;color:inherit;">
           <img src="assets/logo.png" alt="策識永續" style="height:52px;width:auto;display:block;flex-shrink:0;">
           <div class="brand-text">
             <h1>策識永續人才管理顧問有限公司</h1>
@@ -1408,9 +1488,8 @@
       <button class="mobile-login-btn" id="mobile-login-btn" onclick="openAccessModal()">🔑 登 入</button>
     </div>
 
-    <div class="categories" id="categories"></div>
-
     <div class="workspace">
+      <div class="categories" id="categories"></div>
       <div class="chat">
         <div class="chat-header">
           <h2 id="chat-title">請選擇諮詢主題</h2>
@@ -1441,13 +1520,11 @@
             <p class="sidebar-empty">選擇主題後將顯示建議提問</p>
           </div>
         </div>
-        <div class="sidebar-section">
+        <div class="sidebar-section" id="docs-section" style="display:none;">
           <h3>文件 / 表單</h3>
-          <div id="documents">
-            <p class="sidebar-empty">選擇主題後將顯示相關文件</p>
-          </div>
+          <div id="documents"></div>
         </div>
-        <div class="sidebar-section">
+        <div class="sidebar-section" id="consult-section" style="display:none;">
           <h3>專業諮詢</h3>
           <div class="consult-card" id="consult-cta">
             <h4>需要更深入的協助？</h4>
@@ -1774,6 +1851,7 @@
       {
         id: 'labor',
         num: 'I',
+        icon: '⚖️',
         title: '勞動法令',
         desc: '勞基法、勞退、性平法等實務應用',
         prompt: `你是一位專精於台灣勞動法令的 AI 人資顧問，熟悉勞動基準法、勞工退休金條例、性別平等工作法、職業安全衛生法、就業服務法、勞工保險條例等。
@@ -1804,6 +1882,7 @@
       {
         id: 'recruit',
         num: 'II',
+        icon: '🎯',
         title: '招募選才',
         desc: '人才招募、面試流程與選才工具',
         prompt: `你是一位資深的招募與選才 AI 顧問，熟悉台灣就業市場、各類招募管道與選才科學。
@@ -1835,6 +1914,7 @@
       {
         id: 'training',
         num: 'III',
+        icon: '📚',
         title: '教育訓練',
         desc: '訓練需求分析、課程設計與成效評估',
         prompt: `你是一位專精於企業教育訓練規劃的 AI 顧問，熟悉 ADDIE、Kirkpatrick 四層次評估、TTQS、政府訓練補助等。
@@ -1866,6 +1946,7 @@
       {
         id: 'performance',
         num: 'IV',
+        icon: '📊',
         title: '績效考核',
         desc: 'KPI、OKR 設計與績效面談技巧',
         prompt: `你是一位專精於績效管理的 AI 人資顧問，熟悉 MBO、KPI、OKR、BSC、360 度回饋等績效制度，以及台灣勞動法令中關於績效不佳的法律風險。
@@ -1897,6 +1978,7 @@
       {
         id: 'safety',
         num: 'V',
+        icon: '🛡️',
         title: '職業安全',
         desc: '職安法規、職災處理與安全管理',
         prompt: `你是一位專精於台灣職業安全衛生的 AI 人資顧問，熟悉《職業安全衛生法》、《職業災害勞工保護法》及相關施行細則，並具備職安管理實務經驗。
@@ -1928,6 +2010,7 @@
       {
         id: 'all',
         num: 'VI',
+        icon: '💡',
         title: '綜合諮詢',
         desc: '跨領域整合 · 文件下載 · 全方位建議',
         prompt: `你是一位資深的全方位 AI 人資顧問（HR Generalist），熟悉台灣勞動法令、招募選才、教育訓練、績效管理、薪酬福利、員工關係、組織發展等所有人資面向。
@@ -2315,9 +2398,12 @@
       btn.className = 'cat';
       btn.dataset.id = cat.id;
       btn.innerHTML = `
-        <div class="cat-num">${cat.num}</div>
-        <div class="cat-title">${cat.title}</div>
-        <div class="cat-desc">${cat.desc}</div>
+        <span class="cat-icon">${cat.icon || ''}</span>
+        <div class="cat-text">
+          <span class="cat-num">${cat.num}</span>
+          <div class="cat-title">${cat.title}</div>
+          <div class="cat-desc">${cat.desc}</div>
+        </div>
       `;
       btn.addEventListener('click', () => selectCategory(cat));
       catEl.appendChild(btn);
@@ -2352,12 +2438,7 @@
 
       const docs = document.getElementById('documents');
       docs.innerHTML = '';
-      cat.docs.forEach(d => {
-        const div = document.createElement('div');
-        div.className = 'doc-item';
-        div.innerHTML = `<a href="forms.html" target="_blank">${d.name}</a><span class="doc-tag">${d.tag}</span>`;
-        docs.appendChild(div);
-      });
+      document.getElementById('docs-section').style.display = 'none';
 
       const messages = document.getElementById('messages');
       messages.innerHTML = '';
@@ -2433,6 +2514,18 @@
           ⚠️ 以上表單<strong>僅供參考</strong>，使用前建議諮詢專業人資顧問，以確保符合個案情境及最新法規。
         </div>`;
       containerDiv.appendChild(wrapper);
+
+      // 同步更新 sidebar 文件區塊
+      const docsSection = document.getElementById('docs-section');
+      const docsDiv = document.getElementById('documents');
+      docsDiv.innerHTML = '';
+      validIds.forEach(id => {
+        const div = document.createElement('div');
+        div.className = 'doc-item';
+        div.innerHTML = `<a href="forms.html" target="_blank">${FORM_NAMES_MAP[id]}</a><span class="doc-tag">FORM</span>`;
+        docsDiv.appendChild(div);
+      });
+      docsSection.style.display = '';
     }
 
     // 下載 AI 推薦的表單
@@ -2620,6 +2713,13 @@
         // 顯示表單推薦卡片
         if (suggestedFormIds.length > 0) {
           addFormSuggestions(aiDiv, suggestedFormIds);
+        }
+
+        // 對話 3 輪後顯示「專業諮詢」，或回應含高風險關鍵字時立即顯示
+        const highRiskKeywords = ['勞資爭議', '資遣', '解雇', '勞檢', '罰鍰', '訴訟', '仲裁', '職災', '申訴'];
+        const hasRisk = highRiskKeywords.some(kw => cleanText.includes(kw));
+        if (hasRisk || conversation.filter(m => m.role === 'user').length >= 3) {
+          document.getElementById('consult-section').style.display = '';
         }
 
       } catch (err) {
